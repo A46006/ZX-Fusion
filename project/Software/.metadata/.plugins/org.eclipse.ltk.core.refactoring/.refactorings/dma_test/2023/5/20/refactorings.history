@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;dma_test/spectrum_comm/DMA/hw.h&apos; to &apos;dma_hw.h&apos;" description="Rename resource &apos;hw.h&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="spectrum_comm/DMA/hw.h" name="dma_hw.h" stamp="1684253106725" updateReferences="true"/>
+</session>

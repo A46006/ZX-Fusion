@@ -1,0 +1,114 @@
+/*
+WARNING: Do NOT edit the input and output ports in this file in a text
+editor if you plan to continue editing the block that represents it in
+the Block Editor! File corruption is VERY likely to occur.
+*/
+/*
+Copyright (C) 2018  Intel Corporation. All rights reserved.
+Your use of Intel Corporation's design tools, logic functions 
+and other software and tools, and its AMPP partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Intel Program License 
+Subscription Agreement, the Intel Quartus Prime License Agreement,
+the Intel FPGA IP License Agreement, or other applicable license
+agreement, including, without limitation, that your use is for
+the sole purpose of programming logic devices manufactured by
+Intel and sold by Intel or its authorized distributors.  Please
+refer to the applicable agreement for further details.
+*/
+(header "symbol" (version "1.1"))
+(symbol
+	(rect 0 0 512 344)
+	(text "sd_nios2_attempt" (rect 204 -1 274 11)(font "Arial" (font_size 10)))
+	(text "inst" (rect 8 328 20 340)(font "Arial" ))
+	(port
+		(pt 0 72)
+		(input)
+		(text "clk_clk" (rect 0 0 27 12)(font "Arial" (font_size 8)))
+		(text "clk_clk" (rect 4 61 46 72)(font "Arial" (font_size 8)))
+		(line (pt 0 72)(pt 224 72)(line_width 1))
+	)
+	(port
+		(pt 0 112)
+		(input)
+		(text "key_external_connection_export[3..0]" (rect 0 0 149 12)(font "Arial" (font_size 8)))
+		(text "key_external_connection_export[3..0]" (rect 4 101 220 112)(font "Arial" (font_size 8)))
+		(line (pt 0 112)(pt 224 112)(line_width 3))
+	)
+	(port
+		(pt 0 152)
+		(input)
+		(text "reset_reset_n" (rect 0 0 56 12)(font "Arial" (font_size 8)))
+		(text "reset_reset_n" (rect 4 141 82 152)(font "Arial" (font_size 8)))
+		(line (pt 0 152)(pt 224 152)(line_width 1))
+	)
+	(port
+		(pt 0 312)
+		(input)
+		(text "sd_wp_n_external_connection_export" (rect 0 0 151 12)(font "Arial" (font_size 8)))
+		(text "sd_wp_n_external_connection_export" (rect 4 301 208 312)(font "Arial" (font_size 8)))
+		(line (pt 0 312)(pt 224 312)(line_width 1))
+	)
+	(port
+		(pt 0 192)
+		(output)
+		(text "sd_clk_external_connection_export" (rect 0 0 140 12)(font "Arial" (font_size 8)))
+		(text "sd_clk_external_connection_export" (rect 4 181 202 192)(font "Arial" (font_size 8)))
+		(line (pt 0 192)(pt 224 192)(line_width 1))
+	)
+	(port
+		(pt 0 232)
+		(bidir)
+		(text "sd_cmd_external_connection_export" (rect 0 0 147 12)(font "Arial" (font_size 8)))
+		(text "sd_cmd_external_connection_export" (rect 4 221 202 232)(font "Arial" (font_size 8)))
+		(line (pt 0 232)(pt 224 232)(line_width 1))
+	)
+	(port
+		(pt 0 272)
+		(bidir)
+		(text "sd_dat_external_connection_export[3..0]" (rect 0 0 161 12)(font "Arial" (font_size 8)))
+		(text "sd_dat_external_connection_export[3..0]" (rect 4 261 238 272)(font "Arial" (font_size 8)))
+		(line (pt 0 272)(pt 224 272)(line_width 3))
+	)
+	(drawing
+		(text "clk" (rect 209 43 436 99)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "clk" (rect 229 67 476 144)(font "Arial" (color 0 0 0)))
+		(text "key_external_connection" (rect 82 83 302 179)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "export" (rect 229 107 494 224)(font "Arial" (color 0 0 0)))
+		(text "reset" (rect 195 123 420 259)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "reset_n" (rect 229 147 500 304)(font "Arial" (color 0 0 0)))
+		(text "sd_clk_external_connection" (rect 64 163 284 339)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "export" (rect 229 187 494 384)(font "Arial" (color 0 0 0)))
+		(text "sd_cmd_external_connection" (rect 56 203 268 419)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "export" (rect 229 227 494 464)(font "Arial" (color 0 0 0)))
+		(text "sd_dat_external_connection" (rect 62 243 280 499)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "export" (rect 229 267 494 544)(font "Arial" (color 0 0 0)))
+		(text "sd_wp_n_external_connection" (rect 48 283 258 579)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "export" (rect 229 307 494 624)(font "Arial" (color 0 0 0)))
+		(text " sd_nios2_attempt " (rect 433 328 974 666)(font "Arial" ))
+		(line (pt 224 32)(pt 288 32)(line_width 1))
+		(line (pt 288 32)(pt 288 328)(line_width 1))
+		(line (pt 224 328)(pt 288 328)(line_width 1))
+		(line (pt 224 32)(pt 224 328)(line_width 1))
+		(line (pt 225 52)(pt 225 76)(line_width 1))
+		(line (pt 226 52)(pt 226 76)(line_width 1))
+		(line (pt 225 92)(pt 225 116)(line_width 1))
+		(line (pt 226 92)(pt 226 116)(line_width 1))
+		(line (pt 225 132)(pt 225 156)(line_width 1))
+		(line (pt 226 132)(pt 226 156)(line_width 1))
+		(line (pt 225 172)(pt 225 196)(line_width 1))
+		(line (pt 226 172)(pt 226 196)(line_width 1))
+		(line (pt 225 212)(pt 225 236)(line_width 1))
+		(line (pt 226 212)(pt 226 236)(line_width 1))
+		(line (pt 225 252)(pt 225 276)(line_width 1))
+		(line (pt 226 252)(pt 226 276)(line_width 1))
+		(line (pt 225 292)(pt 225 316)(line_width 1))
+		(line (pt 226 292)(pt 226 316)(line_width 1))
+		(line (pt 0 0)(pt 512 0)(line_width 1))
+		(line (pt 512 0)(pt 512 344)(line_width 1))
+		(line (pt 0 344)(pt 512 344)(line_width 1))
+		(line (pt 0 0)(pt 0 344)(line_width 1))
+	)
+)

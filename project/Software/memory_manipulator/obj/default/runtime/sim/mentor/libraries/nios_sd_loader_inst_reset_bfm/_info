@@ -1,0 +1,49 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dH:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/Software/memory_manipulator/obj/default/runtime/sim/mentor
+Ealtera_avalon_reset_source
+Z1 w1687518240
+Z2 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z3 DPx4 ieee 14 std_logic_1164 0 22 eNV`TJ_GofJTzYa?f<@Oe1
+R0
+Z4 8H:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/nios_sd_loader/testbench/nios_sd_loader_tb/simulation/submodules/altera_avalon_reset_source.vhd
+Z5 FH:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/nios_sd_loader/testbench/nios_sd_loader_tb/simulation/submodules/altera_avalon_reset_source.vhd
+l0
+L17
+V]UGgRd2RlfUi`dI;B1kI51
+!s100 ^Km[<?dR7FXMoSiJ?^Wn>1
+Z6 OV;C;10.5b;63
+32
+Z7 !s110 1687529290
+!i10b 1
+Z8 !s108 1687529290.000000
+Z9 !s90 -reportprogress|300|H:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/nios_sd_loader/testbench/nios_sd_loader_tb/simulation/submodules/altera_avalon_reset_source.vhd|-work|nios_sd_loader_inst_reset_bfm|
+Z10 !s107 H:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/nios_sd_loader/testbench/nios_sd_loader_tb/simulation/submodules/altera_avalon_reset_source.vhd|
+!i113 1
+Z11 o-work nios_sd_loader_inst_reset_bfm
+Z12 tExplicit 1 CvgOpt 0
+Abehavioral
+R2
+R3
+Z13 DEx4 work 26 altera_avalon_reset_source 0 22 ]UGgRd2RlfUi`dI;B1kI51
+l31
+L26
+Z14 V?^d;o2=EGgL4bKbiQE>em1
+Z15 !s100 oi0oS]C6kBOH^<UnIS@1>0
+R6
+32
+R7
+!i10b 1
+R8
+R9
+R10
+!i113 1
+R11
+R12

@@ -1,0 +1,126 @@
+#include "sna.h"
+#include "asm_opcodes.h"
+#include "mem_addrs.h"
+
+alt_u8* regs_routine(alt_u8* data) {
+	alt_u8* routine = (alt_u8*) malloc(1 * 50);
+	int i = 0;
+
+	// Load border color into A
+	routine[i++] = LD_A_N;
+	routine[i++] = data[OFFSET_BORDER];
+
+	// Load contents of A (border color) to border color addr
+	routine[i++] = LD_NN_A;
+	routine[i++] = BORDER_COLOR_ADDR_L;
+	routine[i++] = BORDER_COLOR_ADDR_H;
+
+
+	// R Register is for RAM refresh, so it might be ok without this...
+	// Load R data into A
+	routine[i++] = LD_A_N;
+	routine[i++] = data[OFFSET_R];
+
+	// Load contents of A (R data) into R
+	routine[i++] = LD_x_A;
+	routine[i++] = LD_R_A;
+
+	// Load I data into A
+	routine[i++] = LD_A_N;
+	routine[i++] = data[OFFSET_I];
+
+	// Load contents of A (I data) into I
+	routine[i++] = LD_x_A;
+	routine[i++] = LD_I_A;
+
+
+	// Load contents of A AUX into A
+	routine[i++] = LD_A_N;
+	routine[i++] = data[OFFSET_A_AUX];
+
+	// MISSING FLAGS, BECAUSE CAN'T FIND OPCODE FOR LOADING FLAGS REG (pretty sure there is none)
+	// ALSO MISSING WAY OF SETTING IFF2
+
+	// Load HL DE and BC with AUX version values
+	routine[i++] = LD_HL_NN;
+	routine[i++] = data[OFFSET_HL_AUX];		// Supposedly L (little endian)
+	routine[i++] = data[OFFSET_HL_AUX+1];	// Supposedly H...
+
+	routine[i++] = LD_DE_NN;
+	routine[i++] = data[OFFSET_DE_AUX];
+	routine[i++] = data[OFFSET_DE_AUX+1];
+
+	routine[i++] = LD_BC_NN;
+	routine[i++] = data[OFFSET_BC_AUX];
+	routine[i++] = data[OFFSET_BC_AUX+1];
+
+	// Exchange AUX value regs with normal
+	routine[i++] = EXX;
+	routine[i++] = EX_AF;
+
+
+	// Loads HL contents to HL
+	routine[i++] = LD_HL_NN;
+	routine[i++] = data[OFFSET_HL];
+	routine[i++] = data[OFFSET_HL+1];
+
+	// Loads DE contents to DE
+	routine[i++] = LD_DE_NN;
+	routine[i++] = data[OFFSET_DE];
+	routine[i++] = data[OFFSET_DE+1];
+
+	// Loads BC contents to BC
+	routine[i++] = LD_BC_NN;
+	routine[i++] = data[OFFSET_BC];
+	routine[i++] = data[OFFSET_BC+1];
+
+	// Load contents of A into A
+	routine[i++] = LD_A_N;
+	routine[i++] = data[OFFSET_A];
+
+	// Load contents of IY into IY
+	routine[i++] = LD_IY1_NN;
+	routine[i++] = LD_IY2_NN;
+	routine[i++] = data[OFFSET_IY];
+	routine[i++] = data[OFFSET_IY+1];
+
+	// Load contents of IX into IX
+	routine[i++] = LD_IX1_NN;
+	routine[i++] = LD_IX2_NN;
+	routine[i++] = data[OFFSET_IX];
+	routine[i++] = data[OFFSET_IX+1];
+
+	// Load contents of SP into SP
+	routine[i++] = LD_SP_NN;
+	routine[i++] = data[OFFSET_SP];
+	routine[i++] = data[OFFSET_SP+1];
+
+
+	// Set Interrupt mode
+	routine[i++] = IM_x;
+	alt_u8 interrupt_mode = data[OFFSET_INT_MODE];
+	switch (interrupt_mode) {
+		case 0:
+			routine[i++] = IM_0;
+			break;
+		case 1:
+			routine[i++] = IM_1;
+			break;
+		case 2:
+			routine[i++] = IM_2;
+			break;
+		default:
+			printf("Wrong interrupt byte... defaulting to 1");
+			routine[i++] = IM_1;
+	}
+
+
+	// Since I can't manipulate IFF2, wonder if I should enable interrupts manually in here?
+
+	// Supposedly, right before a snapshot is made, the PC is pushed to stack,
+	// so it is set after the instruction RETN
+	routine[i++] = RETN1;
+	routine[i++] = RETN2;
+
+	return routine;
+}

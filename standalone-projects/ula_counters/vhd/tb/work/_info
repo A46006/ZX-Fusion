@@ -1,0 +1,172 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dH:/MI13D/TFM/TFM-SPEC/04-SD_impl/ula_counters/vhd/tb
+Efallingedge_dff
+Z1 w1685970579
+Z2 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z3 DPx4 ieee 14 std_logic_1164 0 22 eNV`TJ_GofJTzYa?f<@Oe1
+R0
+Z4 8../FallingEdge_ DFF.vhd
+Z5 F../FallingEdge_ DFF.vhd
+l0
+L4
+V=UGX`4mN2b@iBffE^4G:J1
+!s100 SEg`6Rf^J75b`9V]cZ41E1
+Z6 OV;C;10.5b;63
+32
+Z7 !s110 1688832307
+!i10b 1
+Z8 !s108 1688832307.000000
+Z9 !s90 -reportprogress|300|-work|work|../FallingEdge_ DFF.vhd|
+Z10 !s107 ../FallingEdge_ DFF.vhd|
+!i113 1
+Z11 o-work work
+Z12 tExplicit 1 CvgOpt 0
+Abehavior
+R2
+R3
+DEx4 work 15 fallingedge_dff 0 22 =UGX`4mN2b@iBffE^4G:J1
+l15
+L13
+VfEN^6@^T^S985bI1Z2^j92
+!s100 Q;13;V5OUZlFn@HcA`W511
+R6
+32
+R7
+!i10b 1
+R8
+R9
+R10
+!i113 1
+R11
+R12
+Efallingedge_tff_rce
+Z13 w1688830294
+R2
+R3
+R0
+Z14 8../FallingEdge_ TFF_RCE.vhd
+Z15 F../FallingEdge_ TFF_RCE.vhd
+l0
+L4
+VIj]l@TgXTje7Y56<IzgK41
+!s100 ID8L^cfNLfA[Cj6WP`]e01
+R6
+32
+R7
+!i10b 1
+R8
+Z16 !s90 -reportprogress|300|-work|work|../FallingEdge_ TFF_RCE.vhd|
+Z17 !s107 ../FallingEdge_ TFF_RCE.vhd|
+!i113 1
+R11
+R12
+Abehavior
+R2
+R3
+DEx4 work 19 fallingedge_tff_rce 0 22 Ij]l@TgXTje7Y56<IzgK41
+l25
+L16
+VoUH;F[]Az051WBBeFHNmB0
+!s100 =kXXR4hO<8d]Ae1@SOVh52
+R6
+32
+R7
+!i10b 1
+R8
+R16
+R17
+!i113 1
+R11
+R12
+Eula_counters
+Z18 w1688832036
+Z19 DPx4 ieee 11 numeric_std 0 22 :ASDNFgHXf_ih3J@9F3Ze1
+R2
+R3
+R0
+Z20 8../ula_counters.vhd
+Z21 F../ula_counters.vhd
+l0
+L5
+Vi^8]mYn?0Em8PZ>ZAHmR31
+!s100 <3_ZL1Db2_ALam>7lLE@B0
+R6
+32
+R7
+!i10b 1
+R8
+Z22 !s90 -reportprogress|300|-work|work|../ula_counters.vhd|
+Z23 !s107 ../ula_counters.vhd|
+!i113 1
+R11
+R12
+Abehavior
+R19
+R2
+R3
+DEx4 work 12 ula_counters 0 22 i^8]mYn?0Em8PZ>ZAHmR31
+l79
+L22
+VgL8LIEV`;9kXS^mceWT=m2
+!s100 6hQ_2]CCgRj[jNBz2EBnl1
+R6
+32
+R7
+!i10b 1
+R8
+R22
+R23
+!i113 1
+R11
+R12
+Eula_counters_tb
+Z24 w1688832076
+Z25 DPx4 ieee 18 std_logic_unsigned 0 22 ;eZjO2D4ZDz<]0>8AL<ne1
+Z26 DPx4 ieee 15 std_logic_arith 0 22 [G314=:2zXJ`VORJe1J@Z1
+R2
+R3
+R0
+Z27 8../ula_counters_tb.vhd
+Z28 F../ula_counters_tb.vhd
+l0
+L7
+VJ7FNJNQ6j2cR]RPKKH>m?0
+!s100 Cgh2=3M9noddc<h0`d19O2
+R6
+32
+Z29 !s110 1688832308
+!i10b 1
+R8
+Z30 !s90 -reportprogress|300|-work|work|../ula_counters_tb.vhd|
+Z31 !s107 ../ula_counters_tb.vhd|
+!i113 1
+R11
+R12
+Aula_counters_tb_arch
+R25
+R26
+R2
+R3
+DEx4 work 15 ula_counters_tb 0 22 J7FNJNQ6j2cR]RPKKH>m?0
+l45
+L10
+Vj15F70hD_fcm>]P9i[eUb0
+!s100 >57^KND4T@M`GEkOQPkG02
+R6
+32
+R29
+!i10b 1
+R8
+R30
+R31
+!i113 1
+R11
+R12

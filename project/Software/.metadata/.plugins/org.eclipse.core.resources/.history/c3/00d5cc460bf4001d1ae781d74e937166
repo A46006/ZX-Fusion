@@ -1,0 +1,80 @@
+#include "dma_hal.h"
+#include "dma_hw.h"
+
+int DMA_state = 0;
+alt_u8 ctrl_bus_state = 0b1111;
+
+void DMA_init() {
+	DATA_IN;
+	CTRL_BUS_SET(ctrl_bus_state);
+	BUS_REQ_CLR;
+}
+
+/**
+ * Requests DMA from the Z80, attempting "tries" number of times
+ */
+int DMA_request(int tries) {
+	int i;
+
+	if (DMA_state == 1 && BUS_ACK_N_GET == 0) {
+		printf("DMA already obtained.");
+		return ALREADY_DONE;
+	}
+
+	BUS_REQ_SET;
+
+	i=0;
+	do {
+		if (i >= tries) {
+			BUS_REQ_CLR;
+			return TIMEOUT;
+		}
+		i++;
+	} while (BUS_ACK_N_GET != 0);
+
+	DMA_state = 1;
+	return 0;
+}
+
+alt_u8 read_mem(alt_u16 addr) {
+
+}
+void write_mem(alt_u16 addr, alt_u8 data) {
+	DATA_OUT;
+	ctrl_bus_state &= SET_WRITE(1);
+	CTRL_BUS_SET(ctrl_bus_state);
+}
+
+alt_u8 read_io(alt_u16 addr) {
+
+}
+void write_io(alt_u16 addr, alt_u8 data) {
+
+}
+
+/**
+ * Stop DMA, attempting "tries" number of times
+ * TODO: Is having multiple tries necessary? just in case?
+ */
+int DMA_stop(int tries) {
+	int i;
+
+	if (DMA_state == 0 && BUS_ACK_N_GET == 1) {
+		printf("DMA already stopped.");
+		return ALREADY_DONE;
+	}
+
+	BUS_REQ_CLR;
+
+	i=0;
+	do {
+		if (i >= tries) {
+			BUS_REQ_SET;
+			return TIMEOUT;
+		}
+		i++;
+	} while (BUS_ACK_N_GET != 1);
+
+	DMA_state = 0;
+	return 0;
+}

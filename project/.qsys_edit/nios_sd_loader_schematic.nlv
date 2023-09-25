@@ -1,0 +1,53 @@
+# # File gsaved with Nlview version 6.3.8  2013-12-19 bk=1.2992 VDI=34 GEI=35
+# 
+preplace inst nios_sd_loader.cpu_cmd_ack -pg 1 -lvl 3 -y 330
+preplace inst nios_sd_loader.cpu.clock_bridge -pg 1
+preplace inst nios_sd_loader.ctrl_bus -pg 1 -lvl 3 -y 1210
+preplace inst nios_sd_loader.cpu_address -pg 1 -lvl 3 -y 230
+preplace inst nios_sd_loader -pg 1 -lvl 1 -y 40 -regy -20
+preplace inst nios_sd_loader.sd_dat -pg 1 -lvl 3 -y 1710
+preplace inst nios_sd_loader.data -pg 1 -lvl 3 -y 1310
+preplace inst nios_sd_loader.cpu_cmd_en -pg 1 -lvl 3 -y 1910
+preplace inst nios_sd_loader.onchip_memory -pg 1 -lvl 3 -y 730
+preplace inst nios_sd_loader.sd_wp_n -pg 1 -lvl 3 -y 1810
+preplace inst nios_sd_loader.jtag_uart -pg 1 -lvl 3 -y 630
+preplace inst nios_sd_loader.bus_ack_n -pg 1 -lvl 3 -y 130
+preplace inst nios_sd_loader.sd_cmd -pg 1 -lvl 3 -y 1610
+preplace inst nios_sd_loader.address -pg 1 -lvl 3 -y 30
+preplace inst nios_sd_loader.cpu_wr_n -pg 1 -lvl 3 -y 1110
+preplace inst nios_sd_loader.clk -pg 1 -lvl 1 -y 570
+preplace inst nios_sd_loader.nmi_n -pg 1 -lvl 3 -y 430
+preplace inst nios_sd_loader.ledg_pio -pg 1 -lvl 3 -y 1410
+preplace inst nios_sd_loader.timer -pg 1 -lvl 3 -y 810
+preplace inst nios_sd_loader.sd_clk -pg 1 -lvl 3 -y 1510
+preplace inst nios_sd_loader.cpu_rd_n -pg 1 -lvl 3 -y 1010
+preplace inst nios_sd_loader.cpu.reset_bridge -pg 1
+preplace inst nios_sd_loader.cpu -pg 1 -lvl 2 -y 640
+preplace inst nios_sd_loader.bus_req_n -pg 1 -lvl 3 -y 530
+preplace inst nios_sd_loader.cpu_cmd -pg 1 -lvl 3 -y 910
+preplace inst nios_sd_loader.cpu.cpu -pg 1
+preplace netloc EXPORT<net_container>nios_sd_loader</net_container>(SLAVE)cpu_cmd_ack.external_connection,(SLAVE)nios_sd_loader.cpu_cmd_ack_external_connection) 1 0 3 NJ 360 NJ 360 NJ
+preplace netloc EXPORT<net_container>nios_sd_loader</net_container>(SLAVE)nios_sd_loader.sd_cmd_external_connection,(SLAVE)sd_cmd.external_connection) 1 0 3 NJ 1640 NJ 1640 NJ
+preplace netloc FAN_OUT<net_container>nios_sd_loader</net_container>(SLAVE)ledg_pio.reset,(SLAVE)sd_dat.reset,(SLAVE)jtag_uart.reset,(SLAVE)cpu.reset,(SLAVE)cpu_wr_n.reset,(SLAVE)cpu_cmd.reset,(SLAVE)bus_ack_n.reset,(SLAVE)sd_wp_n.reset,(SLAVE)onchip_memory.reset1,(MASTER)clk.clk_reset,(SLAVE)cpu_cmd_en.reset,(SLAVE)address.reset,(SLAVE)cpu_address.reset,(SLAVE)timer.reset,(SLAVE)data.reset,(SLAVE)cpu_rd_n.reset,(SLAVE)ctrl_bus.reset,(SLAVE)nmi_n.reset,(SLAVE)cpu_cmd_ack.reset,(SLAVE)bus_req_n.reset,(SLAVE)sd_clk.reset,(SLAVE)sd_cmd.reset) 1 1 2 410 600 830
+preplace netloc EXPORT<net_container>nios_sd_loader</net_container>(SLAVE)bus_ack_n.external_connection,(SLAVE)nios_sd_loader.bus_ack_n_external_connection) 1 0 3 NJ 160 NJ 160 NJ
+preplace netloc INTERCONNECT<net_container>nios_sd_loader</net_container>(SLAVE)jtag_uart.avalon_jtag_slave,(SLAVE)sd_cmd.s1,(SLAVE)data.s1,(SLAVE)ctrl_bus.s1,(SLAVE)timer.s1,(SLAVE)cpu.debug_mem_slave,(SLAVE)sd_dat.s1,(SLAVE)cpu_cmd.s1,(SLAVE)bus_ack_n.s1,(SLAVE)cpu_cmd_en.s1,(SLAVE)sd_clk.s1,(SLAVE)bus_req_n.s1,(SLAVE)onchip_memory.s1,(SLAVE)cpu_address.s1,(SLAVE)sd_wp_n.s1,(SLAVE)cpu_wr_n.s1,(SLAVE)nmi_n.s1,(MASTER)cpu.data_master,(SLAVE)ledg_pio.s1,(SLAVE)cpu_rd_n.s1,(MASTER)cpu.instruction_master,(SLAVE)address.s1,(SLAVE)cpu_cmd_ack.s1) 1 1 2 430 1960 850
+preplace netloc EXPORT<net_container>nios_sd_loader</net_container>(SLAVE)sd_dat.external_connection,(SLAVE)nios_sd_loader.sd_dat_external_connection) 1 0 3 NJ 1740 NJ 1740 NJ
+preplace netloc EXPORT<net_container>nios_sd_loader</net_container>(SLAVE)nios_sd_loader.ledg_pio_external_connection,(SLAVE)ledg_pio.external_connection) 1 0 3 NJ 1440 NJ 1440 NJ
+preplace netloc EXPORT<net_container>nios_sd_loader</net_container>(SLAVE)bus_req_n.external_connection,(SLAVE)nios_sd_loader.bus_req_n_external_connection) 1 0 3 NJ 560 NJ 560 NJ
+preplace netloc FAN_OUT<net_container>nios_sd_loader</net_container>(SLAVE)cpu_rd_n.clk,(MASTER)clk.clk,(SLAVE)sd_wp_n.clk,(SLAVE)ctrl_bus.clk,(SLAVE)cpu_address.clk,(SLAVE)cpu_cmd.clk,(SLAVE)nmi_n.clk,(SLAVE)cpu_cmd_en.clk,(SLAVE)bus_req_n.clk,(SLAVE)cpu_cmd_ack.clk,(SLAVE)address.clk,(SLAVE)onchip_memory.clk1,(SLAVE)timer.clk,(SLAVE)cpu.clk,(SLAVE)bus_ack_n.clk,(SLAVE)sd_clk.clk,(SLAVE)jtag_uart.clk,(SLAVE)data.clk,(SLAVE)sd_dat.clk,(SLAVE)ledg_pio.clk,(SLAVE)sd_cmd.clk,(SLAVE)cpu_wr_n.clk) 1 1 2 430 580 810
+preplace netloc EXPORT<net_container>nios_sd_loader</net_container>(SLAVE)nios_sd_loader.data_external_connection,(SLAVE)data.external_connection) 1 0 3 NJ 1340 NJ 1340 NJ
+preplace netloc EXPORT<net_container>nios_sd_loader</net_container>(SLAVE)nios_sd_loader.ctrl_bus_external_connection,(SLAVE)ctrl_bus.external_connection) 1 0 3 NJ 1240 NJ 1240 NJ
+preplace netloc EXPORT<net_container>nios_sd_loader</net_container>(SLAVE)nios_sd_loader.cpu_rd_n_external_connection,(SLAVE)cpu_rd_n.external_connection) 1 0 3 NJ 1040 NJ 1040 NJ
+preplace netloc EXPORT<net_container>nios_sd_loader</net_container>(SLAVE)sd_clk.external_connection,(SLAVE)nios_sd_loader.sd_clk_external_connection) 1 0 3 NJ 1540 NJ 1540 NJ
+preplace netloc EXPORT<net_container>nios_sd_loader</net_container>(SLAVE)address.external_connection,(SLAVE)nios_sd_loader.address_external_connection) 1 0 3 NJ 60 NJ 60 NJ
+preplace netloc EXPORT<net_container>nios_sd_loader</net_container>(SLAVE)nios_sd_loader.cpu_cmd_external_connection,(SLAVE)cpu_cmd.external_connection) 1 0 3 NJ 940 NJ 940 NJ
+preplace netloc EXPORT<net_container>nios_sd_loader</net_container>(SLAVE)nios_sd_loader.cpu_cmd_en_external_connection,(SLAVE)cpu_cmd_en.external_connection) 1 0 3 NJ 1940 NJ 1940 NJ
+preplace netloc EXPORT<net_container>nios_sd_loader</net_container>(SLAVE)sd_wp_n.external_connection,(SLAVE)nios_sd_loader.sd_wp_n_external_connection) 1 0 3 NJ 1840 NJ 1840 NJ
+preplace netloc EXPORT<net_container>nios_sd_loader</net_container>(SLAVE)nios_sd_loader.nmi_n_external_connection,(SLAVE)nmi_n.external_connection) 1 0 3 NJ 460 NJ 460 NJ
+preplace netloc EXPORT<net_container>nios_sd_loader</net_container>(SLAVE)cpu_address.external_connection,(SLAVE)nios_sd_loader.cpu_address_external_connection) 1 0 3 NJ 260 NJ 260 NJ
+preplace netloc EXPORT<net_container>nios_sd_loader</net_container>(SLAVE)clk.clk_in,(SLAVE)nios_sd_loader.clk) 1 0 1 NJ
+preplace netloc EXPORT<net_container>nios_sd_loader</net_container>(SLAVE)nios_sd_loader.reset,(SLAVE)clk.clk_in_reset) 1 0 1 NJ
+preplace netloc EXPORT<net_container>nios_sd_loader</net_container>(SLAVE)nios_sd_loader.cpu_wr_n_external_connection,(SLAVE)cpu_wr_n.external_connection) 1 0 3 NJ 1140 NJ 1140 NJ
+preplace netloc FAN_OUT<net_container>nios_sd_loader</net_container>(SLAVE)jtag_uart.irq,(SLAVE)timer.irq,(MASTER)cpu.irq) 1 2 1 870
+levelinfo -pg 1 0 200 1070
+levelinfo -hier nios_sd_loader 210 240 570 910 1060

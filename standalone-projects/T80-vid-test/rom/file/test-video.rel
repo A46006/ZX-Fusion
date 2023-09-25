@@ -1,0 +1,25 @@
+XL3
+H 9 areas 2 global symbols
+M test_video
+O -mz80
+S .__.ABS. Def000000
+A _CODE size 29 flags 0 addr 0
+S _main Def000000
+A _DATA size 0 flags 0 addr 0
+A _INITIALIZED size 0 flags 0 addr 0
+A _DABS size 0 flags 8 addr 0
+A _HOME size 0 flags 0 addr 0
+A _GSINIT size 0 flags 0 addr 0
+A _GSFINAL size 0 flags 0 addr 0
+A _INITIALIZER size 0 flags 0 addr 0
+A _CABS size 0 flags 8 addr 0
+T 00 00 00
+R 00 00 00 00
+T 00 00 00 21 00 40 36 3D 26 41 36 43 26 42 36 81
+R 00 00 00 00
+T 0D 00 00 26 43 36 80 26 44 36 80 26 45 36 81 26
+R 00 00 00 00
+T 1A 00 00 46 36 43 26 47 36 3D 26 58 36 AB 11
+R 00 00 00 00
+T 26 00 00 00 00 C9
+R 00 00 00 00

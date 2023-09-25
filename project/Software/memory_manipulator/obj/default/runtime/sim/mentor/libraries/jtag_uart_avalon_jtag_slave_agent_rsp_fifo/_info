@@ -1,0 +1,31 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dH:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/Software/memory_manipulator/obj/default/runtime/sim/mentor
+valtera_avalon_sc_fifo
+!s110 1687529280
+!i10b 1
+!s100 4mK@em][G=j]om3zJIhOc0
+I]SOHhoG5[Y0TO:<@h<<P63
+VDg1SIo80bB@j0V0VzS_@n1
+R0
+w1687518263
+8H:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/nios_sd_loader/testbench/nios_sd_loader_tb/simulation/submodules/altera_avalon_sc_fifo.v
+FH:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/nios_sd_loader/testbench/nios_sd_loader_tb/simulation/submodules/altera_avalon_sc_fifo.v
+L0 21
+OV;L;10.5b;63
+r1
+!s85 0
+31
+!s108 1687529280.000000
+!s107 H:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/nios_sd_loader/testbench/nios_sd_loader_tb/simulation/submodules/altera_avalon_sc_fifo.v|
+!s90 -reportprogress|300|H:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/nios_sd_loader/testbench/nios_sd_loader_tb/simulation/submodules/altera_avalon_sc_fifo.v|-work|jtag_uart_avalon_jtag_slave_agent_rsp_fifo|
+!i113 1
+o-work jtag_uart_avalon_jtag_slave_agent_rsp_fifo
+tCvgOpt 0

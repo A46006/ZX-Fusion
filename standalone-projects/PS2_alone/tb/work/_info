@@ -1,0 +1,203 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dH:/MI13D/TFM/TFM-SPEC/03-PS2_impl/ps2_alone/tb
+vAltera_UP_PS2_Command_Out
+Z1 !s110 1680721664
+!i10b 1
+!s100 ZjDIV:z^W4aE7ECD]ReVK0
+InE=GLFE:CD8;^>?VG=>O21
+Z2 VDg1SIo80bB@j0V0VzS_@n1
+R0
+w1680615634
+8H:/MI13D/TFM/TFM-SPEC/03-PS2_impl/PS2_alone/keyboard/Altera_UP_PS2_Command_Out.v
+FH:/MI13D/TFM/TFM-SPEC/03-PS2_impl/PS2_alone/keyboard/Altera_UP_PS2_Command_Out.v
+Z3 L0 10
+Z4 OV;L;10.5b;63
+r1
+!s85 0
+31
+Z5 !s108 1680721664.000000
+!s107 H:/MI13D/TFM/TFM-SPEC/03-PS2_impl/PS2_alone/keyboard/Altera_UP_PS2_Command_Out.v|
+!s90 -reportprogress|300|-work|work|H:/MI13D/TFM/TFM-SPEC/03-PS2_impl/PS2_alone/keyboard/Altera_UP_PS2_Command_Out.v|
+!i113 1
+Z6 o-work work
+Z7 tCvgOpt 0
+n@altera_@u@p_@p@s2_@command_@out
+vAltera_UP_PS2_Data_In
+R1
+!i10b 1
+!s100 5;cY6M9JY][8IU4_hMKUY2
+II<e3j?DA:;QM4=>@lNLQ?1
+R2
+R0
+w1680620345
+8H:/MI13D/TFM/TFM-SPEC/03-PS2_impl/PS2_alone/keyboard/Altera_UP_PS2_Data_In.v
+FH:/MI13D/TFM/TFM-SPEC/03-PS2_impl/PS2_alone/keyboard/Altera_UP_PS2_Data_In.v
+L0 1
+R4
+r1
+!s85 0
+31
+R5
+!s107 H:/MI13D/TFM/TFM-SPEC/03-PS2_impl/PS2_alone/keyboard/Altera_UP_PS2_Data_In.v|
+!s90 -reportprogress|300|-work|work|H:/MI13D/TFM/TFM-SPEC/03-PS2_impl/PS2_alone/keyboard/Altera_UP_PS2_Data_In.v|
+!i113 1
+R6
+R7
+n@altera_@u@p_@p@s2_@data_@in
+Ekey_mem
+Z8 w1679234542
+Z9 DPx9 altera_mf 20 altera_mf_components 0 22 gV:l9C^?PSb6]b5V?_jR@3
+Z10 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z11 DPx4 ieee 14 std_logic_1164 0 22 eNV`TJ_GofJTzYa?f<@Oe1
+R0
+Z12 8H:/MI13D/TFM/TFM-SPEC/03-PS2_impl/PS2_alone/keyboard/key_mem.vhd
+Z13 FH:/MI13D/TFM/TFM-SPEC/03-PS2_impl/PS2_alone/keyboard/key_mem.vhd
+l0
+L42
+V^1P^3Ok@[B[RYz[CeeJ_U3
+!s100 nY06G>njEAaP:i6zBgOa43
+Z14 OV;C;10.5b;63
+32
+R1
+!i10b 1
+R5
+Z15 !s90 -reportprogress|300|-work|work|H:/MI13D/TFM/TFM-SPEC/03-PS2_impl/PS2_alone/keyboard/key_mem.vhd|
+Z16 !s107 H:/MI13D/TFM/TFM-SPEC/03-PS2_impl/PS2_alone/keyboard/key_mem.vhd|
+!i113 1
+R6
+Z17 tExplicit 1 CvgOpt 0
+Asyn
+R9
+R10
+R11
+DEx4 work 7 key_mem 0 22 ^1P^3Ok@[B[RYz[CeeJ_U3
+l59
+L55
+VDRg3OGAkP]jIcDUc12]a33
+!s100 B:Z2Qd?9aabOAQ5SDaSZo3
+R14
+32
+R1
+!i10b 1
+R5
+R15
+R16
+!i113 1
+R6
+R17
+vPS2_Controller
+R1
+!i10b 1
+!s100 YlQ:3k2j;R^3Eo>Z5B;F<1
+I>_RWhBE7HgAf48;;cMiXQ3
+R2
+R0
+w1680709105
+8H:/MI13D/TFM/TFM-SPEC/03-PS2_impl/PS2_alone/keyboard/PS2_Controller.v
+FH:/MI13D/TFM/TFM-SPEC/03-PS2_impl/PS2_alone/keyboard/PS2_Controller.v
+R3
+R4
+r1
+!s85 0
+31
+R5
+!s107 H:/MI13D/TFM/TFM-SPEC/03-PS2_impl/PS2_alone/keyboard/PS2_Controller.v|
+!s90 -reportprogress|300|-work|work|H:/MI13D/TFM/TFM-SPEC/03-PS2_impl/PS2_alone/keyboard/PS2_Controller.v|
+!i113 1
+R6
+R7
+n@p@s2_@controller
+Eps2_controller_test
+Z18 w1680721538
+Z19 DPx4 ieee 18 std_logic_unsigned 0 22 ;eZjO2D4ZDz<]0>8AL<ne1
+Z20 DPx4 ieee 15 std_logic_arith 0 22 [G314=:2zXJ`VORJe1J@Z1
+R10
+R11
+R0
+Z21 8H:/MI13D/TFM/TFM-SPEC/03-PS2_impl/PS2_alone/keyboard/PS2_controller_test.vhd
+Z22 FH:/MI13D/TFM/TFM-SPEC/03-PS2_impl/PS2_alone/keyboard/PS2_controller_test.vhd
+l0
+L7
+V=eok<7EYf7b^_V]_=@mVP2
+!s100 WI:91O^HFX:c@@Q[4`05T2
+R14
+32
+R1
+!i10b 1
+R5
+Z23 !s90 -reportprogress|300|-work|work|H:/MI13D/TFM/TFM-SPEC/03-PS2_impl/PS2_alone/keyboard/PS2_controller_test.vhd|
+Z24 !s107 H:/MI13D/TFM/TFM-SPEC/03-PS2_impl/PS2_alone/keyboard/PS2_controller_test.vhd|
+!i113 1
+R6
+R17
+Abehavior
+R19
+R20
+R10
+R11
+DEx4 work 19 ps2_controller_test 0 22 =eok<7EYf7b^_V]_=@mVP2
+l86
+L16
+VPL_D_eQeP52?2LKAZbR9z3
+!s100 @[B1<6ZSi][=2DiUSY>Bg3
+R14
+32
+R1
+!i10b 1
+R5
+R23
+R24
+!i113 1
+R6
+R17
+Eps2_controller_test_tb
+Z25 w1680719870
+R19
+R20
+R10
+R11
+R0
+Z26 8H:/MI13D/TFM/TFM-SPEC/03-PS2_impl/PS2_alone/keyboard/PS2_controller_test_tb.vhd
+Z27 FH:/MI13D/TFM/TFM-SPEC/03-PS2_impl/PS2_alone/keyboard/PS2_controller_test_tb.vhd
+l0
+L7
+Vz@?4bX0SgJ8V4g2Pg5^l;1
+!s100 m6SMQ``BgCnSP<58_10cn3
+R14
+32
+R1
+!i10b 1
+Z28 !s108 1680721663.000000
+Z29 !s90 -reportprogress|300|-work|work|H:/MI13D/TFM/TFM-SPEC/03-PS2_impl/PS2_alone/keyboard/PS2_controller_test_tb.vhd|
+Z30 !s107 H:/MI13D/TFM/TFM-SPEC/03-PS2_impl/PS2_alone/keyboard/PS2_controller_test_tb.vhd|
+!i113 1
+R6
+R17
+Abehavior
+R19
+R20
+R10
+R11
+DEx4 work 22 ps2_controller_test_tb 0 22 z@?4bX0SgJ8V4g2Pg5^l;1
+l69
+L10
+VRzg:8mg6SKE:aY:B9f8=Q2
+!s100 l8gRn8ZRUB=6ZFVfWWXPS3
+R14
+32
+R1
+!i10b 1
+R28
+R29
+R30
+!i113 1
+R6
+R17

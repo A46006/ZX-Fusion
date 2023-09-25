@@ -1,0 +1,45 @@
+#include "dma_hal.h"
+#include "dma_hw.h"
+
+int DMA_state = 0;
+
+int request_DMA(int tries) {
+	int i;
+
+	if (DMA_state == 1) {
+		printf("DMA already obtained.");
+		return ALREADY_DONE;
+	}
+
+	BUS_REQ_SET;
+
+	i=0;
+	do {
+		if (i >= tries) {
+			BUS_REQ_CLR;
+			return TIMEOUT;
+		}
+		i++;
+	} while (BUS_ACK_GET != 1);
+
+	DMA_state = 1;
+	return 0;
+}
+
+alt_u8 read_mem(alt_u16 addr) {
+
+}
+void write_mem(alt_u16 addr, alt_u8 data) {
+
+}
+
+alt_u8 read_io(alt_u16 addr) {
+
+}
+void write_io(alt_u16 addr, alt_u8 data) {
+
+}
+
+int stop_DMA(int tries) {
+
+}

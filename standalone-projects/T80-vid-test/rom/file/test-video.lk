@@ -1,0 +1,10 @@
+-mjwx
+-i test-video.ihx
+-b _CODE = 0x0200
+-b _DATA = 0x8000
+-k H:\MI13D\TFM\SDCC\bin\..\lib\z80
+-l z80
+H:\MI13D\TFM\SDCC\bin\..\lib\z80\crt0.rel
+test-video.rel
+
+-e

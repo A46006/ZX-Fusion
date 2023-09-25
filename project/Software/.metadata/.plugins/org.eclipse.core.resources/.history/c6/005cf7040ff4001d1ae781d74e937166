@@ -1,0 +1,27 @@
+#include <stdio.h>
+#include ".\spectrum_comm\DMA\dma_hal.h"
+
+void DMA_print_err(int ret) {
+	switch (ret) {
+		case TIMEOUT:
+			printf("DMA request timeout");
+			break;
+		case ALREADY_DONE:
+			printf("DMA request already done");
+			break;
+		default: printf("Unknown err");
+	}
+}
+
+int main() {
+	int ret;
+
+	DMA_init();
+
+	ret = DMA_request(10);
+
+	if (ret != 0) {
+
+	}
+
+}

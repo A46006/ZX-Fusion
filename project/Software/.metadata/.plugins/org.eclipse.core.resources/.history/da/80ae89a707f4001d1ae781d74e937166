@@ -1,0 +1,28 @@
+#include "../../terasic_lib/terasic_includes.h"
+#include "alt_types.h"  // alt_u32
+#include "io.h"
+#include "system.h"
+
+// Control Bus (RDn, WRn, MEMREQn, IOREQn)
+#define SET_READ(x)			not (x<<3)
+#define SET_WRITE(x)		not (x<<2)
+#define SET_MEM_REQ(x)		not (x<<1)
+#define SET_IO_REQ(x)		not x
+
+#define CTRL_BUS_SET(x)		IOWR_ALTERA_AVALON_PIO_DATA(CTRL_BUS_BASE, x)
+
+// Address Bus
+#define ADDR_SET(x)			IOWR_ALTERA_AVALON_PIO_DATA(ADDRESS_BASE, x)
+
+// Data Bus
+#define DATA_IN				IOWR_ALTERA_AVALON_PIO_DIRECTION(DATA_BASE, ALTERA_AVALON_PIO_DIRECTION_INPUT)
+#define DATA_OUT			IOWR_ALTERA_AVALON_PIO_DIRECTION(DATA_BASE, ALTERA_AVALON_PIO_DIRECTION_OUTPUT)
+
+#define DATA_SET(X)			IOWR_ALTERA_AVALON_PIO_DATA(DATA_BASE, x)
+#define DATA_GET			IORD_ALTERA_AVALON_PIO_DATA(DATA_BASE)
+
+// NIOS to CPU
+#define BUS_REQ_SET			IOWR_ALTERA_AVALON_PIO_DATA(BUS_REQ_N_BASE, 0)
+#define BUS_REQ_CLEAR		IOWR_ALTERA_AVALON_PIO_DATA(BUS_REQ_N_BASE, 1)
+
+#define BUS_ACK_GET			IORD_ALTERA_AVALON_PIO_DATA(BUS_ACK_N_BASE)

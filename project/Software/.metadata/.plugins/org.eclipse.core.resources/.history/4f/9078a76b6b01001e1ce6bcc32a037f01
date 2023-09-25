@@ -1,0 +1,59 @@
+#include <stdio.h>
+//#include ".\SD\test_sd.c"
+#include ".\file_format_reader\formats.h"
+//#include ".\file_format_reader\file_format_aux.h"
+
+int my_list_test() {
+	printf("Processing...\r\n");
+
+	FAT_HANDLE hFat = 0;
+
+	do {
+		hFat = init_SD();
+	} while (!hFat);
+
+	if (hFat){
+		printf("sdcard mount success!\n");
+		printf("Root Directory Item Count:%d\n", Fat_FileCount(hFat));
+		//Fat_Test(hFat, "text.txt");
+	}else{
+		//printf("Failed to mount the SDCARD!\r\nPlease insert the SDCARD into DE2-115 board and press KEY3.\r\n");
+		printf("Failed to mount the SDCARD!\r\nPlease insert the SDCARD into DE2-115 board and reset.\r\n");
+		return -1;
+	}
+
+
+	FILES list = list_files(hFat);
+	if (list.num_pages == -1) {
+		printf("bad listing files");
+		return -1;
+	}
+	print_list(list);
+
+	close_SD(hFat);
+
+	return 0;
+}
+
+int main() {
+	//SD_Test("SENBAL.SNA");
+
+	printf("NOOOO\r\n");
+
+	//my_list_test();
+
+	//sna_file_test();
+
+	//return z80_file_test();
+
+	//return load_SNA("SENBAL.SNA");
+	//return load_SNA("DAAW.SNA");
+	//return load_SNA("DIABLO1.SNA");
+	//return load_SNA("CLOUD99.SNA");
+
+	//return load_z80("BOMBJ.z80"); // GLITCHY
+	//return load_z80("MANICM.z80"); // NORMAL
+	//return load_z80("MISSILGZ.z80"); // CONTROLLER REQUIRED?
+	//return load_z80("test.z80");
+	//return 0;
+}

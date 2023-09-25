@@ -1,0 +1,9 @@
+LPM_DIRECTION=LEFT
+LPM_TYPE=LPM_SHIFTREG
+LPM_WIDTH=23
+DEVICE_FAMILY="Cyclone IV E"
+aclr
+clock
+shiftin
+q
+shiftout

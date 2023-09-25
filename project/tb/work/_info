@@ -1,0 +1,1059 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dH:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/tb
+vAltera_UP_PS2_Command_Out
+Z1 !s110 1687449252
+!i10b 1
+!s100 ZjDIV:z^W4aE7ECD]ReVK0
+I@@nC`k4Bi02zL5>T7Vdnh0
+Z2 VDg1SIo80bB@j0V0VzS_@n1
+R0
+w1680615634
+8../keyboard/PS2_Controller/Altera_UP_PS2_Command_Out.v
+F../keyboard/PS2_Controller/Altera_UP_PS2_Command_Out.v
+Z3 L0 10
+Z4 OV;L;10.5b;63
+r1
+!s85 0
+31
+Z5 !s108 1687449252.000000
+!s107 ../keyboard/PS2_Controller/Altera_UP_PS2_Command_Out.v|
+!s90 -reportprogress|300|-work|work|../keyboard/PS2_Controller/Altera_UP_PS2_Command_Out.v|
+!i113 1
+Z6 o-work work
+Z7 tCvgOpt 0
+n@altera_@u@p_@p@s2_@command_@out
+vAltera_UP_PS2_Data_In
+R1
+!i10b 1
+!s100 5;cY6M9JY][8IU4_hMKUY2
+IAcIM<T0ajZ0V;^dNe8S?g3
+R2
+R0
+w1680620345
+8../keyboard/PS2_Controller/Altera_UP_PS2_Data_In.v
+F../keyboard/PS2_Controller/Altera_UP_PS2_Data_In.v
+L0 1
+R4
+r1
+!s85 0
+31
+R5
+!s107 ../keyboard/PS2_Controller/Altera_UP_PS2_Data_In.v|
+!s90 -reportprogress|300|-work|work|../keyboard/PS2_Controller/Altera_UP_PS2_Data_In.v|
+!i113 1
+R6
+R7
+n@altera_@u@p_@p@s2_@data_@in
+Ecolor_video_ram
+Z8 w1680713118
+Z9 DPx9 altera_mf 20 altera_mf_components 0 22 gV:l9C^?PSb6]b5V?_jR@3
+Z10 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z11 DPx4 ieee 14 std_logic_1164 0 22 eNV`TJ_GofJTzYa?f<@Oe1
+R0
+Z12 8../ram/color_video_ram.vhd
+Z13 F../ram/color_video_ram.vhd
+l0
+L42
+V:W<R]ZI@F^KEe5>K4<?>80
+!s100 5e:^]Qjf5NCMDPz5f::Fi0
+Z14 OV;C;10.5b;63
+32
+Z15 !s110 1687449253
+!i10b 1
+R5
+Z16 !s90 -reportprogress|300|-work|work|../ram/color_video_ram.vhd|
+Z17 !s107 ../ram/color_video_ram.vhd|
+!i113 1
+R6
+Z18 tExplicit 1 CvgOpt 0
+Asyn
+R9
+R10
+R11
+DEx4 work 15 color_video_ram 0 22 :W<R]ZI@F^KEe5>K4<?>80
+l66
+L61
+VTDm8R2IchDm3m2fado5Y30
+!s100 5b1cnR`YHYmG[14@1V0FV1
+R14
+32
+R15
+!i10b 1
+R5
+R16
+R17
+!i113 1
+R6
+R18
+Pconstants
+Z19 DPx4 ieee 11 numeric_std 0 22 :ASDNFgHXf_ih3J@9F3Ze1
+R10
+R11
+Z20 w1680607622
+R0
+Z21 8../constants.vhd
+Z22 F../constants.vhd
+l0
+L5
+V4Seg7Ya[8KmN>b=HKTU7M2
+!s100 g:GgeFV92eVJYBgUeHihP1
+R14
+32
+b1
+Z23 !s110 1687449251
+!i10b 1
+Z24 !s108 1687449251.000000
+Z25 !s90 -reportprogress|300|-work|work|../constants.vhd|
+Z26 !s107 ../constants.vhd|
+!i113 1
+R6
+R18
+Bbody
+Z27 DPx4 work 9 constants 0 22 4Seg7Ya[8KmN>b=HKTU7M2
+R19
+R10
+R11
+l0
+L48
+V`=WLV70mBk6gCR9=fVa8J0
+!s100 POlkITVA:YU0cV86PRAM00
+R14
+32
+R23
+!i10b 1
+R24
+R25
+R26
+!i113 1
+R6
+R18
+Edata_interpreter
+Z28 w1680607464
+R27
+R19
+R10
+R11
+R0
+Z29 8../video/data_interpreter.vhd
+Z30 F../video/data_interpreter.vhd
+l0
+L7
+VjRS5T7@O4]_Zl`6Z5_Hnz1
+!s100 ?gc@cm7[EJ_1:@EPP[V2W1
+R14
+32
+Z31 !s110 1687449256
+!i10b 1
+Z32 !s108 1687449256.000000
+Z33 !s90 -reportprogress|300|-work|work|../video/data_interpreter.vhd|
+Z34 !s107 ../video/data_interpreter.vhd|
+!i113 1
+R6
+R18
+Abehavior
+R27
+R19
+R10
+R11
+DEx4 work 16 data_interpreter 0 22 jRS5T7@O4]_Zl`6Z5_Hnz1
+l49
+L19
+Va7cC@W5nbBYD9UXJTa6eV2
+!s100 zdk5[aE_GgVMh@jSbU`Zk2
+R14
+32
+R31
+!i10b 1
+R32
+R33
+R34
+!i113 1
+R6
+R18
+Einput_receiver
+Z35 w1680726038
+Z36 DPx4 ieee 18 std_logic_unsigned 0 22 ;eZjO2D4ZDz<]0>8AL<ne1
+Z37 DPx4 ieee 15 std_logic_arith 0 22 [G314=:2zXJ`VORJe1J@Z1
+R10
+R11
+R0
+Z38 8../keyboard/input_receiver.vhd
+Z39 F../keyboard/input_receiver.vhd
+l0
+L6
+Vl[do5=31OZH]ce<V_i@cX0
+!s100 LB4mNC;E`;e@9V]e7R;WN2
+R14
+32
+R23
+!i10b 1
+R24
+Z40 !s90 -reportprogress|300|-work|work|../keyboard/input_receiver.vhd|
+Z41 !s107 ../keyboard/input_receiver.vhd|
+!i113 1
+R6
+R18
+Abehavior
+R36
+R37
+R10
+R11
+DEx4 work 14 input_receiver 0 22 l[do5=31OZH]ce<V_i@cX0
+l61
+L20
+V1aZoiD6bO2HB>f[Rg<d:H3
+!s100 @ej[mK4R2_^:<b>W`?JmM0
+R14
+32
+R23
+!i10b 1
+R24
+R40
+R41
+!i113 1
+R6
+R18
+Ekeyboard_top
+Z42 w1683899755
+R36
+R37
+R10
+R11
+R0
+Z43 8../keyboard/keyboard_top.vhd
+Z44 F../keyboard/keyboard_top.vhd
+l0
+L6
+Vc7IHAKYX?2Hb;ogCbk[U<0
+!s100 X?eYVHH^65Ha1JREkV=JW2
+R14
+32
+R1
+!i10b 1
+R24
+Z45 !s90 -reportprogress|300|-work|work|../keyboard/keyboard_top.vhd|
+Z46 !s107 ../keyboard/keyboard_top.vhd|
+!i113 1
+R6
+R18
+Abehavior
+R36
+R37
+R10
+R11
+DEx4 work 12 keyboard_top 0 22 c7IHAKYX?2Hb;ogCbk[U<0
+l56
+L17
+V^Co9TL5Nn^E?g^WIf`D8?1
+!s100 XAghXLP_K5lJ[m?11kP9<3
+R14
+32
+R1
+!i10b 1
+R24
+R45
+R46
+!i113 1
+R6
+R18
+Enios_per_reg
+Z47 w1687446179
+R10
+R11
+R0
+Z48 8../nios_per_reg.vhd
+Z49 F../nios_per_reg.vhd
+l0
+L4
+VaZIHzohWcBSzB8hHb6ILT1
+!s100 NMMRTK9Udne9l4A1gUR:b2
+R14
+32
+R23
+!i10b 1
+R24
+Z50 !s90 -reportprogress|300|-work|work|../nios_per_reg.vhd|
+Z51 !s107 ../nios_per_reg.vhd|
+!i113 1
+R6
+R18
+Abehavior
+R10
+R11
+DEx4 work 12 nios_per_reg 0 22 aZIHzohWcBSzB8hHb6ILT1
+l21
+L19
+VcLG=ZBM81CjE4AlQmS5X91
+!s100 o2AOiMFAA83f`LcC1FT311
+R14
+32
+R23
+!i10b 1
+R24
+R50
+R51
+!i113 1
+R6
+R18
+Enios_sd_loader
+Z52 w1687431988
+R19
+R10
+R11
+R0
+Z53 8../nios_sd_loader/simulation/nios_sd_loader.vhd
+Z54 F../nios_sd_loader/simulation/nios_sd_loader.vhd
+l0
+L9
+Vlo`d6`<HFn4CT`:RDTG3d1
+!s100 gQ0[aa6U<B^Eie0;5o]8:3
+R14
+32
+R23
+!i10b 1
+R24
+Z55 !s90 -reportprogress|300|-work|work|../nios_sd_loader/simulation/nios_sd_loader.vhd|
+Z56 !s107 ../nios_sd_loader/simulation/nios_sd_loader.vhd|
+!i113 1
+R6
+R18
+Artl
+R19
+R10
+R11
+DEx4 work 14 nios_sd_loader 0 22 lo`d6`<HFn4CT`:RDTG3d1
+l553
+L33
+V^N``4j0oA9_F9jMhJ5]lQ1
+!s100 POFZ6A]Z_M[ajFoTmWRMN1
+R14
+32
+R23
+!i10b 1
+R24
+R55
+R56
+!i113 1
+R6
+R18
+Epixel_video_ram
+Z57 w1680713112
+R9
+R10
+R11
+R0
+Z58 8../ram/pixel_video_ram.vhd
+Z59 F../ram/pixel_video_ram.vhd
+l0
+L42
+V:dl;;Nzl5ESY=OeHO74?:3
+!s100 YdW:lkiAl0V>>`_DdJEV]3
+R14
+32
+R15
+!i10b 1
+Z60 !s108 1687449253.000000
+Z61 !s90 -reportprogress|300|-work|work|../ram/pixel_video_ram.vhd|
+Z62 !s107 ../ram/pixel_video_ram.vhd|
+!i113 1
+R6
+R18
+Asyn
+R9
+R10
+R11
+DEx4 work 15 pixel_video_ram 0 22 :dl;;Nzl5ESY=OeHO74?:3
+l66
+L61
+VV3]K1>e2V=8>hbX09ZX;_3
+!s100 QbnBSMlkLb<13b[[`Q;`M0
+R14
+32
+R15
+!i10b 1
+R60
+R61
+R62
+!i113 1
+R6
+R18
+Epll
+Z63 w1685987747
+R10
+R11
+R0
+Z64 8../pll/pll.vhd
+Z65 F../pll/pll.vhd
+l0
+L42
+VY<g;l:FMPGnBA:P2IT<?E0
+!s100 H?[1A]^l06dGe;]OFPmiQ3
+R14
+32
+R1
+!i10b 1
+R5
+Z66 !s90 -reportprogress|300|-work|work|../pll/pll.vhd|
+Z67 !s107 ../pll/pll.vhd|
+!i113 1
+R6
+R18
+Asyn
+R10
+R11
+DEx4 work 3 pll 0 22 Y<g;l:FMPGnBA:P2IT<?E0
+l143
+L55
+VdzH4][XnniMGOH@`<mGE@1
+!s100 TneVgfH?<W<3E>bogI>]60
+R14
+32
+R1
+!i10b 1
+R5
+R66
+R67
+!i113 1
+R6
+R18
+vPS2_Controller
+R1
+!i10b 1
+!s100 YlQ:3k2j;R^3Eo>Z5B;F<1
+IVOaY`=MTOK6HO1ee:C`iS3
+R2
+R0
+w1680709105
+8../keyboard/PS2_Controller/PS2_Controller.v
+F../keyboard/PS2_Controller/PS2_Controller.v
+R3
+R4
+r1
+!s85 0
+31
+R5
+!s107 ../keyboard/PS2_Controller/PS2_Controller.v|
+!s90 -reportprogress|300|-work|work|../keyboard/PS2_Controller/PS2_Controller.v|
+!i113 1
+R6
+R7
+n@p@s2_@controller
+Eremaining_ram
+Z68 w1685441431
+R9
+R10
+R11
+R0
+Z69 8../ram/remaining_ram.vhd
+Z70 F../ram/remaining_ram.vhd
+l0
+L42
+VZdo4AhgZXf2f@DAoIDFUm2
+!s100 ZzndJ1jVn1i[8MnNhLo@[2
+R14
+32
+R15
+!i10b 1
+R60
+Z71 !s90 -reportprogress|300|-work|work|../ram/remaining_ram.vhd|
+Z72 !s107 ../ram/remaining_ram.vhd|
+!i113 1
+R6
+R18
+Asyn
+R9
+R10
+R11
+DEx4 work 13 remaining_ram 0 22 Zdo4AhgZXf2f@DAoIDFUm2
+l60
+L56
+V4VgA2m0?mWGdhL0GY[`EQ2
+!s100 GfgizmNZL:kP@RcZHBQ8N0
+R14
+32
+R15
+!i10b 1
+R60
+R71
+R72
+!i113 1
+R6
+R18
+Ereset_counter
+Z73 w1680027273
+R10
+R11
+R0
+Z74 8../reset_counter.vhd
+Z75 F../reset_counter.vhd
+l0
+L42
+VUSIa@iOYU0e>hAfeQ3;Cl2
+!s100 ;=V2>ib>6QnZ>K41zR<OI2
+R14
+32
+Z76 !s110 1687449257
+!i10b 1
+Z77 !s108 1687449257.000000
+Z78 !s90 -reportprogress|300|-work|work|../reset_counter.vhd|
+Z79 !s107 ../reset_counter.vhd|
+!i113 1
+R6
+R18
+Asyn
+R10
+R11
+DEx4 work 13 reset_counter 0 22 USIa@iOYU0e>hAfeQ3;Cl2
+l74
+L53
+V5JQaH>dfOgkK0CHDa4aOf2
+!s100 MB@85M:CIJ3JTQWz8D>]>1
+R14
+32
+R76
+!i10b 1
+R77
+R78
+R79
+!i113 1
+R6
+R18
+Erom
+Z80 w1687445742
+R9
+R10
+R11
+R0
+Z81 8../rom/rom.vhd
+Z82 F../rom/rom.vhd
+l0
+L42
+V0:Rlfj1i1aQf<d8]N_98a0
+!s100 bndmb06danPYMokJFf]hd3
+R14
+32
+R15
+!i10b 1
+R60
+Z83 !s90 -reportprogress|300|-work|work|../rom/rom.vhd|
+Z84 !s107 ../rom/rom.vhd|
+!i113 1
+R6
+R18
+Asyn
+R9
+R10
+R11
+DEx4 work 3 rom 0 22 0:Rlfj1i1aQf<d8]N_98a0
+l60
+L56
+VUR?1EigCi47OY]9GXFMD93
+!s100 eV;R?:z6b4dlBcFFeo7?n1
+R14
+32
+R15
+!i10b 1
+R60
+R83
+R84
+!i113 1
+R6
+R18
+Et80
+Z85 w1676826250
+R37
+R36
+R19
+R10
+R11
+R0
+Z86 8../t80/T80.vhd
+Z87 F../t80/T80.vhd
+l0
+L87
+VbgKE2_9>^IcL:zjgTHGKS0
+!s100 [h@9@<f:Yd64:kV>=lA:92
+R14
+32
+R15
+!i10b 1
+R60
+Z88 !s90 -reportprogress|300|-work|work|../t80/T80.vhd|
+Z89 !s107 ../t80/T80.vhd|
+!i113 1
+R6
+R18
+Artl
+R37
+R36
+R19
+R10
+R11
+DEx4 work 3 t80 0 22 bgKE2_9>^IcL:zjgTHGKS0
+l385
+L132
+VPIjLeH[IF595?E`T9BkIQ0
+!s100 VRM>HR`_I0Ai0o15`_V;:3
+R14
+32
+R15
+!i10b 1
+R60
+R88
+R89
+!i113 1
+R6
+R18
+Et80_alu
+Z90 w1676797159
+R19
+R10
+R11
+R0
+Z91 8../t80/T80_ALU.vhd
+Z92 F../t80/T80_ALU.vhd
+l0
+L74
+Ve5z6V5gIQJ1QMYSh2L6`Z2
+!s100 @_RSaeo]92JI5nn2gl^IL1
+R14
+32
+Z93 !s110 1687449254
+!i10b 1
+R60
+Z94 !s90 -reportprogress|300|-work|work|../t80/T80_ALU.vhd|
+Z95 !s107 ../t80/T80_ALU.vhd|
+!i113 1
+R6
+R18
+Artl
+R19
+R10
+R11
+DEx4 work 7 t80_alu 0 22 e5z6V5gIQJ1QMYSh2L6`Z2
+l135
+L102
+V[cERiP1[RVY5VdMR68Fa;3
+!s100 TS>iG1n7zb_dW]iHOimg^3
+R14
+32
+R93
+!i10b 1
+R60
+R94
+R95
+!i113 1
+R6
+R18
+Et80_mcode
+R90
+R19
+R10
+R11
+R0
+Z96 8../t80/T80_MCode.vhd
+Z97 F../t80/T80_MCode.vhd
+l0
+L78
+V>6KS>TRgSRm5:KzKUMBK13
+!s100 OeUYAYm:mooO?FFGHQ>d<1
+R14
+32
+Z98 !s110 1687449255
+!i10b 1
+Z99 !s108 1687449254.000000
+Z100 !s90 -reportprogress|300|-work|work|../t80/T80_MCode.vhd|
+Z101 !s107 ../t80/T80_MCode.vhd|
+!i113 1
+R6
+R18
+Artl
+R19
+R10
+R11
+DEx4 work 9 t80_mcode 0 22 >6KS>TRgSRm5:KzKUMBK13
+l190
+L150
+V`N4F=[]h4l;]?9jJ]HE`80
+!s100 6@`UShgNMQBAn3gQ^@>3n0
+R14
+32
+R98
+!i10b 1
+R99
+R100
+R101
+!i113 1
+R6
+R18
+Pt80_pack
+R10
+R11
+w1676826316
+R0
+8../t80/T80_Pack.vhd
+F../t80/T80_Pack.vhd
+l0
+L61
+VI93_DITL66WZG`LJQ6BHM2
+!s100 Sk1o=4>G?0ea>C9:4Z^GN1
+R14
+32
+R98
+!i10b 1
+Z102 !s108 1687449255.000000
+!s90 -reportprogress|300|-work|work|../t80/T80_Pack.vhd|
+!s107 ../t80/T80_Pack.vhd|
+!i113 1
+R6
+R18
+Et80_reg
+Z103 w1676797158
+R19
+R10
+R11
+R0
+Z104 8../t80/T80_Reg.vhd
+Z105 F../t80/T80_Reg.vhd
+l0
+L75
+V:Aj@cJ3E0jB6cCbITF^k33
+!s100 FIWN=RC8;nLfD_j3<QMgd1
+R14
+32
+R98
+!i10b 1
+R102
+Z106 !s90 -reportprogress|300|-work|work|../t80/T80_Reg.vhd|
+Z107 !s107 ../t80/T80_Reg.vhd|
+!i113 1
+R6
+R18
+Artl
+R19
+R10
+R11
+DEx4 work 7 t80_reg 0 22 :Aj@cJ3E0jB6cCbITF^k33
+l104
+L98
+VCn_S1BNdhD?N<E]NcSVok1
+!s100 IXMHMKLHH5POgG:02TZ@32
+R14
+32
+R98
+!i10b 1
+R102
+R106
+R107
+!i113 1
+R6
+R18
+Et80a
+Z108 w1677146784
+Z109 DPx4 work 8 t80_pack 0 22 I93_DITL66WZG`LJQ6BHM2
+R19
+R10
+R11
+R0
+Z110 8../t80/T80a.vhd
+Z111 F../t80/T80a.vhd
+l0
+L76
+V6^1K;IDzn54z^kk?9@l@a3
+!s100 e5=WE@C90zB2]>Sh8z3QL2
+R14
+32
+R98
+!i10b 1
+R102
+Z112 !s90 -reportprogress|300|-work|work|../t80/T80a.vhd|
+Z113 !s107 ../t80/T80a.vhd|
+!i113 1
+R6
+R18
+Artl
+R109
+R19
+R10
+R11
+DEx4 work 4 t80a 0 22 6^1K;IDzn54z^kk?9@l@a3
+l127
+L101
+Vg@SdH=Y9bR45SD:8:U?o41
+!s100 87@>Bml2g>j@EU8?`UV8W0
+R14
+32
+R98
+!i10b 1
+R102
+R112
+R113
+!i113 1
+R6
+R18
+Etb
+Z114 w1685970384
+R19
+R27
+R36
+R37
+R10
+R11
+R0
+Z115 8../tb.vhd
+Z116 F../tb.vhd
+l0
+L10
+VMoo?D91h=S:1de21CG;^52
+!s100 FPAGnKiHA[zd^jB8FjTG>0
+R14
+32
+R76
+!i10b 1
+R77
+Z117 !s90 -reportprogress|300|-work|work|../tb.vhd|
+Z118 !s107 ../tb.vhd|
+!i113 1
+R6
+R18
+Atb_arch
+R19
+R27
+R36
+R37
+R10
+R11
+DEx4 work 2 tb 0 22 Moo?D91h=S:1de21CG;^52
+l59
+L13
+VR9:G_k7HedFDoB^VL^[SY3
+!s100 ;YKEJUFllfjKdaM5USZKR2
+R14
+32
+R76
+!i10b 1
+R77
+R117
+R118
+!i113 1
+R6
+R18
+Etop
+Z119 w1687446421
+R36
+R37
+R10
+R11
+R0
+Z120 8../top.vhd
+Z121 F../top.vhd
+l0
+L7
+VS4iS[oP:UC33gg1feJI8d0
+!s100 6I9>E2[6>OYaCgGbfK72B3
+R14
+32
+R76
+!i10b 1
+R77
+Z122 !s90 -reportprogress|300|-work|work|../top.vhd|
+Z123 !s107 ../top.vhd|
+!i113 1
+R6
+R18
+Abehavior
+R36
+R37
+R10
+R11
+DEx4 work 3 top 0 22 S4iS[oP:UC33gg1feJI8d0
+l380
+L31
+VB;johi:09f>>IPVBiST@E0
+!s100 1c>m04FdW=cOBWKbokV542
+R14
+32
+R76
+!i10b 1
+R77
+R122
+R123
+!i113 1
+R6
+R18
+Eula_count
+Z124 w1685986496
+R19
+R10
+R11
+R0
+Z125 8../ula/ula_count.vhd
+Z126 F../ula/ula_count.vhd
+l0
+L5
+V]lI1=ROFFXWW0ANO>hPAA2
+!s100 4zdH7iFgDVPNRP[JQ>40f1
+R14
+32
+R98
+!i10b 1
+R102
+Z127 !s90 -reportprogress|300|-work|work|../ula/ula_count.vhd|
+Z128 !s107 ../ula/ula_count.vhd|
+!i113 1
+R6
+R18
+Abehavior
+R19
+R10
+R11
+DEx4 work 9 ula_count 0 22 ]lI1=ROFFXWW0ANO>hPAA2
+l65
+L21
+VOS6LTE_mnejFLd3?=fE?C1
+!s100 8=aaki51;eD9K4]`f;8X72
+R14
+32
+R31
+!i10b 1
+R102
+R127
+R128
+!i113 1
+R6
+R18
+Eula_port
+Z129 w1685033300
+R19
+R10
+R11
+R0
+Z130 8../ula/ula_port.vhd
+Z131 F../ula/ula_port.vhd
+l0
+L42
+V]ej2>a=Rm33I^:f5E4DWL2
+!s100 fTJ_6ck0Lf;de1n`0E;VR0
+R14
+32
+R31
+!i10b 1
+R32
+Z132 !s90 -reportprogress|300|-work|work|../ula/ula_port.vhd|
+Z133 !s107 ../ula/ula_port.vhd|
+!i113 1
+R6
+R18
+Aula_port_arch
+R19
+R10
+R11
+DEx4 work 8 ula_port 0 22 ]ej2>a=Rm33I^:f5E4DWL2
+l63
+L62
+VF<M=@P6hHo^f=d?]UnD1>1
+!s100 hnI`Ah1k:6@3EnQ5K4On22
+R14
+32
+R31
+!i10b 1
+R32
+R132
+R133
+!i113 1
+R6
+R18
+Evga_controller
+Z134 w1680607261
+R19
+R27
+R10
+R11
+R0
+Z135 8../video/vga_controller.vhd
+Z136 F../video/vga_controller.vhd
+l0
+L30
+V>aYj0lXLPabi6eYhI1e`X3
+!s100 KN:CDXf8EhSAgCo7`EgLQ1
+R14
+32
+R31
+!i10b 1
+R32
+Z137 !s90 -reportprogress|300|-work|work|../video/vga_controller.vhd|
+Z138 !s107 ../video/vga_controller.vhd|
+!i113 1
+R6
+R18
+Abehavior
+R19
+R27
+R10
+R11
+DEx4 work 14 vga_controller 0 22 >aYj0lXLPabi6eYhI1e`X3
+l46
+L43
+V`[Te4iCnga9ko_Zbg5MRU0
+!s100 [?i3beNEoO_DP6=0TMzb_3
+R14
+32
+R31
+!i10b 1
+R32
+R137
+R138
+!i113 1
+R6
+R18
+Evideo
+Z139 w1680606610
+R27
+R19
+R10
+R11
+R0
+Z140 8../video/video.vhd
+Z141 F../video/video.vhd
+l0
+L7
+V^OA]Qb86lGN]@[JoQiUH<1
+!s100 =Fk6NIdn:P>co2WTK^ZXg1
+R14
+32
+R31
+!i10b 1
+R32
+Z142 !s90 -reportprogress|300|-work|work|../video/video.vhd|
+Z143 !s107 ../video/video.vhd|
+!i113 1
+R6
+R18
+Abehavior
+R27
+R19
+R10
+R11
+DEx4 work 5 video 0 22 ^OA]Qb86lGN]@[JoQiUH<1
+l63
+L21
+V]nF6@kRUhDK67:04Tk;gd3
+!s100 E>^:>Pa?PR6:_jcF7h^Rc3
+R14
+32
+R31
+!i10b 1
+R32
+R142
+R143
+!i113 1
+R6
+R18

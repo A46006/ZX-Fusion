@@ -1,0 +1,10 @@
+#include "..\..\terasic_lib\terasic_includes.h"
+
+int request_DMA(int timeout);
+
+alt_u8 read_mem(alt_u16 addr);
+void write_mem(alt_u16 addr, alt_u8 data);
+
+alt_u8 read_io(alt_u16 addr);
+void write_io(alt_u16 addr, alt_u8 data);
+int stop_DMA(int timeout);
