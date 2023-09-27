@@ -196,34 +196,30 @@ architecture Behavior of top is
 	---------
 	-- ULA --
 	---------
-	component ula_port is
+	
+	component ula_top is
 		port (
-			CLK		:	in	std_logic;
-			nRESET	:	in	std_logic;
+			CLK			: in std_logic;
+			nRESET		: in std_logic;
 			
-			-- CPU interface with separate read/write buses
-			D_IN	:	in	std_logic_vector(7 downto 0);
-			D_OUT	:	out	std_logic_vector(7 downto 0);
-			ENABLE	:	in	std_logic;
-			WR_e		:	in	std_logic;
+			-- PORT --
+			D_IN			:	in	std_logic_vector(7 downto 0);
+			D_OUT			:	out std_logic_vector(7 downto 0);
+			ENABLE		:	in	std_logic;
+			WR_e			:	in	std_logic;
 			
-			BORDER_OUT	:	out	std_logic_vector(2 downto 0);
-			EAR_OUT		:	out	std_logic;
+			BORDER_OUT	:	out std_logic_vector(2 downto 0);
+			EAR_OUT		:	out std_logic;
 			MIC_OUT		:	out std_logic;
 			
-			KEYB_IN		:	in 	std_logic_vector(4 downto 0);
-			EAR_IN		:	in	std_logic	
-			);
-		end component;
-	
-	component ula_count is
-		port (
-			CLK			: in	std_logic; -- 7MHz
-			nTCLKA		: in	std_logic; -- Upper Counter Stage Test Clock = nIOREQ and nMREQ and nRD and !nWR
-			nTCLKB		: in	std_logic; -- Flash Counter Test Clock = nIOREQ and nMREQ and !nRD and nWR
-			nRESET		: in	std_logic;
+			KEYB_IN		:	in std_logic_vector(4 downto 0);
+			EAR_IN		:	in	std_logic;
 			
-			MREQ_n		: in	std_logic;
+			-- COUNT --
+			nTCLKA		: in std_logic; -- Upper Counter Stage Test Clock = nIOREQ and nMREQ and nRD and !nWR
+			nTCLKB		: in std_logic; -- Flash Counter Test Clock = nIOREQ and nMREQ and !nRD and nWR
+			
+			MREQ_n		: in std_logic;
 			IOREQ_n		: in std_logic;
 
 			TOP_ADDRESS	: in	std_logic_vector(1 downto 0);
@@ -232,9 +228,9 @@ architecture Behavior of top is
 			CPU_CLK		: out	std_logic; -- 3.5MHz
 			FLASH_CLK	: out std_logic; -- 1.56 Hz
 			IOREQGTW3_n	: out std_logic
---			C_out : out std_logic_vector(8 downto 0)
-			);
-		end component;
+		);
+	end component;
+	
 	
 	-----------
 	-- Audio --
@@ -701,10 +697,11 @@ begin
 	---------
 	-- ULA --
 	---------
-	ula_ports : ula_port port map(
+	ula : ula_top port map(
 			CLK			=> ula_clock,
 			nRESET		=> ula_reset_n,
 			
+			-- PORTS --
 			D_IN			=> data_out,
 			D_OUT			=> ula_data_out,
 			ENABLE		=> ula_en,
@@ -715,16 +712,11 @@ begin
 			MIC_OUT		=> ula_mic_out,
 			
 			KEYB_IN		=> keyboard_data_out,
-			EAR_IN		=> ula_ear_in
-		);
-	
-	ula_in_iorq_n <= iorq_n OR address(0); -- for proper i/o contention handling (spider modification)
-	ula_a <= address(15) & address(14);
-	ula_counters : ula_count port map(
-			CLK			=> ula_clock,
+			EAR_IN		=> ula_ear_in,
+			
+			-- COUNT --
 			nTCLKA		=> ula_tclka_n,
 			nTCLKB		=> ula_tclkb_n,
-			nRESET		=> ula_reset_n,
 			
 			MREQ_n		=> mreq_n,
 			IOREQ_n		=> ula_in_iorq_n,
@@ -734,8 +726,10 @@ begin
 			CPU_CLK		=> cpu_clock,
 			FLASH_CLK	=> flash_clk,
 			IOREQGTW3_n => delayed_iorq_n
---			C_out			=> LEDR(8 downto 0)
-		);
+	);
+	
+	ula_in_iorq_n <= iorq_n OR address(0); -- for proper i/o contention handling (spider modification)
+	ula_a <= address(15) & address(14);
 	
 	-----------
 	-- Audio --

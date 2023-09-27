@@ -1195,6 +1195,7 @@ set_global_assignment -name VHDL_FILE keyboard/input_receiver.vhd
 set_global_assignment -name VERILOG_FILE keyboard/PS2_Controller/PS2_Controller.v
 set_global_assignment -name VERILOG_FILE keyboard/PS2_Controller/Altera_UP_PS2_Data_In.v
 set_global_assignment -name VERILOG_FILE keyboard/PS2_Controller/Altera_UP_PS2_Command_Out.v
+set_global_assignment -name VHDL_FILE ula/ula_top.vhd
 set_global_assignment -name VHDL_FILE ula/ula_port.vhd
 set_global_assignment -name VHDL_FILE ula/ula_count.vhd
 set_global_assignment -name BDF_FILE ula/ula_h_counter.bdf
