@@ -498,8 +498,8 @@ begin
 --	LEDG(0) <= cpu_clock;
 
 	LEDR(17) <= nios_en_reg_out;
-	LEDR(16) <= not cpu_halt_n;
-	LEDR(15) <= ula_speaker_out;
+--	LEDR(16) <= not cpu_halt_n;
+--	LEDR(15) <= ula_speaker_out;
 --	LEDR(7 downto 0) <= ula_data_out;
 --	LEDR(16) <= cpu_rd_n_reg_out;
 --	LEDR(15) <= cpu_wr_n_reg_out;
@@ -867,6 +867,7 @@ begin
 	-- Enable for T80 communication with NIOS. Does not influence when DMA is happening
 	nios_en <= '1' when iorq_n = '0' and cpu_mreq_n = '1' and ( --cpu_iorq_n = '0' and cpu_mreq_n = '1' and (
 								address(7 downto 0) = x"17" or
+								address(7 downto 0) = x"19" or
 								address(7 downto 0) = x"1B" or
 								address(7 downto 0) = x"1D") and --and (address(4) = '1' and address(0) = '1') and 
 					cpu_busak_n = '1' else 	-- making sure the enable only happens when the T80 is in charge
