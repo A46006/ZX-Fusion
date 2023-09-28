@@ -48,7 +48,6 @@ architecture Behavior of data_interpreter is
 	signal read_next, next_was_read : std_logic := '0';
 begin
 
-	-- TODO make sure this really works
 	x_trans <= X - X_INIT when read_next = '0' else (others => '0');
 	y_trans <= Y - Y_INIT when read_next = '0' else (Y-Y_INIT)+1;
 	
