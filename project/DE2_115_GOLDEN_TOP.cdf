@@ -4,7 +4,7 @@ JedecChain;
 	DefaultMfr(6E);
 
 	P ActionCode(Cfg)
-		Device PartName(EP4CE115F29) Path("H:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/") File("DE2_115_GOLDEN_TOP.sof") MfrSpec(OpMask(1));
+		Device PartName(EP4CE115F29) Path("../") File("DE2_115_GOLDEN_TOP.sof") MfrSpec(OpMask(1));
 
 ChainEnd;
 
