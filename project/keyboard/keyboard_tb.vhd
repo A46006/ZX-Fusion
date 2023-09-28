@@ -45,11 +45,22 @@ architecture tb of keyboard_tb is
 	end procedure;
 
 	component keyboard_top is
+--		port(
+--			CLOCK, PS2_CLOCK, PS2_DATA, RESET : in std_logic;
+--			NATIVE_DATA : in std_logic_vector(4 downto 0);
+--			PS2nNat : in std_logic;
+--			ADDRESS : in std_logic_vector(7 downto 0);
+--			KEY_DATA : out std_logic_vector(4 downto 0)
+--		);
+		
 		port(
-			CLOCK, PS2_CLOCK, PS2_DATA, RESET : in std_logic;
+			CLOCK, RESET : in std_logic;
+			PS2_CLOCK, PS2_DATA : inout std_logic;
 			NATIVE_DATA : in std_logic_vector(4 downto 0);
-			PS2nNat : in std_logic;
+			NATnPS2 : in std_logic;
 			ADDRESS : in std_logic_vector(7 downto 0);
+			JOY1_STATE : in std_logic_vector(7 downto 0);
+			JOY2_STATE : in std_logic_vector(7 downto 0);
 			KEY_DATA : out std_logic_vector(4 downto 0)
 		);
 	end component;
@@ -60,14 +71,27 @@ architecture tb of keyboard_tb is
 	signal PS2_DATA : std_logic := '1';
 --	signal DATA  : std_logic_vector(7 downto 0);
 	
-	signal PS2_nNative : std_logic;
+	signal Native_nPS2 : std_logic;
 	signal native_data, key_data : std_logic_vector(4 downto 0);
 	signal address : std_logic_vector(7 downto 0) := x"FD";
+	signal joy1_state, joy2_state : std_logic_vector(7 downto 0);
 	
 	signal test_data : std_logic_vector(7 downto 0);
 begin
-  uut : keyboard_top port map(
-    CLK, PS2_CLK, PS2_DATA, RESET, native_data, PS2_nNative, address, key_data
+--  uut : keyboard_top port map(
+--    CLK, PS2_CLK, PS2_DATA, RESET, native_data, Native_nPS2, address, key_data
+--	);
+	uut : keyboard_top port map(
+			CLOCK 		=> CLK,
+			RESET			=> RESET,
+			PS2_CLOCK	=> PS2_CLK,
+			PS2_DATA		=> PS2_DATA,
+			NATIVE_DATA	=> native_data,
+			NATnPS2		=> Native_nPS2,
+			ADDRESS		=> address,
+			JOY1_STATE	=> joy1_state,
+			JOY2_STATE	=> joy2_state,
+			KEY_DATA		=> key_data
 	);
   
   CLK <= not CLK after 10 ns; -- t=10ns / T=20ns / f = 1/20ns = 50=MHz
@@ -77,7 +101,9 @@ begin
 	begin
 		wait for 100 ns;
 		RESET <= '0';
-		PS2_nNative <= '1';
+		Native_nPS2 <= '0';
+		joy1_state <= x"00";
+		joy2_state <= x"00";
 
 		-- Q Press
 		test_data <= X"15";

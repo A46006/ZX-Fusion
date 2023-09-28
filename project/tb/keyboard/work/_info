@@ -7,172 +7,241 @@ z2
 !i10e 25
 !i10f 100
 cModel Technology
-Z0 dH:/MI13D/TFM/TFM-SPEC/03-PS2_impl/project/tb/keyboard
-Einput_receiver
-Z1 w1680284616
-Z2 DPx4 ieee 18 std_logic_unsigned 0 22 ;eZjO2D4ZDz<]0>8AL<ne1
-Z3 DPx4 ieee 15 std_logic_arith 0 22 [G314=:2zXJ`VORJe1J@Z1
-Z4 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
-Z5 DPx4 ieee 14 std_logic_1164 0 22 eNV`TJ_GofJTzYa?f<@Oe1
+Z0 dH:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/tb/keyboard
+vAltera_UP_PS2_Command_Out
+Z1 !s110 1695942419
+!i10b 1
+!s100 ZjDIV:z^W4aE7ECD]ReVK0
+IAg?l@EOBgdKT^CUIDTZn:1
+Z2 VDg1SIo80bB@j0V0VzS_@n1
 R0
-Z6 8H:/MI13D/TFM/TFM-SPEC/03-PS2_impl/project/keyboard/input_receiver.vhd
-Z7 FH:/MI13D/TFM/TFM-SPEC/03-PS2_impl/project/keyboard/input_receiver.vhd
-l0
-L6
-Vm6d?mX5FUT=>Dg=CGYnU?1
-!s100 i_zaI4J0P9n2=c]IU`J0F0
-Z8 OV;C;10.5b;63
-32
-Z9 !s110 1680284632
-!i10b 1
-Z10 !s108 1680284632.000000
-Z11 !s90 -reportprogress|300|-work|work|H:/MI13D/TFM/TFM-SPEC/03-PS2_impl/project/keyboard/input_receiver.vhd|
-Z12 !s107 H:/MI13D/TFM/TFM-SPEC/03-PS2_impl/project/keyboard/input_receiver.vhd|
+Z3 w1695852025
+8../../keyboard/PS2_Controller/Altera_UP_PS2_Command_Out.v
+F../../keyboard/PS2_Controller/Altera_UP_PS2_Command_Out.v
+Z4 L0 10
+Z5 OV;L;10.5b;63
+r1
+!s85 0
+31
+Z6 !s108 1695942419.000000
+!s107 ../../keyboard/PS2_Controller/Altera_UP_PS2_Command_Out.v|
+!s90 -reportprogress|300|-work|work|../../keyboard/PS2_Controller/Altera_UP_PS2_Command_Out.v|
 !i113 1
-Z13 o-work work
-Z14 tExplicit 1 CvgOpt 0
-Abehavior
-R2
-R3
-R4
-R5
-DEx4 work 14 input_receiver 0 22 m6d?mX5FUT=>Dg=CGYnU?1
-l27
-L16
-VB21JW`o21@1fb@DXcCb<m1
-!s100 i9=l@_6TT0R;@J4El046F3
-R8
-32
-R9
+Z7 o-work work
+Z8 tCvgOpt 0
+n@altera_@u@p_@p@s2_@command_@out
+vAltera_UP_PS2_Data_In
+R1
 !i10b 1
+!s100 5;cY6M9JY][8IU4_hMKUY2
+I:^^XAYF9bF>I]11InJUK:1
+R2
+R0
+R3
+8../../keyboard/PS2_Controller/Altera_UP_PS2_Data_In.v
+F../../keyboard/PS2_Controller/Altera_UP_PS2_Data_In.v
+L0 1
+R5
+r1
+!s85 0
+31
+R6
+!s107 ../../keyboard/PS2_Controller/Altera_UP_PS2_Data_In.v|
+!s90 -reportprogress|300|-work|work|../../keyboard/PS2_Controller/Altera_UP_PS2_Data_In.v|
+!i113 1
+R7
+R8
+n@altera_@u@p_@p@s2_@data_@in
+Pconstants
+Z9 DPx4 ieee 11 numeric_std 0 22 :ASDNFgHXf_ih3J@9F3Ze1
+Z10 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z11 DPx4 ieee 14 std_logic_1164 0 22 eNV`TJ_GofJTzYa?f<@Oe1
+Z12 w1695941733
+R0
+Z13 8../../constants.vhd
+Z14 F../../constants.vhd
+l0
+L5
+VUN6Hh[:Fi_ohPEA9ZdeCA1
+!s100 ;jbdK5F63Hkf1];LJTl?R0
+Z15 OV;C;10.5b;63
+32
+b1
+R1
+!i10b 1
+R6
+Z16 !s90 -reportprogress|300|-work|work|../../constants.vhd|
+Z17 !s107 ../../constants.vhd|
+!i113 1
+R7
+Z18 tExplicit 1 CvgOpt 0
+Bbody
+Z19 DPx4 work 9 constants 0 22 UN6Hh[:Fi_ohPEA9ZdeCA1
+R9
 R10
 R11
-R12
+l0
+L152
+VF[;>Qd9Qb9H1obm_a_oH=2
+!s100 CG0cbhmlQjiY7RGf6HN;<1
+R15
+32
+R1
+!i10b 1
+R6
+R16
+R17
 !i113 1
-R13
-R14
-Ekeyboard_tb
-Z15 w1680266007
-R4
-R5
+R7
+R18
+Einput_receiver
+R3
+R9
+R19
+Z20 DPx4 ieee 18 std_logic_unsigned 0 22 ;eZjO2D4ZDz<]0>8AL<ne1
+Z21 DPx4 ieee 15 std_logic_arith 0 22 [G314=:2zXJ`VORJe1J@Z1
+R10
+R11
 R0
-Z16 8H:/MI13D/TFM/TFM-SPEC/03-PS2_impl/project/keyboard/keyboard_tb.vhd
-Z17 FH:/MI13D/TFM/TFM-SPEC/03-PS2_impl/project/keyboard/keyboard_tb.vhd
+Z22 8../../keyboard/input_receiver.vhd
+Z23 F../../keyboard/input_receiver.vhd
+l0
+L8
+VSQRKb[A]E86R;3a47z3nO2
+!s100 5bHHD7KE?WF^7LC9dcXXS2
+R15
+32
+R1
+!i10b 1
+R6
+Z24 !s90 -reportprogress|300|-work|work|../../keyboard/input_receiver.vhd|
+Z25 !s107 ../../keyboard/input_receiver.vhd|
+!i113 1
+R7
+R18
+Abehavior
+R9
+R19
+R20
+R21
+R10
+R11
+DEx4 work 14 input_receiver 0 22 SQRKb[A]E86R;3a47z3nO2
+l76
+L25
+VRTe@>aZzmQ_S;UlD<b;6i1
+!s100 gCNiLc;=2?P=mMozzf=QL1
+R15
+32
+Z26 !s110 1695942420
+!i10b 1
+R6
+R24
+R25
+!i113 1
+R7
+R18
+Ekeyboard_tb
+Z27 w1695941776
+R10
+R11
+R0
+Z28 8../../keyboard/keyboard_tb.vhd
+Z29 F../../keyboard/keyboard_tb.vhd
 l0
 L4
 V0Fb2>5OQKLZFjIKG9]^ZD0
 !s100 BjK@`_CH`IOZ[_AzYeKHT3
-R8
+R15
 32
-R9
+R26
 !i10b 1
-R10
-Z18 !s90 -reportprogress|300|-work|work|H:/MI13D/TFM/TFM-SPEC/03-PS2_impl/project/keyboard/keyboard_tb.vhd|
-Z19 !s107 H:/MI13D/TFM/TFM-SPEC/03-PS2_impl/project/keyboard/keyboard_tb.vhd|
+Z30 !s108 1695942420.000000
+Z31 !s90 -reportprogress|300|-work|work|../../keyboard/keyboard_tb.vhd|
+Z32 !s107 ../../keyboard/keyboard_tb.vhd|
 !i113 1
-R13
-R14
-Atb
-R4
-R5
-DEx4 work 11 keyboard_tb 0 22 0Fb2>5OQKLZFjIKG9]^ZD0
-l68
-L8
-VFEPhNR@4HB55KEM?C1aoL2
-!s100 TMI<P];6HhNZ:F2RBn9Ji0
-R8
-32
-R9
-!i10b 1
-R10
+R7
 R18
-R19
+Atb
+R10
+R11
+DEx4 work 11 keyboard_tb 0 22 0Fb2>5OQKLZFjIKG9]^ZD0
+l80
+L8
+V2LjHUz=4nd`SHbUceakol1
+!s100 k:YJFJB^93_9E8kQ9W[Q21
+R15
+32
+R26
+!i10b 1
+R30
+R31
+R32
 !i113 1
-R13
-R14
+R7
+R18
 Ekeyboard_top
-Z20 w1680021878
-R2
 R3
-R4
-R5
+R20
+R21
+R10
+R11
 R0
-Z21 8H:/MI13D/TFM/TFM-SPEC/03-PS2_impl/project/keyboard/keyboard_top.vhd
-Z22 FH:/MI13D/TFM/TFM-SPEC/03-PS2_impl/project/keyboard/keyboard_top.vhd
+Z33 8../../keyboard/keyboard_top.vhd
+Z34 F../../keyboard/keyboard_top.vhd
 l0
 L6
-VnifF7FHzzK<QADaU:AQ<50
-!s100 VUU3?zKj5kUmniGaCFeH22
-R8
+V0Q22z96TAAz4IUBngGilI2
+!s100 KWZ44C5`:1d_gHYL`HReW3
+R15
 32
-R9
+R26
 !i10b 1
-R10
-Z23 !s90 -reportprogress|300|-work|work|H:/MI13D/TFM/TFM-SPEC/03-PS2_impl/project/keyboard/keyboard_top.vhd|
-Z24 !s107 H:/MI13D/TFM/TFM-SPEC/03-PS2_impl/project/keyboard/keyboard_top.vhd|
+R30
+Z35 !s90 -reportprogress|300|-work|work|../../keyboard/keyboard_top.vhd|
+Z36 !s107 ../../keyboard/keyboard_top.vhd|
 !i113 1
-R13
-R14
+R7
+R18
 Abehavior
-R2
-R3
-R4
-R5
-DEx4 work 12 keyboard_top 0 22 nifF7FHzzK<QADaU:AQ<50
-l46
-L16
-V=6fT9f<DbzTlgO34dD`ni1
-!s100 1H5:U<7^^==TOQ^cPHg6g0
-R8
-32
-R9
-!i10b 1
+R20
+R21
 R10
-R23
-R24
+R11
+DEx4 work 12 keyboard_top 0 22 0Q22z96TAAz4IUBngGilI2
+l61
+L19
+VcQkPZDU9nSZ`]SA74<?a92
+!s100 ^gPH?KYo58Phl>UPdMIC32
+R15
+32
+R26
+!i10b 1
+R30
+R35
+R36
 !i113 1
-R13
-R14
-Eps2_intf
-Z25 w1679233862
+R7
+R18
+vPS2_Controller
+R1
+!i10b 1
+!s100 YlQ:3k2j;R^3Eo>Z5B;F<1
+IEHlzmJWWf2VQ]=Ni?2BDH3
 R2
-R3
-R4
-R5
 R0
-Z26 8H:/MI13D/TFM/TFM-SPEC/03-PS2_impl/project/keyboard/ps2_intf.vhd
-Z27 FH:/MI13D/TFM/TFM-SPEC/03-PS2_impl/project/keyboard/ps2_intf.vhd
-l0
-L46
-VPdk=NFMX9Q]AJaF`WIUOP0
-!s100 Cz2HAh09L9fJIz`7WZX7]1
-R8
-32
-R9
-!i10b 1
-R10
-Z28 !s90 -reportprogress|300|-work|work|H:/MI13D/TFM/TFM-SPEC/03-PS2_impl/project/keyboard/ps2_intf.vhd|
-Z29 !s107 H:/MI13D/TFM/TFM-SPEC/03-PS2_impl/project/keyboard/ps2_intf.vhd|
-!i113 1
-R13
-R14
-Aps2_intf_arch
-R2
 R3
+8../../keyboard/PS2_Controller/PS2_Controller.v
+F../../keyboard/PS2_Controller/PS2_Controller.v
 R4
 R5
-DEx4 work 8 ps2_intf 0 22 Pdk=NFMX9Q]AJaF`WIUOP0
-l75
-L64
-VA4nke>^OPla7MRXGnW^3X0
-!s100 S26o12f^zCihKgFQN>bzZ3
-R8
-32
-R9
-!i10b 1
-R10
-R28
-R29
+r1
+!s85 0
+31
+R6
+!s107 ../../keyboard/PS2_Controller/PS2_Controller.v|
+!s90 -reportprogress|300|-work|work|../../keyboard/PS2_Controller/PS2_Controller.v|
 !i113 1
-R13
-R14
+R7
+R8
+n@p@s2_@controller
