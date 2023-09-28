@@ -152,12 +152,13 @@ int wait_for_pc(alt_u16 pc, int tries) {
 }
 
 int wait_until_routine_ends(int tries) {
+	alt_u16 end_of_screen = END_OF_SCREEN;
 	alt_u16 addr;
 
 	while(1) {
 		if (tries-- < 0) return TIMEOUT;
 		// TODO make sure endianness is good for this comparison
-		if (addr > END_OF_SCREEN) break;
+		if (addr > end_of_screen) break;
 		addr = CPU_ADDR_GET;
 	}
 	return 0;
