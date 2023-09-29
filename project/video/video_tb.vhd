@@ -10,9 +10,9 @@ architecture tb_arch of video_tb is
 	component video is
 		port(
 			CLOCK, FLASH_CLK, RESET : IN std_logic; -- 65MHz video clock
+			MODE : in std_logic_vector(1 downto 0);
 			PIXEL_DATA, COLOR_DATA	: IN std_logic_vector(7 downto 0);
 			BORDER : in std_logic_vector(2 downto 0);
-			BORDER_EN : in std_logic;
 			PIXEL_RE, COLOR_RE : out std_logic;
 			PIXEL_ADDR : OUT std_logic_vector(12 downto 0);
 			COLOR_ADDR : out std_logic_vector(9 downto 0);
@@ -70,7 +70,7 @@ architecture tb_arch of video_tb is
 	signal col_addr : std_logic_vector(9 downto 0) := (others => '0');
 	
 	signal border : std_logic_vector(2 downto 0) := (others => '1');
-	signal border_en : std_logic := '0';
+	signal border_mode : std_logic_vector(1 downto 0) := "00";
 	
 	-- REG --
 	signal h_sync_reg, v_sync_reg : std_logic;
@@ -105,7 +105,7 @@ begin
 			COLOR_DATA	=> col_data,
 			-- Border --
 			BORDER 		=> border,
-			BORDER_EN	=> border_en,
+			MODE			=> border_mode,
 			-- Memory Enables --
 			PIXEL_RE		=> pixel_en,
 			COLOR_RE		=> col_en,

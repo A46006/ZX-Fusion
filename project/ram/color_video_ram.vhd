@@ -76,6 +76,7 @@ BEGIN
 		clock_enable_output_b => "BYPASS",
 		indata_reg_b => "CLOCK1",
 --		init_file => "./video/file/colorData.hex",
+--		init_file => "./file/colorData.hex", -- used in video TB scope
 --		init_file => "./video/file/colorDataBugTest.hex",
 		intended_device_family => "Cyclone IV E",
 		lpm_type => "altsyncram",
