@@ -1,8 +1,8 @@
 #include "../terasic_lib/terasic_includes.h"
 
-#define NMI_ROUTINE_ADDR 0x4000 // the address where the NMI routine is injected
-#define OLD_STACK_START_ADDR 0x57FC // top of the old stack, where old PC is stored
-#define OLD_STACK_SIZE 4 // size of that old stack
+#define NMI_ROUTINE_ADDR 0x4000//0xFF50
+#define OLD_STACK_START_ADDR 0x57FC
+#define OLD_STACK_SIZE 4
 //#define SP_LOCATION 0x5CC0 // Because it is close to the end of "Reserved for BASIC" area
 
 enum file_type {Z80, SNA};

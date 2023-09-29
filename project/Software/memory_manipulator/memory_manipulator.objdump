@@ -11371,11 +11371,11 @@ int load_SNA(FAT_HANDLE hFat, char* filename) {
    26c5c:	002892c0 	call	2892c <read_buf_mem>
 
 	// Save data that the stack additions overwrite
-	alt_u8* bottom_data_bk = (alt_u8*) malloc(ADDED_STACK_SIZE * sizeof(alt_u8*));
+	alt_u8* bottom_data_bk = (alt_u8*) malloc(OLD_STACK_SIZE * sizeof(alt_u8*));
    26c60:	01000404 	movi	r4,16
    26c64:	002ac5c0 	call	2ac5c <malloc>
    26c68:	e0bf6e15 	stw	r2,-584(fp)
-	read_buf_mem(ADDED_STACK_START_ADDR, ADDED_STACK_SIZE, bottom_data_bk);
+	read_buf_mem(OLD_STACK_START_ADDR, OLD_STACK_SIZE, bottom_data_bk);
    26c6c:	e1bf6e17 	ldw	r6,-584(fp)
    26c70:	01400104 	movi	r5,4
    26c74:	0115ff04 	movi	r4,22524
@@ -11568,7 +11568,7 @@ int load_SNA(FAT_HANDLE hFat, char* filename) {
    26e6c:	e17f6d17 	ldw	r5,-588(fp)
    26e70:	01100004 	movi	r4,16384
    26e74:	0028ac40 	call	28ac4 <write_buf_mem>
-		write_buf_mem(ADDED_STACK_START_ADDR, bottom_data_bk, 0, ADDED_STACK_SIZE);
+		write_buf_mem(OLD_STACK_START_ADDR, bottom_data_bk, 0, OLD_STACK_SIZE);
    26e78:	01c00104 	movi	r7,4
    26e7c:	000d883a 	mov	r6,zero
    26e80:	e17f6e17 	ldw	r5,-584(fp)
@@ -13132,11 +13132,11 @@ int load_z80(FAT_HANDLE hFat, char* filename) {
    27d80:	002892c0 	call	2892c <read_buf_mem>
 
 	// Save data that the stack additions overwrite
-	alt_u8* bottom_data_bk = (alt_u8*) malloc(ADDED_STACK_SIZE * sizeof(alt_u8*));
+	alt_u8* bottom_data_bk = (alt_u8*) malloc(OLD_STACK_SIZE * sizeof(alt_u8*));
    27d84:	01000404 	movi	r4,16
    27d88:	002ac5c0 	call	2ac5c <malloc>
    27d8c:	e0bfae15 	stw	r2,-328(fp)
-	read_buf_mem(ADDED_STACK_START_ADDR, ADDED_STACK_SIZE, bottom_data_bk);
+	read_buf_mem(OLD_STACK_START_ADDR, OLD_STACK_SIZE, bottom_data_bk);
    27d90:	e1bfae17 	ldw	r6,-328(fp)
    27d94:	01400104 	movi	r5,4
    27d98:	0115ff04 	movi	r4,22524
@@ -13287,7 +13287,7 @@ int load_z80(FAT_HANDLE hFat, char* filename) {
    27f30:	e17fad17 	ldw	r5,-332(fp)
    27f34:	01100004 	movi	r4,16384
    27f38:	0028ac40 	call	28ac4 <write_buf_mem>
-		write_buf_mem(ADDED_STACK_START_ADDR, bottom_data_bk, 0, ADDED_STACK_SIZE);
+		write_buf_mem(OLD_STACK_START_ADDR, bottom_data_bk, 0, OLD_STACK_SIZE);
    27f3c:	01c00104 	movi	r7,4
    27f40:	000d883a 	mov	r6,zero
    27f44:	e17fae17 	ldw	r5,-328(fp)

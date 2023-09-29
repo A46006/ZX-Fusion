@@ -144,8 +144,8 @@ int load_SNA(FAT_HANDLE hFat, char* filename) {
 	read_buf_mem(NMI_ROUTINE_ADDR, data_bk_len, data_bk);
 
 	// Save data that the stack additions overwrite
-	alt_u8* bottom_data_bk = (alt_u8*) malloc(ADDED_STACK_SIZE * sizeof(alt_u8*));
-	read_buf_mem(ADDED_STACK_START_ADDR, ADDED_STACK_SIZE, bottom_data_bk);
+	alt_u8* bottom_data_bk = (alt_u8*) malloc(OLD_STACK_SIZE * sizeof(alt_u8*));
+	read_buf_mem(OLD_STACK_START_ADDR, OLD_STACK_SIZE, bottom_data_bk);
 
 	/*
 	// Obtaining PC for later
@@ -216,7 +216,7 @@ int load_SNA(FAT_HANDLE hFat, char* filename) {
 		DMA_request(10);
 
 		write_buf_mem(NMI_ROUTINE_ADDR, data_bk, 0, data_bk_len);
-		write_buf_mem(ADDED_STACK_START_ADDR, bottom_data_bk, 0, ADDED_STACK_SIZE);
+		write_buf_mem(OLD_STACK_START_ADDR, bottom_data_bk, 0, OLD_STACK_SIZE);
 
 		DMA_stop(10);
 	}
@@ -690,8 +690,8 @@ int load_z80(FAT_HANDLE hFat, char* filename) {
 	read_buf_mem(NMI_ROUTINE_ADDR, data_bk_len, data_bk);
 
 	// Save data that the stack additions overwrite
-	alt_u8* bottom_data_bk = (alt_u8*) malloc(ADDED_STACK_SIZE * sizeof(alt_u8*));
-	read_buf_mem(ADDED_STACK_START_ADDR, ADDED_STACK_SIZE, bottom_data_bk);
+	alt_u8* bottom_data_bk = (alt_u8*) malloc(OLD_STACK_SIZE * sizeof(alt_u8*));
+	read_buf_mem(OLD_STACK_START_ADDR, OLD_STACK_SIZE, bottom_data_bk);
 
 	alt_u8* routine = generate_routine(regs, type, routine_size);
 
@@ -739,7 +739,7 @@ int load_z80(FAT_HANDLE hFat, char* filename) {
 		DMA_request(10);
 
 		write_buf_mem(NMI_ROUTINE_ADDR, data_bk, 0, data_bk_len);
-		write_buf_mem(ADDED_STACK_START_ADDR, bottom_data_bk, 0, ADDED_STACK_SIZE);
+		write_buf_mem(OLD_STACK_START_ADDR, bottom_data_bk, 0, OLD_STACK_SIZE);
 
 		DMA_stop(10);
 	}
