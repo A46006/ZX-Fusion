@@ -15517,7 +15517,7 @@ int  myprintf_dwordarray(unsigned int *pArray, int nElementCount){
    296d0:	18803fcc 	andi	r2,r3,255
    296d4:	a18dc83a 	sub	r6,r20,r6
    296d8:	2000683a 	jmp	r4
-   296dc:	000298c0 	call	298c <__reset-0x1d674>
+   296dc:	000298c0 	call	298c <__alt_mem_onchip_memory-0x1d674>
    296e0:	00029744 	movi	zero,2653
    296e4:	000298b4 	movhi	zero,2658
    296e8:	00029730 	cmpltui	zero,zero,2652
@@ -16145,9 +16145,9 @@ int  myprintf_dwordarray(unsigned int *pArray, int nElementCount){
    2a088:	0002a0dc 	xori	zero,zero,2691
    2a08c:	0002a268 	cmpgeui	zero,zero,2697
    2a090:	0002a0d0 	cmplti	zero,zero,2691
-   2a094:	0002a0c0 	call	2a0c <__reset-0x1d5f4>
-   2a098:	0002a0c0 	call	2a0c <__reset-0x1d5f4>
-   2a09c:	0002a0c0 	call	2a0c <__reset-0x1d5f4>
+   2a094:	0002a0c0 	call	2a0c <__alt_mem_onchip_memory-0x1d5f4>
+   2a098:	0002a0c0 	call	2a0c <__alt_mem_onchip_memory-0x1d5f4>
+   2a09c:	0002a0c0 	call	2a0c <__alt_mem_onchip_memory-0x1d5f4>
    2a0a0:	0002a62c 	andhi	zero,zero,2712
    2a0a4:	2404b03a 	or	r2,r4,r16
    2a0a8:	10006c1e 	bne	r2,zero,2a25c <__divdf3+0x2ec>
