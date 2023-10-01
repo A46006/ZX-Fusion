@@ -489,7 +489,7 @@ MENU_TITLE_SPACE_TBL:  ; WAS 3C42
 SHOW_FILE_MENU:	; WAS L259F	
 	;LD HL, MENU_JMP_TBL	; Jump table for Main Menu
 	;LD ($F6EA), HL	; Store current menu jump table address
-	LD HL, $C000	; Main Menu text									; MUST CHANGE TO ACTUAL ADDRESS IN RAM
+	LD HL, $C000	; File Menu text
 	LD ($F6EC), HL	; Store current menu text table address
 
 	PUSH HL
@@ -669,8 +669,14 @@ EMPTY_ENTRIES_TRAILING:
 
 EMPTY_ENTRIES_END:	
 
+	PUSH HL           ;
+	LD   HL,FILE_MENU_TITLE_COLORS_TBL ; setting color for rest of text
+	CALL PRINT_STRING ; Print it.
+	POP  HL           ; HL=Address of first menu item text.
 	
-	LD HL, FILE_MENU_TITLE_COLORS_TBL+10 ; address of a ' '
+	;LD HL, FILE_MENU_TITLE_COLORS_TBL ; address of a ' '
+	
+	; HL = end of file list text, now at page string 
 	LD BC, $1400	   ; coordinates
 	XOR A
 	CALL PRINT_BLACK_STRIPE  ; Prints stripe
@@ -754,10 +760,10 @@ FILE_UP_DN_HNDLR:
 ; ----------------------------------
 RT_HNDLR:
 	;SCF               ; Signal move up.
-	LD HL, ($F6EC)        ; addr of page entries size
-	LD A, (HL)
-	SUB A, $11
-	JR NZ, NO_RT
+	LD HL, $EC09     ; address to number of pages left, 0 if last page
+	LD A, (HL)         ; A = number of pages left
+	ADD A, $0         ; to affect Z flag
+	JR Z, NO_RT
 	
 	LD   HL, $EC0B    ; 
 	LD   A, (HL)      ; Fetch current page number

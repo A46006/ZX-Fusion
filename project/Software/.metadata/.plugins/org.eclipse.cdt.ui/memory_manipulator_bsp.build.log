@@ -1,6 +1,6 @@
-12:17:27 **** Build of configuration Nios II for project memory_manipulator_bsp ****
+14:20:27 **** Incremental Build of configuration Nios II for project memory_manipulator_bsp ****
 make all 
 [BSP build complete]
 
-12:17:28 Build Finished (took 712ms)
+14:20:28 Build Finished (took 709ms)
 
