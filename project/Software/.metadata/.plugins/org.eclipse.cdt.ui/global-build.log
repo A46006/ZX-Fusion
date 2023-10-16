@@ -519,3 +519,1133 @@ Info:                          22 KBytes free for stack + heap.
 Info: Creating memory_manipulator.objdump
 nios2-elf-objdump --disassemble --syms --all-header --source memory_manipulator.elf >memory_manipulator.objdump
 [memory_manipulator build complete]
+16:19:46 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+make all 
+Info: Building ../memory_manipulator_bsp/
+C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
+[BSP build complete]
+Info: Compiling file_format_reader/formats.c to obj/default/file_format_reader/formats.o
+nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_C_PLUS_PLUS -DALT_NO_INSTRUCTION_EMULATION -DALT_USE_SMALL_DRIVERS -DSMALL_C_LIB -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/file_format_reader/formats.o file_format_reader/formats.c
+file_format_reader/formats.c: In function 'load_file':
+file_format_reader/formats.c:9:18: warning: implicit declaration of function 'tolower' [-Wimplicit-function-declaration]
+   extension[i] = tolower(extension[i]);
+                  ^
+Info: Compiling main.c to obj/default/main.o
+nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_C_PLUS_PLUS -DALT_NO_INSTRUCTION_EMULATION -DALT_USE_SMALL_DRIVERS -DSMALL_C_LIB -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/main.o main.c
+main.c: In function 'load_page':
+main.c:212:22: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+  write_buf_mem(addr, title, 0, strlen(title));
+                      ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:218:23: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+   write_buf_mem(addr, list.filenames[i], 0, name_len);
+                       ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:225:23: warning: implicit declaration of function 'ceil' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                       ^
+main.c:225:23: warning: incompatible implicit declaration of built-in function 'ceil'
+main.c:225:23: note: include '<math.h>' or provide a declaration of 'ceil'
+main.c:225:28: warning: implicit declaration of function 'log10' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                            ^
+main.c:225:28: warning: incompatible implicit declaration of built-in function 'log10'
+main.c:225:28: note: include '<math.h>' or provide a declaration of 'log10'
+main.c:232:25: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+     write_buf_mem(addr, pages_str, 0, str_len); // writes the page string to memory
+                         ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+Info: Linking memory_manipulator.elf
+nios2-elf-g++  -T'../memory_manipulator_bsp//linker.x' -msys-crt0='../memory_manipulator_bsp//obj/HAL/src/crt0.o' -msys-lib=hal_bsp -L../memory_manipulator_bsp/  -msmallc  -Wl,-Map=memory_manipulator.map   -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o memory_manipulator.elf obj/default/SD/sd_if.o obj/default/SD/terasic_fat/FatFileSystem.o obj/default/SD/terasic_fat/FatInternal.o obj/default/SD/terasic_sdcard/crc16.o obj/default/SD/terasic_sdcard/crc7.o obj/default/SD/terasic_sdcard/sd_hal.o obj/default/SD/terasic_sdcard/sd_lib.o obj/default/SD/terasic_sdcard/sd_protocol.o obj/default/SD/test_sd.o obj/default/file_format_reader/file_format_aux.o obj/default/file_format_reader/formats.o obj/default/main.o obj/default/spectrum_comm/DMA/dma_hal.o obj/default/spectrum_comm/Peripheral_Interfaces/per_hal.o obj/default/terasic_lib/debug.o -lm -msys-lib=m
+nios2-elf-insert memory_manipulator.elf --thread_model hal --cpu_name cpu --qsys true --simulation_enabled false --stderr_dev jtag_uart --stdin_dev jtag_uart --stdout_dev jtag_uart --sopc_system_name nios_sd_loader --quartus_project_dir "H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project" --jdi H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../DE2_115_GOLDEN_TOP.jdi --sopcinfo H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../nios_sd_loader.sopcinfo
+Info: (memory_manipulator.elf) 72 KBytes program size (code + initialized data).
+Info:                          22 KBytes free for stack + heap.
+Info: Creating memory_manipulator.objdump
+nios2-elf-objdump --disassemble --syms --all-header --source memory_manipulator.elf >memory_manipulator.objdump
+[memory_manipulator build complete]
+16:30:32 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+make all 
+Info: Building ../memory_manipulator_bsp/
+C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
+[BSP build complete]
+Info: Compiling main.c to obj/default/main.o
+nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_C_PLUS_PLUS -DALT_NO_INSTRUCTION_EMULATION -DALT_USE_SMALL_DRIVERS -DSMALL_C_LIB -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/main.o main.c
+main.c: In function 'load_page':
+main.c:213:22: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+  write_buf_mem(addr, title, 0, strlen(title));
+                      ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:219:23: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+   write_buf_mem(addr, list.filenames[i], 0, name_len);
+                       ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:226:23: warning: implicit declaration of function 'ceil' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                       ^
+main.c:226:23: warning: incompatible implicit declaration of built-in function 'ceil'
+main.c:226:23: note: include '<math.h>' or provide a declaration of 'ceil'
+main.c:226:28: warning: implicit declaration of function 'log10' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                            ^
+main.c:226:28: warning: incompatible implicit declaration of built-in function 'log10'
+main.c:226:28: note: include '<math.h>' or provide a declaration of 'log10'
+main.c:233:25: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+     write_buf_mem(addr, pages_str, 0, str_len); // writes the page string to memory
+                         ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+Info: Linking memory_manipulator.elf
+nios2-elf-g++  -T'../memory_manipulator_bsp//linker.x' -msys-crt0='../memory_manipulator_bsp//obj/HAL/src/crt0.o' -msys-lib=hal_bsp -L../memory_manipulator_bsp/  -msmallc  -Wl,-Map=memory_manipulator.map   -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o memory_manipulator.elf obj/default/SD/sd_if.o obj/default/SD/terasic_fat/FatFileSystem.o obj/default/SD/terasic_fat/FatInternal.o obj/default/SD/terasic_sdcard/crc16.o obj/default/SD/terasic_sdcard/crc7.o obj/default/SD/terasic_sdcard/sd_hal.o obj/default/SD/terasic_sdcard/sd_lib.o obj/default/SD/terasic_sdcard/sd_protocol.o obj/default/SD/test_sd.o obj/default/file_format_reader/file_format_aux.o obj/default/file_format_reader/formats.o obj/default/main.o obj/default/spectrum_comm/DMA/dma_hal.o obj/default/spectrum_comm/Peripheral_Interfaces/per_hal.o obj/default/terasic_lib/debug.o -lm -msys-lib=m
+nios2-elf-insert memory_manipulator.elf --thread_model hal --cpu_name cpu --qsys true --simulation_enabled false --stderr_dev jtag_uart --stdin_dev jtag_uart --stdout_dev jtag_uart --sopc_system_name nios_sd_loader --quartus_project_dir "H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project" --jdi H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../DE2_115_GOLDEN_TOP.jdi --sopcinfo H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../nios_sd_loader.sopcinfo
+Info: (memory_manipulator.elf) 72 KBytes program size (code + initialized data).
+Info:                          22 KBytes free for stack + heap.
+Info: Creating memory_manipulator.objdump
+nios2-elf-objdump --disassemble --syms --all-header --source memory_manipulator.elf >memory_manipulator.objdump
+[memory_manipulator build complete]
+16:32:19 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+make all 
+Info: Building ../memory_manipulator_bsp/
+C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
+[BSP build complete]
+Info: Compiling main.c to obj/default/main.o
+nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_C_PLUS_PLUS -DALT_NO_INSTRUCTION_EMULATION -DALT_USE_SMALL_DRIVERS -DSMALL_C_LIB -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/main.o main.c
+main.c: In function 'load_page':
+main.c:213:22: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+  write_buf_mem(addr, title, 0, strlen(title));
+                      ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:219:23: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+   write_buf_mem(addr, list.filenames[i], 0, name_len);
+                       ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:226:23: warning: implicit declaration of function 'ceil' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                       ^
+main.c:226:23: warning: incompatible implicit declaration of built-in function 'ceil'
+main.c:226:23: note: include '<math.h>' or provide a declaration of 'ceil'
+main.c:226:28: warning: implicit declaration of function 'log10' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                            ^
+main.c:226:28: warning: incompatible implicit declaration of built-in function 'log10'
+main.c:226:28: note: include '<math.h>' or provide a declaration of 'log10'
+main.c:233:25: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+     write_buf_mem(addr, pages_str, 0, str_len); // writes the page string to memory
+                         ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+Info: Linking memory_manipulator.elf
+nios2-elf-g++  -T'../memory_manipulator_bsp//linker.x' -msys-crt0='../memory_manipulator_bsp//obj/HAL/src/crt0.o' -msys-lib=hal_bsp -L../memory_manipulator_bsp/  -msmallc  -Wl,-Map=memory_manipulator.map   -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o memory_manipulator.elf obj/default/SD/sd_if.o obj/default/SD/terasic_fat/FatFileSystem.o obj/default/SD/terasic_fat/FatInternal.o obj/default/SD/terasic_sdcard/crc16.o obj/default/SD/terasic_sdcard/crc7.o obj/default/SD/terasic_sdcard/sd_hal.o obj/default/SD/terasic_sdcard/sd_lib.o obj/default/SD/terasic_sdcard/sd_protocol.o obj/default/SD/test_sd.o obj/default/file_format_reader/file_format_aux.o obj/default/file_format_reader/formats.o obj/default/main.o obj/default/spectrum_comm/DMA/dma_hal.o obj/default/spectrum_comm/Peripheral_Interfaces/per_hal.o obj/default/terasic_lib/debug.o -lm -msys-lib=m
+nios2-elf-insert memory_manipulator.elf --thread_model hal --cpu_name cpu --qsys true --simulation_enabled false --stderr_dev jtag_uart --stdin_dev jtag_uart --stdout_dev jtag_uart --sopc_system_name nios_sd_loader --quartus_project_dir "H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project" --jdi H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../DE2_115_GOLDEN_TOP.jdi --sopcinfo H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../nios_sd_loader.sopcinfo
+Info: (memory_manipulator.elf) 72 KBytes program size (code + initialized data).
+Info:                          22 KBytes free for stack + heap.
+Info: Creating memory_manipulator.objdump
+nios2-elf-objdump --disassemble --syms --all-header --source memory_manipulator.elf >memory_manipulator.objdump
+[memory_manipulator build complete]
+16:33:08 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+make all 
+Info: Building ../memory_manipulator_bsp/
+C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
+[BSP build complete]
+Info: Compiling main.c to obj/default/main.o
+nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_C_PLUS_PLUS -DALT_NO_INSTRUCTION_EMULATION -DALT_USE_SMALL_DRIVERS -DSMALL_C_LIB -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/main.o main.c
+main.c: In function 'load_page':
+main.c:213:22: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+  write_buf_mem(addr, title, 0, strlen(title));
+                      ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:219:23: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+   write_buf_mem(addr, list.filenames[i], 0, name_len);
+                       ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:226:23: warning: implicit declaration of function 'ceil' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                       ^
+main.c:226:23: warning: incompatible implicit declaration of built-in function 'ceil'
+main.c:226:23: note: include '<math.h>' or provide a declaration of 'ceil'
+main.c:226:28: warning: implicit declaration of function 'log10' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                            ^
+main.c:226:28: warning: incompatible implicit declaration of built-in function 'log10'
+main.c:226:28: note: include '<math.h>' or provide a declaration of 'log10'
+main.c:233:25: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+     write_buf_mem(addr, pages_str, 0, str_len); // writes the page string to memory
+                         ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+Info: Linking memory_manipulator.elf
+nios2-elf-g++  -T'../memory_manipulator_bsp//linker.x' -msys-crt0='../memory_manipulator_bsp//obj/HAL/src/crt0.o' -msys-lib=hal_bsp -L../memory_manipulator_bsp/  -msmallc  -Wl,-Map=memory_manipulator.map   -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o memory_manipulator.elf obj/default/SD/sd_if.o obj/default/SD/terasic_fat/FatFileSystem.o obj/default/SD/terasic_fat/FatInternal.o obj/default/SD/terasic_sdcard/crc16.o obj/default/SD/terasic_sdcard/crc7.o obj/default/SD/terasic_sdcard/sd_hal.o obj/default/SD/terasic_sdcard/sd_lib.o obj/default/SD/terasic_sdcard/sd_protocol.o obj/default/SD/test_sd.o obj/default/file_format_reader/file_format_aux.o obj/default/file_format_reader/formats.o obj/default/main.o obj/default/spectrum_comm/DMA/dma_hal.o obj/default/spectrum_comm/Peripheral_Interfaces/per_hal.o obj/default/terasic_lib/debug.o -lm -msys-lib=m
+nios2-elf-insert memory_manipulator.elf --thread_model hal --cpu_name cpu --qsys true --simulation_enabled false --stderr_dev jtag_uart --stdin_dev jtag_uart --stdout_dev jtag_uart --sopc_system_name nios_sd_loader --quartus_project_dir "H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project" --jdi H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../DE2_115_GOLDEN_TOP.jdi --sopcinfo H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../nios_sd_loader.sopcinfo
+Info: (memory_manipulator.elf) 72 KBytes program size (code + initialized data).
+Info:                          22 KBytes free for stack + heap.
+Info: Creating memory_manipulator.objdump
+nios2-elf-objdump --disassemble --syms --all-header --source memory_manipulator.elf >memory_manipulator.objdump
+[memory_manipulator build complete]
+16:41:23 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+make all 
+Info: Building ../memory_manipulator_bsp/
+C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
+[BSP build complete]
+Info: Compiling main.c to obj/default/main.o
+nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_C_PLUS_PLUS -DALT_NO_INSTRUCTION_EMULATION -DALT_USE_SMALL_DRIVERS -DSMALL_C_LIB -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/main.o main.c
+main.c: In function 'load_page':
+main.c:223:22: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+  write_buf_mem(addr, title, 0, strlen(title));
+                      ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:229:23: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+   write_buf_mem(addr, list.filenames[i], 0, name_len);
+                       ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:236:23: warning: implicit declaration of function 'ceil' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                       ^
+main.c:236:23: warning: incompatible implicit declaration of built-in function 'ceil'
+main.c:236:23: note: include '<math.h>' or provide a declaration of 'ceil'
+main.c:236:28: warning: implicit declaration of function 'log10' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                            ^
+main.c:236:28: warning: incompatible implicit declaration of built-in function 'log10'
+main.c:236:28: note: include '<math.h>' or provide a declaration of 'log10'
+main.c:243:25: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+     write_buf_mem(addr, pages_str, 0, str_len); // writes the page string to memory
+                         ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+Info: Linking memory_manipulator.elf
+nios2-elf-g++  -T'../memory_manipulator_bsp//linker.x' -msys-crt0='../memory_manipulator_bsp//obj/HAL/src/crt0.o' -msys-lib=hal_bsp -L../memory_manipulator_bsp/  -msmallc  -Wl,-Map=memory_manipulator.map   -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o memory_manipulator.elf obj/default/SD/sd_if.o obj/default/SD/terasic_fat/FatFileSystem.o obj/default/SD/terasic_fat/FatInternal.o obj/default/SD/terasic_sdcard/crc16.o obj/default/SD/terasic_sdcard/crc7.o obj/default/SD/terasic_sdcard/sd_hal.o obj/default/SD/terasic_sdcard/sd_lib.o obj/default/SD/terasic_sdcard/sd_protocol.o obj/default/SD/test_sd.o obj/default/file_format_reader/file_format_aux.o obj/default/file_format_reader/formats.o obj/default/main.o obj/default/spectrum_comm/DMA/dma_hal.o obj/default/spectrum_comm/Peripheral_Interfaces/per_hal.o obj/default/terasic_lib/debug.o -lm -msys-lib=m
+nios2-elf-insert memory_manipulator.elf --thread_model hal --cpu_name cpu --qsys true --simulation_enabled false --stderr_dev jtag_uart --stdin_dev jtag_uart --stdout_dev jtag_uart --sopc_system_name nios_sd_loader --quartus_project_dir "H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project" --jdi H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../DE2_115_GOLDEN_TOP.jdi --sopcinfo H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../nios_sd_loader.sopcinfo
+Info: (memory_manipulator.elf) 73 KBytes program size (code + initialized data).
+Info:                          22 KBytes free for stack + heap.
+Info: Creating memory_manipulator.objdump
+nios2-elf-objdump --disassemble --syms --all-header --source memory_manipulator.elf >memory_manipulator.objdump
+[memory_manipulator build complete]
+16:51:44 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+make all 
+Info: Building ../memory_manipulator_bsp/
+C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
+[BSP build complete]
+Info: Compiling main.c to obj/default/main.o
+nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_C_PLUS_PLUS -DALT_NO_INSTRUCTION_EMULATION -DALT_USE_SMALL_DRIVERS -DSMALL_C_LIB -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/main.o main.c
+main.c: In function 'load_page':
+main.c:243:22: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+  write_buf_mem(addr, title, 0, strlen(title));
+                      ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:249:23: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+   write_buf_mem(addr, list.filenames[i], 0, name_len);
+                       ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:256:23: warning: implicit declaration of function 'ceil' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                       ^
+main.c:256:23: warning: incompatible implicit declaration of built-in function 'ceil'
+main.c:256:23: note: include '<math.h>' or provide a declaration of 'ceil'
+main.c:256:28: warning: implicit declaration of function 'log10' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                            ^
+main.c:256:28: warning: incompatible implicit declaration of built-in function 'log10'
+main.c:256:28: note: include '<math.h>' or provide a declaration of 'log10'
+main.c:263:25: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+     write_buf_mem(addr, pages_str, 0, str_len); // writes the page string to memory
+                         ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+Info: Linking memory_manipulator.elf
+nios2-elf-g++  -T'../memory_manipulator_bsp//linker.x' -msys-crt0='../memory_manipulator_bsp//obj/HAL/src/crt0.o' -msys-lib=hal_bsp -L../memory_manipulator_bsp/  -msmallc  -Wl,-Map=memory_manipulator.map   -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o memory_manipulator.elf obj/default/SD/sd_if.o obj/default/SD/terasic_fat/FatFileSystem.o obj/default/SD/terasic_fat/FatInternal.o obj/default/SD/terasic_sdcard/crc16.o obj/default/SD/terasic_sdcard/crc7.o obj/default/SD/terasic_sdcard/sd_hal.o obj/default/SD/terasic_sdcard/sd_lib.o obj/default/SD/terasic_sdcard/sd_protocol.o obj/default/SD/test_sd.o obj/default/file_format_reader/file_format_aux.o obj/default/file_format_reader/formats.o obj/default/main.o obj/default/spectrum_comm/DMA/dma_hal.o obj/default/spectrum_comm/Peripheral_Interfaces/per_hal.o obj/default/terasic_lib/debug.o -lm -msys-lib=m
+nios2-elf-insert memory_manipulator.elf --thread_model hal --cpu_name cpu --qsys true --simulation_enabled false --stderr_dev jtag_uart --stdin_dev jtag_uart --stdout_dev jtag_uart --sopc_system_name nios_sd_loader --quartus_project_dir "H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project" --jdi H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../DE2_115_GOLDEN_TOP.jdi --sopcinfo H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../nios_sd_loader.sopcinfo
+Info: (memory_manipulator.elf) 73 KBytes program size (code + initialized data).
+Info:                          22 KBytes free for stack + heap.
+Info: Creating memory_manipulator.objdump
+nios2-elf-objdump --disassemble --syms --all-header --source memory_manipulator.elf >memory_manipulator.objdump
+[memory_manipulator build complete]
+17:06:32 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+make all 
+Info: Building ../memory_manipulator_bsp/
+C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
+[BSP build complete]
+Info: Compiling main.c to obj/default/main.o
+nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_C_PLUS_PLUS -DALT_NO_INSTRUCTION_EMULATION -DALT_USE_SMALL_DRIVERS -DSMALL_C_LIB -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/main.o main.c
+main.c: In function 'load_page':
+main.c:256:22: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+  write_buf_mem(addr, title, 0, strlen(title));
+                      ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:262:23: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+   write_buf_mem(addr, list.filenames[i], 0, name_len);
+                       ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:269:23: warning: implicit declaration of function 'ceil' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                       ^
+main.c:269:23: warning: incompatible implicit declaration of built-in function 'ceil'
+main.c:269:23: note: include '<math.h>' or provide a declaration of 'ceil'
+main.c:269:28: warning: implicit declaration of function 'log10' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                            ^
+main.c:269:28: warning: incompatible implicit declaration of built-in function 'log10'
+main.c:269:28: note: include '<math.h>' or provide a declaration of 'log10'
+main.c:276:25: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+     write_buf_mem(addr, pages_str, 0, str_len); // writes the page string to memory
+                         ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+Info: Linking memory_manipulator.elf
+nios2-elf-g++  -T'../memory_manipulator_bsp//linker.x' -msys-crt0='../memory_manipulator_bsp//obj/HAL/src/crt0.o' -msys-lib=hal_bsp -L../memory_manipulator_bsp/  -msmallc  -Wl,-Map=memory_manipulator.map   -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o memory_manipulator.elf obj/default/SD/sd_if.o obj/default/SD/terasic_fat/FatFileSystem.o obj/default/SD/terasic_fat/FatInternal.o obj/default/SD/terasic_sdcard/crc16.o obj/default/SD/terasic_sdcard/crc7.o obj/default/SD/terasic_sdcard/sd_hal.o obj/default/SD/terasic_sdcard/sd_lib.o obj/default/SD/terasic_sdcard/sd_protocol.o obj/default/SD/test_sd.o obj/default/file_format_reader/file_format_aux.o obj/default/file_format_reader/formats.o obj/default/main.o obj/default/spectrum_comm/DMA/dma_hal.o obj/default/spectrum_comm/Peripheral_Interfaces/per_hal.o obj/default/terasic_lib/debug.o -lm -msys-lib=m
+nios2-elf-insert memory_manipulator.elf --thread_model hal --cpu_name cpu --qsys true --simulation_enabled false --stderr_dev jtag_uart --stdin_dev jtag_uart --stdout_dev jtag_uart --sopc_system_name nios_sd_loader --quartus_project_dir "H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project" --jdi H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../DE2_115_GOLDEN_TOP.jdi --sopcinfo H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../nios_sd_loader.sopcinfo
+Info: (memory_manipulator.elf) 73 KBytes program size (code + initialized data).
+Info:                          21 KBytes free for stack + heap.
+Info: Creating memory_manipulator.objdump
+nios2-elf-objdump --disassemble --syms --all-header --source memory_manipulator.elf >memory_manipulator.objdump
+[memory_manipulator build complete]
+17:08:42 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+make all 
+Info: Building ../memory_manipulator_bsp/
+C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
+[BSP build complete]
+[memory_manipulator build complete]
+17:12:11 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+make all 
+Info: Building ../memory_manipulator_bsp/
+C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
+[BSP build complete]
+Info: Compiling main.c to obj/default/main.o
+nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_C_PLUS_PLUS -DALT_NO_INSTRUCTION_EMULATION -DALT_USE_SMALL_DRIVERS -DSMALL_C_LIB -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/main.o main.c
+main.c: In function 'load_page':
+main.c:257:22: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+  write_buf_mem(addr, title, 0, strlen(title));
+                      ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:263:23: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+   write_buf_mem(addr, list.filenames[i], 0, name_len);
+                       ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:270:23: warning: implicit declaration of function 'ceil' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                       ^
+main.c:270:23: warning: incompatible implicit declaration of built-in function 'ceil'
+main.c:270:23: note: include '<math.h>' or provide a declaration of 'ceil'
+main.c:270:28: warning: implicit declaration of function 'log10' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                            ^
+main.c:270:28: warning: incompatible implicit declaration of built-in function 'log10'
+main.c:270:28: note: include '<math.h>' or provide a declaration of 'log10'
+main.c:277:25: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+     write_buf_mem(addr, pages_str, 0, str_len); // writes the page string to memory
+                         ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+Info: Linking memory_manipulator.elf
+nios2-elf-g++  -T'../memory_manipulator_bsp//linker.x' -msys-crt0='../memory_manipulator_bsp//obj/HAL/src/crt0.o' -msys-lib=hal_bsp -L../memory_manipulator_bsp/  -msmallc  -Wl,-Map=memory_manipulator.map   -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o memory_manipulator.elf obj/default/SD/sd_if.o obj/default/SD/terasic_fat/FatFileSystem.o obj/default/SD/terasic_fat/FatInternal.o obj/default/SD/terasic_sdcard/crc16.o obj/default/SD/terasic_sdcard/crc7.o obj/default/SD/terasic_sdcard/sd_hal.o obj/default/SD/terasic_sdcard/sd_lib.o obj/default/SD/terasic_sdcard/sd_protocol.o obj/default/SD/test_sd.o obj/default/file_format_reader/file_format_aux.o obj/default/file_format_reader/formats.o obj/default/main.o obj/default/spectrum_comm/DMA/dma_hal.o obj/default/spectrum_comm/Peripheral_Interfaces/per_hal.o obj/default/terasic_lib/debug.o -lm -msys-lib=m
+nios2-elf-insert memory_manipulator.elf --thread_model hal --cpu_name cpu --qsys true --simulation_enabled false --stderr_dev jtag_uart --stdin_dev jtag_uart --stdout_dev jtag_uart --sopc_system_name nios_sd_loader --quartus_project_dir "H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project" --jdi H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../DE2_115_GOLDEN_TOP.jdi --sopcinfo H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../nios_sd_loader.sopcinfo
+Info: (memory_manipulator.elf) 73 KBytes program size (code + initialized data).
+Info:                          21 KBytes free for stack + heap.
+Info: Creating memory_manipulator.objdump
+nios2-elf-objdump --disassemble --syms --all-header --source memory_manipulator.elf >memory_manipulator.objdump
+[memory_manipulator build complete]
+17:12:56 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+make all 
+Info: Building ../memory_manipulator_bsp/
+C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
+[BSP build complete]
+Info: Compiling main.c to obj/default/main.o
+nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_C_PLUS_PLUS -DALT_NO_INSTRUCTION_EMULATION -DALT_USE_SMALL_DRIVERS -DSMALL_C_LIB -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/main.o main.c
+main.c: In function 'load_page':
+main.c:257:22: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+  write_buf_mem(addr, title, 0, strlen(title));
+                      ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:263:23: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+   write_buf_mem(addr, list.filenames[i], 0, name_len);
+                       ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:270:23: warning: implicit declaration of function 'ceil' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                       ^
+main.c:270:23: warning: incompatible implicit declaration of built-in function 'ceil'
+main.c:270:23: note: include '<math.h>' or provide a declaration of 'ceil'
+main.c:270:28: warning: implicit declaration of function 'log10' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                            ^
+main.c:270:28: warning: incompatible implicit declaration of built-in function 'log10'
+main.c:270:28: note: include '<math.h>' or provide a declaration of 'log10'
+main.c:277:25: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+     write_buf_mem(addr, pages_str, 0, str_len); // writes the page string to memory
+                         ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+Info: Linking memory_manipulator.elf
+nios2-elf-g++  -T'../memory_manipulator_bsp//linker.x' -msys-crt0='../memory_manipulator_bsp//obj/HAL/src/crt0.o' -msys-lib=hal_bsp -L../memory_manipulator_bsp/  -msmallc  -Wl,-Map=memory_manipulator.map   -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o memory_manipulator.elf obj/default/SD/sd_if.o obj/default/SD/terasic_fat/FatFileSystem.o obj/default/SD/terasic_fat/FatInternal.o obj/default/SD/terasic_sdcard/crc16.o obj/default/SD/terasic_sdcard/crc7.o obj/default/SD/terasic_sdcard/sd_hal.o obj/default/SD/terasic_sdcard/sd_lib.o obj/default/SD/terasic_sdcard/sd_protocol.o obj/default/SD/test_sd.o obj/default/file_format_reader/file_format_aux.o obj/default/file_format_reader/formats.o obj/default/main.o obj/default/spectrum_comm/DMA/dma_hal.o obj/default/spectrum_comm/Peripheral_Interfaces/per_hal.o obj/default/terasic_lib/debug.o -lm -msys-lib=m
+nios2-elf-insert memory_manipulator.elf --thread_model hal --cpu_name cpu --qsys true --simulation_enabled false --stderr_dev jtag_uart --stdin_dev jtag_uart --stdout_dev jtag_uart --sopc_system_name nios_sd_loader --quartus_project_dir "H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project" --jdi H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../DE2_115_GOLDEN_TOP.jdi --sopcinfo H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../nios_sd_loader.sopcinfo
+Info: (memory_manipulator.elf) 73 KBytes program size (code + initialized data).
+Info:                          21 KBytes free for stack + heap.
+Info: Creating memory_manipulator.objdump
+nios2-elf-objdump --disassemble --syms --all-header --source memory_manipulator.elf >memory_manipulator.objdump
+[memory_manipulator build complete]
+17:13:58 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+make all 
+Info: Building ../memory_manipulator_bsp/
+C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
+[BSP build complete]
+Info: Compiling main.c to obj/default/main.o
+nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_C_PLUS_PLUS -DALT_NO_INSTRUCTION_EMULATION -DALT_USE_SMALL_DRIVERS -DSMALL_C_LIB -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/main.o main.c
+main.c: In function 'load_page':
+main.c:257:22: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+  write_buf_mem(addr, title, 0, strlen(title));
+                      ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:263:23: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+   write_buf_mem(addr, list.filenames[i], 0, name_len);
+                       ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:270:23: warning: implicit declaration of function 'ceil' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                       ^
+main.c:270:23: warning: incompatible implicit declaration of built-in function 'ceil'
+main.c:270:23: note: include '<math.h>' or provide a declaration of 'ceil'
+main.c:270:28: warning: implicit declaration of function 'log10' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                            ^
+main.c:270:28: warning: incompatible implicit declaration of built-in function 'log10'
+main.c:270:28: note: include '<math.h>' or provide a declaration of 'log10'
+main.c:277:25: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+     write_buf_mem(addr, pages_str, 0, str_len); // writes the page string to memory
+                         ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+Info: Linking memory_manipulator.elf
+nios2-elf-g++  -T'../memory_manipulator_bsp//linker.x' -msys-crt0='../memory_manipulator_bsp//obj/HAL/src/crt0.o' -msys-lib=hal_bsp -L../memory_manipulator_bsp/  -msmallc  -Wl,-Map=memory_manipulator.map   -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o memory_manipulator.elf obj/default/SD/sd_if.o obj/default/SD/terasic_fat/FatFileSystem.o obj/default/SD/terasic_fat/FatInternal.o obj/default/SD/terasic_sdcard/crc16.o obj/default/SD/terasic_sdcard/crc7.o obj/default/SD/terasic_sdcard/sd_hal.o obj/default/SD/terasic_sdcard/sd_lib.o obj/default/SD/terasic_sdcard/sd_protocol.o obj/default/SD/test_sd.o obj/default/file_format_reader/file_format_aux.o obj/default/file_format_reader/formats.o obj/default/main.o obj/default/spectrum_comm/DMA/dma_hal.o obj/default/spectrum_comm/Peripheral_Interfaces/per_hal.o obj/default/terasic_lib/debug.o -lm -msys-lib=m
+nios2-elf-insert memory_manipulator.elf --thread_model hal --cpu_name cpu --qsys true --simulation_enabled false --stderr_dev jtag_uart --stdin_dev jtag_uart --stdout_dev jtag_uart --sopc_system_name nios_sd_loader --quartus_project_dir "H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project" --jdi H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../DE2_115_GOLDEN_TOP.jdi --sopcinfo H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../nios_sd_loader.sopcinfo
+Info: (memory_manipulator.elf) 73 KBytes program size (code + initialized data).
+Info:                          21 KBytes free for stack + heap.
+Info: Creating memory_manipulator.objdump
+nios2-elf-objdump --disassemble --syms --all-header --source memory_manipulator.elf >memory_manipulator.objdump
+[memory_manipulator build complete]
+17:14:23 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+make all 
+Info: Building ../memory_manipulator_bsp/
+C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
+[BSP build complete]
+Info: Compiling main.c to obj/default/main.o
+nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_C_PLUS_PLUS -DALT_NO_INSTRUCTION_EMULATION -DALT_USE_SMALL_DRIVERS -DSMALL_C_LIB -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/main.o main.c
+main.c: In function 'load_page':
+main.c:257:22: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+  write_buf_mem(addr, title, 0, strlen(title));
+                      ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:263:23: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+   write_buf_mem(addr, list.filenames[i], 0, name_len);
+                       ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:270:23: warning: implicit declaration of function 'ceil' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                       ^
+main.c:270:23: warning: incompatible implicit declaration of built-in function 'ceil'
+main.c:270:23: note: include '<math.h>' or provide a declaration of 'ceil'
+main.c:270:28: warning: implicit declaration of function 'log10' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                            ^
+main.c:270:28: warning: incompatible implicit declaration of built-in function 'log10'
+main.c:270:28: note: include '<math.h>' or provide a declaration of 'log10'
+main.c:277:25: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+     write_buf_mem(addr, pages_str, 0, str_len); // writes the page string to memory
+                         ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+Info: Linking memory_manipulator.elf
+nios2-elf-g++  -T'../memory_manipulator_bsp//linker.x' -msys-crt0='../memory_manipulator_bsp//obj/HAL/src/crt0.o' -msys-lib=hal_bsp -L../memory_manipulator_bsp/  -msmallc  -Wl,-Map=memory_manipulator.map   -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o memory_manipulator.elf obj/default/SD/sd_if.o obj/default/SD/terasic_fat/FatFileSystem.o obj/default/SD/terasic_fat/FatInternal.o obj/default/SD/terasic_sdcard/crc16.o obj/default/SD/terasic_sdcard/crc7.o obj/default/SD/terasic_sdcard/sd_hal.o obj/default/SD/terasic_sdcard/sd_lib.o obj/default/SD/terasic_sdcard/sd_protocol.o obj/default/SD/test_sd.o obj/default/file_format_reader/file_format_aux.o obj/default/file_format_reader/formats.o obj/default/main.o obj/default/spectrum_comm/DMA/dma_hal.o obj/default/spectrum_comm/Peripheral_Interfaces/per_hal.o obj/default/terasic_lib/debug.o -lm -msys-lib=m
+nios2-elf-insert memory_manipulator.elf --thread_model hal --cpu_name cpu --qsys true --simulation_enabled false --stderr_dev jtag_uart --stdin_dev jtag_uart --stdout_dev jtag_uart --sopc_system_name nios_sd_loader --quartus_project_dir "H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project" --jdi H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../DE2_115_GOLDEN_TOP.jdi --sopcinfo H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../nios_sd_loader.sopcinfo
+Info: (memory_manipulator.elf) 73 KBytes program size (code + initialized data).
+Info:                          21 KBytes free for stack + heap.
+Info: Creating memory_manipulator.objdump
+nios2-elf-objdump --disassemble --syms --all-header --source memory_manipulator.elf >memory_manipulator.objdump
+[memory_manipulator build complete]
+17:17:31 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+make all 
+Info: Building ../memory_manipulator_bsp/
+C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
+[BSP build complete]
+Info: Compiling main.c to obj/default/main.o
+nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_C_PLUS_PLUS -DALT_NO_INSTRUCTION_EMULATION -DALT_USE_SMALL_DRIVERS -DSMALL_C_LIB -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/main.o main.c
+main.c: In function 'load_page':
+main.c:261:22: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+  write_buf_mem(addr, title, 0, strlen(title));
+                      ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:267:23: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+   write_buf_mem(addr, list.filenames[i], 0, name_len);
+                       ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:274:23: warning: implicit declaration of function 'ceil' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                       ^
+main.c:274:23: warning: incompatible implicit declaration of built-in function 'ceil'
+main.c:274:23: note: include '<math.h>' or provide a declaration of 'ceil'
+main.c:274:28: warning: implicit declaration of function 'log10' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                            ^
+main.c:274:28: warning: incompatible implicit declaration of built-in function 'log10'
+main.c:274:28: note: include '<math.h>' or provide a declaration of 'log10'
+main.c:281:25: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+     write_buf_mem(addr, pages_str, 0, str_len); // writes the page string to memory
+                         ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+Info: Linking memory_manipulator.elf
+nios2-elf-g++  -T'../memory_manipulator_bsp//linker.x' -msys-crt0='../memory_manipulator_bsp//obj/HAL/src/crt0.o' -msys-lib=hal_bsp -L../memory_manipulator_bsp/  -msmallc  -Wl,-Map=memory_manipulator.map   -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o memory_manipulator.elf obj/default/SD/sd_if.o obj/default/SD/terasic_fat/FatFileSystem.o obj/default/SD/terasic_fat/FatInternal.o obj/default/SD/terasic_sdcard/crc16.o obj/default/SD/terasic_sdcard/crc7.o obj/default/SD/terasic_sdcard/sd_hal.o obj/default/SD/terasic_sdcard/sd_lib.o obj/default/SD/terasic_sdcard/sd_protocol.o obj/default/SD/test_sd.o obj/default/file_format_reader/file_format_aux.o obj/default/file_format_reader/formats.o obj/default/main.o obj/default/spectrum_comm/DMA/dma_hal.o obj/default/spectrum_comm/Peripheral_Interfaces/per_hal.o obj/default/terasic_lib/debug.o -lm -msys-lib=m
+nios2-elf-insert memory_manipulator.elf --thread_model hal --cpu_name cpu --qsys true --simulation_enabled false --stderr_dev jtag_uart --stdin_dev jtag_uart --stdout_dev jtag_uart --sopc_system_name nios_sd_loader --quartus_project_dir "H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project" --jdi H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../DE2_115_GOLDEN_TOP.jdi --sopcinfo H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../nios_sd_loader.sopcinfo
+Info: (memory_manipulator.elf) 74 KBytes program size (code + initialized data).
+Info:                          21 KBytes free for stack + heap.
+Info: Creating memory_manipulator.objdump
+nios2-elf-objdump --disassemble --syms --all-header --source memory_manipulator.elf >memory_manipulator.objdump
+[memory_manipulator build complete]
+17:18:57 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+make all 
+Info: Building ../memory_manipulator_bsp/
+C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
+[BSP build complete]
+Info: Compiling main.c to obj/default/main.o
+nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_C_PLUS_PLUS -DALT_NO_INSTRUCTION_EMULATION -DALT_USE_SMALL_DRIVERS -DSMALL_C_LIB -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/main.o main.c
+main.c: In function 'save_state':
+main.c:222:11: warning: format '%s' expects argument of type 'char *', but argument 2 has type 'int' [-Wformat=]
+    printf("STRING: %s\r\n", list.filenames[i][curr_game_filename_len]);
+           ^
+main.c:222:11: warning: format '%s' expects argument of type 'char *', but argument 2 has type 'int' [-Wformat=]
+main.c: In function 'load_page':
+main.c:262:22: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+  write_buf_mem(addr, title, 0, strlen(title));
+                      ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:268:23: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+   write_buf_mem(addr, list.filenames[i], 0, name_len);
+                       ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:275:23: warning: implicit declaration of function 'ceil' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                       ^
+main.c:275:23: warning: incompatible implicit declaration of built-in function 'ceil'
+main.c:275:23: note: include '<math.h>' or provide a declaration of 'ceil'
+main.c:275:28: warning: implicit declaration of function 'log10' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                            ^
+main.c:275:28: warning: incompatible implicit declaration of built-in function 'log10'
+main.c:275:28: note: include '<math.h>' or provide a declaration of 'log10'
+main.c:282:25: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+     write_buf_mem(addr, pages_str, 0, str_len); // writes the page string to memory
+                         ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+Info: Linking memory_manipulator.elf
+nios2-elf-g++  -T'../memory_manipulator_bsp//linker.x' -msys-crt0='../memory_manipulator_bsp//obj/HAL/src/crt0.o' -msys-lib=hal_bsp -L../memory_manipulator_bsp/  -msmallc  -Wl,-Map=memory_manipulator.map   -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o memory_manipulator.elf obj/default/SD/sd_if.o obj/default/SD/terasic_fat/FatFileSystem.o obj/default/SD/terasic_fat/FatInternal.o obj/default/SD/terasic_sdcard/crc16.o obj/default/SD/terasic_sdcard/crc7.o obj/default/SD/terasic_sdcard/sd_hal.o obj/default/SD/terasic_sdcard/sd_lib.o obj/default/SD/terasic_sdcard/sd_protocol.o obj/default/SD/test_sd.o obj/default/file_format_reader/file_format_aux.o obj/default/file_format_reader/formats.o obj/default/main.o obj/default/spectrum_comm/DMA/dma_hal.o obj/default/spectrum_comm/Peripheral_Interfaces/per_hal.o obj/default/terasic_lib/debug.o -lm -msys-lib=m
+nios2-elf-insert memory_manipulator.elf --thread_model hal --cpu_name cpu --qsys true --simulation_enabled false --stderr_dev jtag_uart --stdin_dev jtag_uart --stdout_dev jtag_uart --sopc_system_name nios_sd_loader --quartus_project_dir "H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project" --jdi H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../DE2_115_GOLDEN_TOP.jdi --sopcinfo H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../nios_sd_loader.sopcinfo
+Info: (memory_manipulator.elf) 74 KBytes program size (code + initialized data).
+Info:                          21 KBytes free for stack + heap.
+Info: Creating memory_manipulator.objdump
+nios2-elf-objdump --disassemble --syms --all-header --source memory_manipulator.elf >memory_manipulator.objdump
+[memory_manipulator build complete]
+17:20:03 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+make all 
+Info: Building ../memory_manipulator_bsp/
+C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
+[BSP build complete]
+Info: Compiling main.c to obj/default/main.o
+nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_C_PLUS_PLUS -DALT_NO_INSTRUCTION_EMULATION -DALT_USE_SMALL_DRIVERS -DSMALL_C_LIB -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/main.o main.c
+main.c: In function 'load_page':
+main.c:262:22: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+  write_buf_mem(addr, title, 0, strlen(title));
+                      ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:268:23: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+   write_buf_mem(addr, list.filenames[i], 0, name_len);
+                       ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:275:23: warning: implicit declaration of function 'ceil' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                       ^
+main.c:275:23: warning: incompatible implicit declaration of built-in function 'ceil'
+main.c:275:23: note: include '<math.h>' or provide a declaration of 'ceil'
+main.c:275:28: warning: implicit declaration of function 'log10' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                            ^
+main.c:275:28: warning: incompatible implicit declaration of built-in function 'log10'
+main.c:275:28: note: include '<math.h>' or provide a declaration of 'log10'
+main.c:282:25: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+     write_buf_mem(addr, pages_str, 0, str_len); // writes the page string to memory
+                         ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+Info: Linking memory_manipulator.elf
+nios2-elf-g++  -T'../memory_manipulator_bsp//linker.x' -msys-crt0='../memory_manipulator_bsp//obj/HAL/src/crt0.o' -msys-lib=hal_bsp -L../memory_manipulator_bsp/  -msmallc  -Wl,-Map=memory_manipulator.map   -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o memory_manipulator.elf obj/default/SD/sd_if.o obj/default/SD/terasic_fat/FatFileSystem.o obj/default/SD/terasic_fat/FatInternal.o obj/default/SD/terasic_sdcard/crc16.o obj/default/SD/terasic_sdcard/crc7.o obj/default/SD/terasic_sdcard/sd_hal.o obj/default/SD/terasic_sdcard/sd_lib.o obj/default/SD/terasic_sdcard/sd_protocol.o obj/default/SD/test_sd.o obj/default/file_format_reader/file_format_aux.o obj/default/file_format_reader/formats.o obj/default/main.o obj/default/spectrum_comm/DMA/dma_hal.o obj/default/spectrum_comm/Peripheral_Interfaces/per_hal.o obj/default/terasic_lib/debug.o -lm -msys-lib=m
+nios2-elf-insert memory_manipulator.elf --thread_model hal --cpu_name cpu --qsys true --simulation_enabled false --stderr_dev jtag_uart --stdin_dev jtag_uart --stdout_dev jtag_uart --sopc_system_name nios_sd_loader --quartus_project_dir "H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project" --jdi H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../DE2_115_GOLDEN_TOP.jdi --sopcinfo H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../nios_sd_loader.sopcinfo
+Info: (memory_manipulator.elf) 74 KBytes program size (code + initialized data).
+Info:                          21 KBytes free for stack + heap.
+Info: Creating memory_manipulator.objdump
+nios2-elf-objdump --disassemble --syms --all-header --source memory_manipulator.elf >memory_manipulator.objdump
+[memory_manipulator build complete]
+17:21:46 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+make all 
+Info: Building ../memory_manipulator_bsp/
+C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
+[BSP build complete]
+Info: Compiling main.c to obj/default/main.o
+nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_C_PLUS_PLUS -DALT_NO_INSTRUCTION_EMULATION -DALT_USE_SMALL_DRIVERS -DSMALL_C_LIB -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/main.o main.c
+main.c: In function 'load_page':
+main.c:262:22: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+  write_buf_mem(addr, title, 0, strlen(title));
+                      ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:268:23: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+   write_buf_mem(addr, list.filenames[i], 0, name_len);
+                       ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:275:23: warning: implicit declaration of function 'ceil' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                       ^
+main.c:275:23: warning: incompatible implicit declaration of built-in function 'ceil'
+main.c:275:23: note: include '<math.h>' or provide a declaration of 'ceil'
+main.c:275:28: warning: implicit declaration of function 'log10' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                            ^
+main.c:275:28: warning: incompatible implicit declaration of built-in function 'log10'
+main.c:275:28: note: include '<math.h>' or provide a declaration of 'log10'
+main.c:282:25: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+     write_buf_mem(addr, pages_str, 0, str_len); // writes the page string to memory
+                         ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+Info: Linking memory_manipulator.elf
+nios2-elf-g++  -T'../memory_manipulator_bsp//linker.x' -msys-crt0='../memory_manipulator_bsp//obj/HAL/src/crt0.o' -msys-lib=hal_bsp -L../memory_manipulator_bsp/  -msmallc  -Wl,-Map=memory_manipulator.map   -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o memory_manipulator.elf obj/default/SD/sd_if.o obj/default/SD/terasic_fat/FatFileSystem.o obj/default/SD/terasic_fat/FatInternal.o obj/default/SD/terasic_sdcard/crc16.o obj/default/SD/terasic_sdcard/crc7.o obj/default/SD/terasic_sdcard/sd_hal.o obj/default/SD/terasic_sdcard/sd_lib.o obj/default/SD/terasic_sdcard/sd_protocol.o obj/default/SD/test_sd.o obj/default/file_format_reader/file_format_aux.o obj/default/file_format_reader/formats.o obj/default/main.o obj/default/spectrum_comm/DMA/dma_hal.o obj/default/spectrum_comm/Peripheral_Interfaces/per_hal.o obj/default/terasic_lib/debug.o -lm -msys-lib=m
+nios2-elf-insert memory_manipulator.elf --thread_model hal --cpu_name cpu --qsys true --simulation_enabled false --stderr_dev jtag_uart --stdin_dev jtag_uart --stdout_dev jtag_uart --sopc_system_name nios_sd_loader --quartus_project_dir "H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project" --jdi H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../DE2_115_GOLDEN_TOP.jdi --sopcinfo H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../nios_sd_loader.sopcinfo
+Info: (memory_manipulator.elf) 74 KBytes program size (code + initialized data).
+Info:                          21 KBytes free for stack + heap.
+Info: Creating memory_manipulator.objdump
+nios2-elf-objdump --disassemble --syms --all-header --source memory_manipulator.elf >memory_manipulator.objdump
+[memory_manipulator build complete]
+17:23:50 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+make all 
+Info: Building ../memory_manipulator_bsp/
+C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
+[BSP build complete]
+Info: Compiling main.c to obj/default/main.o
+nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_C_PLUS_PLUS -DALT_NO_INSTRUCTION_EMULATION -DALT_USE_SMALL_DRIVERS -DSMALL_C_LIB -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/main.o main.c
+main.c: In function 'load_page':
+main.c:258:22: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+  write_buf_mem(addr, title, 0, strlen(title));
+                      ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:264:23: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+   write_buf_mem(addr, list.filenames[i], 0, name_len);
+                       ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:271:23: warning: implicit declaration of function 'ceil' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                       ^
+main.c:271:23: warning: incompatible implicit declaration of built-in function 'ceil'
+main.c:271:23: note: include '<math.h>' or provide a declaration of 'ceil'
+main.c:271:28: warning: implicit declaration of function 'log10' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                            ^
+main.c:271:28: warning: incompatible implicit declaration of built-in function 'log10'
+main.c:271:28: note: include '<math.h>' or provide a declaration of 'log10'
+main.c:278:25: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+     write_buf_mem(addr, pages_str, 0, str_len); // writes the page string to memory
+                         ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+Info: Linking memory_manipulator.elf
+nios2-elf-g++  -T'../memory_manipulator_bsp//linker.x' -msys-crt0='../memory_manipulator_bsp//obj/HAL/src/crt0.o' -msys-lib=hal_bsp -L../memory_manipulator_bsp/  -msmallc  -Wl,-Map=memory_manipulator.map   -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o memory_manipulator.elf obj/default/SD/sd_if.o obj/default/SD/terasic_fat/FatFileSystem.o obj/default/SD/terasic_fat/FatInternal.o obj/default/SD/terasic_sdcard/crc16.o obj/default/SD/terasic_sdcard/crc7.o obj/default/SD/terasic_sdcard/sd_hal.o obj/default/SD/terasic_sdcard/sd_lib.o obj/default/SD/terasic_sdcard/sd_protocol.o obj/default/SD/test_sd.o obj/default/file_format_reader/file_format_aux.o obj/default/file_format_reader/formats.o obj/default/main.o obj/default/spectrum_comm/DMA/dma_hal.o obj/default/spectrum_comm/Peripheral_Interfaces/per_hal.o obj/default/terasic_lib/debug.o -lm -msys-lib=m
+nios2-elf-insert memory_manipulator.elf --thread_model hal --cpu_name cpu --qsys true --simulation_enabled false --stderr_dev jtag_uart --stdin_dev jtag_uart --stdout_dev jtag_uart --sopc_system_name nios_sd_loader --quartus_project_dir "H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project" --jdi H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../DE2_115_GOLDEN_TOP.jdi --sopcinfo H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../nios_sd_loader.sopcinfo
+Info: (memory_manipulator.elf) 73 KBytes program size (code + initialized data).
+Info:                          21 KBytes free for stack + heap.
+Info: Creating memory_manipulator.objdump
+nios2-elf-objdump --disassemble --syms --all-header --source memory_manipulator.elf >memory_manipulator.objdump
+[memory_manipulator build complete]
+17:26:36 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+make all 
+Info: Building ../memory_manipulator_bsp/
+C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
+[BSP build complete]
+Info: Compiling main.c to obj/default/main.o
+nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_C_PLUS_PLUS -DALT_NO_INSTRUCTION_EMULATION -DALT_USE_SMALL_DRIVERS -DSMALL_C_LIB -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/main.o main.c
+main.c: In function 'load_page':
+main.c:258:22: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+  write_buf_mem(addr, title, 0, strlen(title));
+                      ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:264:23: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+   write_buf_mem(addr, list.filenames[i], 0, name_len);
+                       ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:271:23: warning: implicit declaration of function 'ceil' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                       ^
+main.c:271:23: warning: incompatible implicit declaration of built-in function 'ceil'
+main.c:271:23: note: include '<math.h>' or provide a declaration of 'ceil'
+main.c:271:28: warning: implicit declaration of function 'log10' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                            ^
+main.c:271:28: warning: incompatible implicit declaration of built-in function 'log10'
+main.c:271:28: note: include '<math.h>' or provide a declaration of 'log10'
+main.c:278:25: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+     write_buf_mem(addr, pages_str, 0, str_len); // writes the page string to memory
+                         ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+Info: Linking memory_manipulator.elf
+nios2-elf-g++  -T'../memory_manipulator_bsp//linker.x' -msys-crt0='../memory_manipulator_bsp//obj/HAL/src/crt0.o' -msys-lib=hal_bsp -L../memory_manipulator_bsp/  -msmallc  -Wl,-Map=memory_manipulator.map   -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o memory_manipulator.elf obj/default/SD/sd_if.o obj/default/SD/terasic_fat/FatFileSystem.o obj/default/SD/terasic_fat/FatInternal.o obj/default/SD/terasic_sdcard/crc16.o obj/default/SD/terasic_sdcard/crc7.o obj/default/SD/terasic_sdcard/sd_hal.o obj/default/SD/terasic_sdcard/sd_lib.o obj/default/SD/terasic_sdcard/sd_protocol.o obj/default/SD/test_sd.o obj/default/file_format_reader/file_format_aux.o obj/default/file_format_reader/formats.o obj/default/main.o obj/default/spectrum_comm/DMA/dma_hal.o obj/default/spectrum_comm/Peripheral_Interfaces/per_hal.o obj/default/terasic_lib/debug.o -lm -msys-lib=m
+nios2-elf-insert memory_manipulator.elf --thread_model hal --cpu_name cpu --qsys true --simulation_enabled false --stderr_dev jtag_uart --stdin_dev jtag_uart --stdout_dev jtag_uart --sopc_system_name nios_sd_loader --quartus_project_dir "H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project" --jdi H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../DE2_115_GOLDEN_TOP.jdi --sopcinfo H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../nios_sd_loader.sopcinfo
+Info: (memory_manipulator.elf) 73 KBytes program size (code + initialized data).
+Info:                          21 KBytes free for stack + heap.
+Info: Creating memory_manipulator.objdump
+nios2-elf-objdump --disassemble --syms --all-header --source memory_manipulator.elf >memory_manipulator.objdump
+[memory_manipulator build complete]
+17:28:22 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+make all 
+Info: Building ../memory_manipulator_bsp/
+C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
+[BSP build complete]
+Info: Compiling main.c to obj/default/main.o
+nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_C_PLUS_PLUS -DALT_NO_INSTRUCTION_EMULATION -DALT_USE_SMALL_DRIVERS -DSMALL_C_LIB -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/main.o main.c
+main.c: In function 'load_page':
+main.c:258:22: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+  write_buf_mem(addr, title, 0, strlen(title));
+                      ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:264:23: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+   write_buf_mem(addr, list.filenames[i], 0, name_len);
+                       ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:271:23: warning: implicit declaration of function 'ceil' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                       ^
+main.c:271:23: warning: incompatible implicit declaration of built-in function 'ceil'
+main.c:271:23: note: include '<math.h>' or provide a declaration of 'ceil'
+main.c:271:28: warning: implicit declaration of function 'log10' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                            ^
+main.c:271:28: warning: incompatible implicit declaration of built-in function 'log10'
+main.c:271:28: note: include '<math.h>' or provide a declaration of 'log10'
+main.c:278:25: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+     write_buf_mem(addr, pages_str, 0, str_len); // writes the page string to memory
+                         ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+Info: Linking memory_manipulator.elf
+nios2-elf-g++  -T'../memory_manipulator_bsp//linker.x' -msys-crt0='../memory_manipulator_bsp//obj/HAL/src/crt0.o' -msys-lib=hal_bsp -L../memory_manipulator_bsp/  -msmallc  -Wl,-Map=memory_manipulator.map   -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o memory_manipulator.elf obj/default/SD/sd_if.o obj/default/SD/terasic_fat/FatFileSystem.o obj/default/SD/terasic_fat/FatInternal.o obj/default/SD/terasic_sdcard/crc16.o obj/default/SD/terasic_sdcard/crc7.o obj/default/SD/terasic_sdcard/sd_hal.o obj/default/SD/terasic_sdcard/sd_lib.o obj/default/SD/terasic_sdcard/sd_protocol.o obj/default/SD/test_sd.o obj/default/file_format_reader/file_format_aux.o obj/default/file_format_reader/formats.o obj/default/main.o obj/default/spectrum_comm/DMA/dma_hal.o obj/default/spectrum_comm/Peripheral_Interfaces/per_hal.o obj/default/terasic_lib/debug.o -lm -msys-lib=m
+nios2-elf-insert memory_manipulator.elf --thread_model hal --cpu_name cpu --qsys true --simulation_enabled false --stderr_dev jtag_uart --stdin_dev jtag_uart --stdout_dev jtag_uart --sopc_system_name nios_sd_loader --quartus_project_dir "H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project" --jdi H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../DE2_115_GOLDEN_TOP.jdi --sopcinfo H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../nios_sd_loader.sopcinfo
+Info: (memory_manipulator.elf) 73 KBytes program size (code + initialized data).
+Info:                          21 KBytes free for stack + heap.
+Info: Creating memory_manipulator.objdump
+nios2-elf-objdump --disassemble --syms --all-header --source memory_manipulator.elf >memory_manipulator.objdump
+[memory_manipulator build complete]
+17:31:33 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+make all 
+Info: Building ../memory_manipulator_bsp/
+C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
+[BSP build complete]
+Info: Compiling main.c to obj/default/main.o
+nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_C_PLUS_PLUS -DALT_NO_INSTRUCTION_EMULATION -DALT_USE_SMALL_DRIVERS -DSMALL_C_LIB -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/main.o main.c
+main.c: In function 'save_state':
+main.c:230:10: warning: unknown conversion type character 0xd in format [-Wformat=]
+  printf ("BASE NAME LEN: %\r\n", curr_game_filename_len);
+          ^
+main.c:230:10: warning: too many arguments for format [-Wformat-extra-args]
+main.c:230:10: warning: unknown conversion type character 0xd in format [-Wformat=]
+main.c:230:10: warning: too many arguments for format [-Wformat-extra-args]
+main.c: In function 'load_page':
+main.c:259:22: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+  write_buf_mem(addr, title, 0, strlen(title));
+                      ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:265:23: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+   write_buf_mem(addr, list.filenames[i], 0, name_len);
+                       ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:272:23: warning: implicit declaration of function 'ceil' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                       ^
+main.c:272:23: warning: incompatible implicit declaration of built-in function 'ceil'
+main.c:272:23: note: include '<math.h>' or provide a declaration of 'ceil'
+main.c:272:28: warning: implicit declaration of function 'log10' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                            ^
+main.c:272:28: warning: incompatible implicit declaration of built-in function 'log10'
+main.c:272:28: note: include '<math.h>' or provide a declaration of 'log10'
+main.c:279:25: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+     write_buf_mem(addr, pages_str, 0, str_len); // writes the page string to memory
+                         ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+Info: Linking memory_manipulator.elf
+nios2-elf-g++  -T'../memory_manipulator_bsp//linker.x' -msys-crt0='../memory_manipulator_bsp//obj/HAL/src/crt0.o' -msys-lib=hal_bsp -L../memory_manipulator_bsp/  -msmallc  -Wl,-Map=memory_manipulator.map   -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o memory_manipulator.elf obj/default/SD/sd_if.o obj/default/SD/terasic_fat/FatFileSystem.o obj/default/SD/terasic_fat/FatInternal.o obj/default/SD/terasic_sdcard/crc16.o obj/default/SD/terasic_sdcard/crc7.o obj/default/SD/terasic_sdcard/sd_hal.o obj/default/SD/terasic_sdcard/sd_lib.o obj/default/SD/terasic_sdcard/sd_protocol.o obj/default/SD/test_sd.o obj/default/file_format_reader/file_format_aux.o obj/default/file_format_reader/formats.o obj/default/main.o obj/default/spectrum_comm/DMA/dma_hal.o obj/default/spectrum_comm/Peripheral_Interfaces/per_hal.o obj/default/terasic_lib/debug.o -lm -msys-lib=m
+nios2-elf-insert memory_manipulator.elf --thread_model hal --cpu_name cpu --qsys true --simulation_enabled false --stderr_dev jtag_uart --stdin_dev jtag_uart --stdout_dev jtag_uart --sopc_system_name nios_sd_loader --quartus_project_dir "H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project" --jdi H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../DE2_115_GOLDEN_TOP.jdi --sopcinfo H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../nios_sd_loader.sopcinfo
+Info: (memory_manipulator.elf) 74 KBytes program size (code + initialized data).
+Info:                          21 KBytes free for stack + heap.
+Info: Creating memory_manipulator.objdump
+nios2-elf-objdump --disassemble --syms --all-header --source memory_manipulator.elf >memory_manipulator.objdump
+[memory_manipulator build complete]
+17:32:32 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+make all 
+Info: Building ../memory_manipulator_bsp/
+C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
+[BSP build complete]
+Info: Compiling main.c to obj/default/main.o
+nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_C_PLUS_PLUS -DALT_NO_INSTRUCTION_EMULATION -DALT_USE_SMALL_DRIVERS -DSMALL_C_LIB -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/main.o main.c
+main.c: In function 'load_page':
+main.c:259:22: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+  write_buf_mem(addr, title, 0, strlen(title));
+                      ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:265:23: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+   write_buf_mem(addr, list.filenames[i], 0, name_len);
+                       ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:272:23: warning: implicit declaration of function 'ceil' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                       ^
+main.c:272:23: warning: incompatible implicit declaration of built-in function 'ceil'
+main.c:272:23: note: include '<math.h>' or provide a declaration of 'ceil'
+main.c:272:28: warning: implicit declaration of function 'log10' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                            ^
+main.c:272:28: warning: incompatible implicit declaration of built-in function 'log10'
+main.c:272:28: note: include '<math.h>' or provide a declaration of 'log10'
+main.c:279:25: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+     write_buf_mem(addr, pages_str, 0, str_len); // writes the page string to memory
+                         ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+Info: Linking memory_manipulator.elf
+nios2-elf-g++  -T'../memory_manipulator_bsp//linker.x' -msys-crt0='../memory_manipulator_bsp//obj/HAL/src/crt0.o' -msys-lib=hal_bsp -L../memory_manipulator_bsp/  -msmallc  -Wl,-Map=memory_manipulator.map   -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o memory_manipulator.elf obj/default/SD/sd_if.o obj/default/SD/terasic_fat/FatFileSystem.o obj/default/SD/terasic_fat/FatInternal.o obj/default/SD/terasic_sdcard/crc16.o obj/default/SD/terasic_sdcard/crc7.o obj/default/SD/terasic_sdcard/sd_hal.o obj/default/SD/terasic_sdcard/sd_lib.o obj/default/SD/terasic_sdcard/sd_protocol.o obj/default/SD/test_sd.o obj/default/file_format_reader/file_format_aux.o obj/default/file_format_reader/formats.o obj/default/main.o obj/default/spectrum_comm/DMA/dma_hal.o obj/default/spectrum_comm/Peripheral_Interfaces/per_hal.o obj/default/terasic_lib/debug.o -lm -msys-lib=m
+nios2-elf-insert memory_manipulator.elf --thread_model hal --cpu_name cpu --qsys true --simulation_enabled false --stderr_dev jtag_uart --stdin_dev jtag_uart --stdout_dev jtag_uart --sopc_system_name nios_sd_loader --quartus_project_dir "H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project" --jdi H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../DE2_115_GOLDEN_TOP.jdi --sopcinfo H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../nios_sd_loader.sopcinfo
+Info: (memory_manipulator.elf) 74 KBytes program size (code + initialized data).
+Info:                          21 KBytes free for stack + heap.
+Info: Creating memory_manipulator.objdump
+nios2-elf-objdump --disassemble --syms --all-header --source memory_manipulator.elf >memory_manipulator.objdump
+[memory_manipulator build complete]
+17:34:52 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+make all 
+Info: Building ../memory_manipulator_bsp/
+C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
+[BSP build complete]
+[memory_manipulator build complete]
+17:37:26 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+make all 
+Info: Building ../memory_manipulator_bsp/
+C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
+[BSP build complete]
+Info: Compiling main.c to obj/default/main.o
+nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_C_PLUS_PLUS -DALT_NO_INSTRUCTION_EMULATION -DALT_USE_SMALL_DRIVERS -DSMALL_C_LIB -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/main.o main.c
+main.c: In function 'load_page':
+main.c:259:22: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+  write_buf_mem(addr, title, 0, strlen(title));
+                      ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:265:23: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+   write_buf_mem(addr, list.filenames[i], 0, name_len);
+                       ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:272:23: warning: implicit declaration of function 'ceil' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                       ^
+main.c:272:23: warning: incompatible implicit declaration of built-in function 'ceil'
+main.c:272:23: note: include '<math.h>' or provide a declaration of 'ceil'
+main.c:272:28: warning: implicit declaration of function 'log10' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                            ^
+main.c:272:28: warning: incompatible implicit declaration of built-in function 'log10'
+main.c:272:28: note: include '<math.h>' or provide a declaration of 'log10'
+main.c:279:25: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+     write_buf_mem(addr, pages_str, 0, str_len); // writes the page string to memory
+                         ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+Info: Linking memory_manipulator.elf
+nios2-elf-g++  -T'../memory_manipulator_bsp//linker.x' -msys-crt0='../memory_manipulator_bsp//obj/HAL/src/crt0.o' -msys-lib=hal_bsp -L../memory_manipulator_bsp/  -msmallc  -Wl,-Map=memory_manipulator.map   -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o memory_manipulator.elf obj/default/SD/sd_if.o obj/default/SD/terasic_fat/FatFileSystem.o obj/default/SD/terasic_fat/FatInternal.o obj/default/SD/terasic_sdcard/crc16.o obj/default/SD/terasic_sdcard/crc7.o obj/default/SD/terasic_sdcard/sd_hal.o obj/default/SD/terasic_sdcard/sd_lib.o obj/default/SD/terasic_sdcard/sd_protocol.o obj/default/SD/test_sd.o obj/default/file_format_reader/file_format_aux.o obj/default/file_format_reader/formats.o obj/default/main.o obj/default/spectrum_comm/DMA/dma_hal.o obj/default/spectrum_comm/Peripheral_Interfaces/per_hal.o obj/default/terasic_lib/debug.o -lm -msys-lib=m
+nios2-elf-insert memory_manipulator.elf --thread_model hal --cpu_name cpu --qsys true --simulation_enabled false --stderr_dev jtag_uart --stdin_dev jtag_uart --stdout_dev jtag_uart --sopc_system_name nios_sd_loader --quartus_project_dir "H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project" --jdi H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../DE2_115_GOLDEN_TOP.jdi --sopcinfo H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../nios_sd_loader.sopcinfo
+Info: (memory_manipulator.elf) 74 KBytes program size (code + initialized data).
+Info:                          21 KBytes free for stack + heap.
+Info: Creating memory_manipulator.objdump
+nios2-elf-objdump --disassemble --syms --all-header --source memory_manipulator.elf >memory_manipulator.objdump
+[memory_manipulator build complete]
+18:01:56 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+make all 
+Info: Building ../memory_manipulator_bsp/
+C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
+[BSP build complete]
+Info: Compiling main.c to obj/default/main.o
+nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_C_PLUS_PLUS -DALT_NO_INSTRUCTION_EMULATION -DALT_USE_SMALL_DRIVERS -DSMALL_C_LIB -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/main.o main.c
+main.c: In function 'load_page':
+main.c:259:22: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+  write_buf_mem(addr, title, 0, strlen(title));
+                      ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:265:23: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+   write_buf_mem(addr, list.filenames[i], 0, name_len);
+                       ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:272:23: warning: implicit declaration of function 'ceil' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                       ^
+main.c:272:23: warning: incompatible implicit declaration of built-in function 'ceil'
+main.c:272:23: note: include '<math.h>' or provide a declaration of 'ceil'
+main.c:272:28: warning: implicit declaration of function 'log10' [-Wimplicit-function-declaration]
+  int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
+                            ^
+main.c:272:28: warning: incompatible implicit declaration of built-in function 'log10'
+main.c:272:28: note: include '<math.h>' or provide a declaration of 'log10'
+main.c:279:25: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+     write_buf_mem(addr, pages_str, 0, str_len); // writes the page string to memory
+                         ^
+In file included from .\file_format_reader\formats.h:3:0,
+                 from main.c:4:
+.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+Info: Linking memory_manipulator.elf
+nios2-elf-g++  -T'../memory_manipulator_bsp//linker.x' -msys-crt0='../memory_manipulator_bsp//obj/HAL/src/crt0.o' -msys-lib=hal_bsp -L../memory_manipulator_bsp/  -msmallc  -Wl,-Map=memory_manipulator.map   -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o memory_manipulator.elf obj/default/SD/sd_if.o obj/default/SD/terasic_fat/FatFileSystem.o obj/default/SD/terasic_fat/FatInternal.o obj/default/SD/terasic_sdcard/crc16.o obj/default/SD/terasic_sdcard/crc7.o obj/default/SD/terasic_sdcard/sd_hal.o obj/default/SD/terasic_sdcard/sd_lib.o obj/default/SD/terasic_sdcard/sd_protocol.o obj/default/SD/test_sd.o obj/default/file_format_reader/file_format_aux.o obj/default/file_format_reader/formats.o obj/default/main.o obj/default/spectrum_comm/DMA/dma_hal.o obj/default/spectrum_comm/Peripheral_Interfaces/per_hal.o obj/default/terasic_lib/debug.o -lm -msys-lib=m
+nios2-elf-insert memory_manipulator.elf --thread_model hal --cpu_name cpu --qsys true --simulation_enabled false --stderr_dev jtag_uart --stdin_dev jtag_uart --stdout_dev jtag_uart --sopc_system_name nios_sd_loader --quartus_project_dir "H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project" --jdi H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../DE2_115_GOLDEN_TOP.jdi --sopcinfo H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../nios_sd_loader.sopcinfo
+Info: (memory_manipulator.elf) 74 KBytes program size (code + initialized data).
+Info:                          21 KBytes free for stack + heap.
+Info: Creating memory_manipulator.objdump
+nios2-elf-objdump --disassemble --syms --all-header --source memory_manipulator.elf >memory_manipulator.objdump
+[memory_manipulator build complete]

@@ -120,9 +120,17 @@ const alt_u8 menu_code[MENU_CODE_LEN] = {
 	0x00, 0x00, 0x00, 0x04, 0x10, 0x14
 };
 
-
 char* curr_game_filename;
 int curr_game_filename_len;
+int curr_game_idx;
+
+int string_to_num(char* string, int str_len, int num_len) {
+	int result = 0;
+	for (int i = str_len-num_len; i<str_len; i++) {
+		result = result * 10 + (string[i] - '0');
+	}
+	return result;
+}
 
 int inject_menu() {
 
@@ -184,10 +192,52 @@ int my_list_test() {
 	return 0;
 }
 
-void save_state(FAT_HANDLE hFat) {
+void save_state(FAT_HANDLE hFat, FILENAMES list) {
 	printf("SAVE STATE WAS REQUESTED\r\n");
-	printf("NAME: %s\r\n", curr_game_filename);
-	printf("NAME LEN: %d\r\n", curr_game_filename_len);
+
+	// false if no game was selected (length = 0)
+	if (curr_game_filename_len) {
+		printf("NAME: %s\r\n", curr_game_filename);
+		printf("NAME LEN: %d\r\n", curr_game_filename_len);
+	} else {
+		curr_game_filename = "save";
+		curr_game_filename_len = 4;
+	}
+
+	int curr_save_num = -1;
+	// checking for save state tag
+	if (curr_game_filename_len > 3 && curr_game_filename[curr_game_filename_len-3] == '_') {
+		curr_save_num = string_to_num(curr_game_filename, curr_game_filename_len, 2);
+		curr_game_filename_len -= 3; // updating length for the save state tag not to appear
+		printf("CURR_SAVE_NUM: %02d\r\n", curr_save_num);
+
+	}
+
+	// obtaining the last save number
+	for (int i = curr_game_idx+1; i < list.size; i++) { // maybe use 0 at beginning?
+		if (strncmp(curr_game_filename, list.filenames[i], curr_game_filename_len) == 0 && list.filenames[i][curr_game_filename_len] == '_') {
+			printf("STRING: %s\r\n", list.filenames[i]);
+
+			int next_num = string_to_num(list.filenames[i], curr_game_filename_len+3, 2);
+			printf("FOUND ANOTHER: %d\r\n", next_num);
+			if (next_num > curr_save_num) curr_save_num = next_num;
+		}
+	}
+	curr_save_num ++;
+	char save_num[3];
+	snprintf(save_num, 3, "%02d", curr_save_num);
+
+	printf("BASE NAME LEN: %d\r\n", curr_game_filename_len);
+	char filename[curr_game_filename_len+3+4]; // +3 for save state tag, +4 for extension
+	strncpy(filename, curr_game_filename, curr_game_filename_len);
+	strncat(filename, "_", 1);
+	strncat(filename, save_num, 2);
+	strncat(filename, ".sna", 4);
+	printf("FINAL FILENAME:%s\r\n", filename);
+
+
+	//char filename[curr_game_filename_len+6];
+	//strncpy(filename, curr_game_filename, curr_game_filename_len);
 }
 
 void load_page(FILENAMES list) {
@@ -250,22 +300,23 @@ void load_game(FAT_HANDLE hFat, FILENAMES list) {
 	printf("PAGE: %d\r\n", page_num);
 	printf("GAME: %d\r\n", game_num);
 
-	int idx = (page_num*16 + game_num);
-	printf("idx: %d\r\n", idx);
-	if (list.size < idx) {
+	int curr_game_idx = (page_num*16 + game_num);
+	printf("idx: %d\r\n", curr_game_idx);
+	if (list.size < curr_game_idx) {
 		printf("something went wrong :(\r\n");
 		return;
 	}
 
 	// restoring the name
-	int name_len = strlen(list.filenames[idx]);
+	int name_len = strlen(list.filenames[curr_game_idx]);
 	char filename[name_len];
-	strncpy(filename, list.filenames[idx], name_len);
-	filename[name_len] = '\0'; // have to stress this, cause sometimes it would have an extra @ for no reason
+	strncpy(filename, list.filenames[curr_game_idx], name_len);
+	filename[name_len] = '\0'; // have to stress this, cause sometimes it would have an extra unreadable characters
 
 	// saving filename globally, without extension
 	curr_game_filename_len = name_len - 4;
-	strncpy(curr_game_filename, list.filenames[idx], curr_game_filename_len);
+	strncpy(curr_game_filename, list.filenames[curr_game_idx], curr_game_filename_len);
+	curr_game_filename[curr_game_filename_len] = '\0';
 
 
 	printf("GAME SELECTED before: %s\r\n", filename);
@@ -281,6 +332,8 @@ void load_game(FAT_HANDLE hFat, FILENAMES list) {
 }
 
 int main() {
+	curr_game_idx = 0;
+	curr_game_filename_len = 0;
 	curr_game_filename = malloc(50 * sizeof(char));
 	//SD_Test("SENBAL.SNA");
 
@@ -349,7 +402,7 @@ int main() {
 				break;
 			case STATE:
 				if (is_write()) {
-					save_state(hFat);
+					save_state(hFat, list);
 				} else {
 					printf("THERE IS NO READ FOR SAVE STATE CMD!\r\n");
 				}
