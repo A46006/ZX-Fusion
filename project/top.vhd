@@ -383,12 +383,19 @@ architecture Behavior of top is
 	signal nios_address : std_logic_vector(15 downto 0);
 	
 	signal nios_reg_en : std_logic := '0';
+	
+	signal nios_reg_addr_in : std_logic_vector(15 downto 0) := x"0000";
+	signal nios_reg_data_in : std_logic_vector(7 downto 0) := x"00";
+	signal nios_reg_rd_n_in : std_logic := '1';
+	signal nios_reg_wr_n_in : std_logic := '1';
+	
 	signal cpu_address_reg_out : std_logic_vector(15 downto 0) := x"0000";
 	signal cpu_cmd_reg_out : std_logic_vector(7 downto 0) := x"00";
 	signal cpu_rd_n_reg_out : std_logic := '1';
 	signal cpu_wr_n_reg_out : std_logic := '1';
 	signal cpu_cmd_ack : std_logic := '0';
 	signal nios_en_reg_out : std_logic := '0';
+	
 	signal nios_reg_reset : std_logic := '0';
 	
 	-- CPU Shared signals --
@@ -475,6 +482,7 @@ architecture Behavior of top is
 	
 	-- Global --
 	signal global_reset : std_logic;
+	signal save_state : std_logic;
 	
 	signal ula_c, ula_v : std_logic_vector(8 downto 0);
 begin
@@ -483,6 +491,7 @@ begin
 	-- INPUTS --
 	------------
 	global_reset <= not KEY(0);
+	save_state <= not KEY(3);
 	kemp_n_sin <= SW(17);
 	native_n_ps2 <= SW(16);
 	
@@ -498,6 +507,8 @@ begin
 --	LEDG(0) <= cpu_clock;
 
 	LEDR(17) <= nios_en_reg_out;
+	LEDR(1) <= nios_reg_en;
+	LEDR(0) <= save_state;
 --	LEDR(16) <= not cpu_halt_n;
 --	LEDR(15) <= ula_speaker_out;
 --	LEDR(7 downto 0) <= ula_data_out;
@@ -586,16 +597,28 @@ begin
 			address_external_connection_export		=> nios_address,
 			data_external_connection_export			=> nios_data
 		);
-		
-	nios_reg_en <= nios_en AND (cpu_rd_n XOR cpu_wr_n); 
+			
+			
+	-- This register was originally only for CPU commands to be saved for NIOS to read the command when ready
+	-- Now, since save states are triggered away from the CPU, this was adapted to receive hardcoded values for a save state command
 	
+	-- Resetting the register after the command saved in it is processed by NIOS (it sends cpu_cmd_ack), 
+	-- or when the rest of the system is reset. 
 	nios_reg_reset <= cpu_cmd_ack or (not nios_reset_n);
-		
+	
+	nios_reg_en <= (nios_en AND (cpu_rd_n XOR cpu_wr_n)) or save_state; 
+	
+	nios_reg_addr_in <= cpu_address when save_state = '0' else x"0019";	-- 0x19 for save state
+	nios_reg_data_in <= cpu_data_out; 												-- unnecessary for save state
+	nios_reg_rd_n_in <= cpu_rd_n when save_state = '0' else '1';
+	nios_reg_wr_n_in <= cpu_wr_n when save_state = '0' else '0';			-- forcing a write for save state command
+	
+
 	nios_reg : nios_per_reg port map (
-			address_in	=> cpu_address,
-			data_in		=> cpu_data_out,
-			rd_n_in		=> cpu_rd_n,
-			wr_n_in		=> cpu_wr_n,
+			address_in	=> nios_reg_addr_in,
+			data_in		=> nios_reg_data_in,
+			rd_n_in		=> nios_reg_rd_n_in,
+			wr_n_in		=> nios_reg_wr_n_in,
 			
 			address_out => cpu_address_reg_out,
 			data_out		=> cpu_cmd_reg_out,

@@ -333,12 +333,8 @@ int main() {
 				printf("NONE\r\n");
 				break;
 			case STATE:
-				if (is_write()) {
-					// do SAVE STATE stuff
-					printf("SAVE STATE WAS REQUESTED\r\n");
-				} else {
-					printf("THERE IS NO READ FOR SAVE STATE CMD!\r\n");
-				}
+				printf("SAVE STATE WAS REQUESTED");
+				// do SAVE STATE stuff
 				break;
 			case SD:
 				if (is_read()) {

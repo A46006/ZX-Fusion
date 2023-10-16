@@ -332,14 +332,6 @@ int main() {
 			case NA:
 				printf("NONE\r\n");
 				break;
-			case STATE:
-				if (is_write()) {
-					// do SAVE STATE stuff
-					printf("SAVE STATE WAS REQUESTED\r\n");
-				} else {
-					printf("THERE IS NO READ FOR SAVE STATE CMD!\r\n");
-				}
-				break;
 			case SD:
 				if (is_read()) {
 					load_page(list);
