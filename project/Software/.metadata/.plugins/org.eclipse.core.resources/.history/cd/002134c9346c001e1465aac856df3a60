@@ -130,7 +130,7 @@ int load_file(FAT_HANDLE hFat, char* filename, int name_len);
 /* SNA */
 REGS generate_regs_SNA(alt_u8* data);
 int load_SNA(FAT_HANDLE hFat, char* filename);
-int save_SNA(FAT_HANDLE hFat, char* filename);
+int save_SNA(FAT_HANDLE hFat);
 
 /* Z80 */
 int get_version_z80(alt_u8* data);

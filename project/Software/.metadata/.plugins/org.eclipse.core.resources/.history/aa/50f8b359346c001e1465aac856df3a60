@@ -295,6 +295,7 @@ int main() {
 	//return load_SNA("DIABLO1.SNA");
 	//return load_SNA("CLOUD99.SNA");
 
+	printf("TEST\r\n");
 	DMA_init();
 
 	printf("Injecting menu...\r\n");

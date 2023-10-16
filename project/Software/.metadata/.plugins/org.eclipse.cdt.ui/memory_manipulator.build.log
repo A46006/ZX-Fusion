@@ -1,42 +1,48 @@
-15:39:37 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+15:57:13 **** Incremental Build of configuration Nios II for project memory_manipulator ****
 make all 
 Info: Building ../memory_manipulator_bsp/
 C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
 [BSP build complete]
+Info: Compiling file_format_reader/formats.c to obj/default/file_format_reader/formats.o
+nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_C_PLUS_PLUS -DALT_NO_INSTRUCTION_EMULATION -DALT_USE_SMALL_DRIVERS -DSMALL_C_LIB -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/file_format_reader/formats.o file_format_reader/formats.c
+file_format_reader/formats.c: In function 'load_file':
+file_format_reader/formats.c:9:18: warning: implicit declaration of function 'tolower' [-Wimplicit-function-declaration]
+   extension[i] = tolower(extension[i]);
+                  ^
 Info: Compiling main.c to obj/default/main.o
 nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_C_PLUS_PLUS -DALT_NO_INSTRUCTION_EMULATION -DALT_USE_SMALL_DRIVERS -DSMALL_C_LIB -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/main.o main.c
 main.c: In function 'load_page':
-main.c:199:22: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+main.c:209:22: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
   write_buf_mem(addr, title, 0, strlen(title));
                       ^
 In file included from .\file_format_reader\formats.h:3:0,
-                 from main.c:3:
+                 from main.c:4:
 .\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
  void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
       ^
-main.c:205:23: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+main.c:215:23: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
    write_buf_mem(addr, list.filenames[i], 0, name_len);
                        ^
 In file included from .\file_format_reader\formats.h:3:0,
-                 from main.c:3:
+                 from main.c:4:
 .\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
  void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
       ^
-main.c:212:23: warning: implicit declaration of function 'ceil' [-Wimplicit-function-declaration]
+main.c:222:23: warning: implicit declaration of function 'ceil' [-Wimplicit-function-declaration]
   int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
                        ^
-main.c:212:23: warning: incompatible implicit declaration of built-in function 'ceil'
-main.c:212:23: note: include '<math.h>' or provide a declaration of 'ceil'
-main.c:212:28: warning: implicit declaration of function 'log10' [-Wimplicit-function-declaration]
+main.c:222:23: warning: incompatible implicit declaration of built-in function 'ceil'
+main.c:222:23: note: include '<math.h>' or provide a declaration of 'ceil'
+main.c:222:28: warning: implicit declaration of function 'log10' [-Wimplicit-function-declaration]
   int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
                             ^
-main.c:212:28: warning: incompatible implicit declaration of built-in function 'log10'
-main.c:212:28: note: include '<math.h>' or provide a declaration of 'log10'
-main.c:219:25: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+main.c:222:28: warning: incompatible implicit declaration of built-in function 'log10'
+main.c:222:28: note: include '<math.h>' or provide a declaration of 'log10'
+main.c:229:25: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
      write_buf_mem(addr, pages_str, 0, str_len); // writes the page string to memory
                          ^
 In file included from .\file_format_reader\formats.h:3:0,
-                 from main.c:3:
+                 from main.c:4:
 .\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
  void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
       ^
@@ -49,5 +55,5 @@ Info: Creating memory_manipulator.objdump
 nios2-elf-objdump --disassemble --syms --all-header --source memory_manipulator.elf >memory_manipulator.objdump
 [memory_manipulator build complete]
 
-15:39:39 Build Finished (took 2s.121ms)
+15:57:15 Build Finished (took 2s.275ms)
 

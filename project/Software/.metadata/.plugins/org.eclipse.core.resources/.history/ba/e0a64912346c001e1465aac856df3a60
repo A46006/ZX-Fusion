@@ -1,5 +1,5 @@
 #include <stdio.h>
-//#include <time.h>
+#include <time.h>
 //#include ".\SD\test_sd.c"
 #include ".\file_format_reader\formats.h"
 #include ".\file_format_reader\asm_opcodes.h"
@@ -16,8 +16,6 @@
 #define EDITOR_FLAGS_ADDR 0xEC0D
 
 #define MENU_CODE_LEN 1170
-
-//#define JAN_1_2023 1672531200
 
 const alt_u8 menu_code[MENU_CODE_LEN] = {
 	0xFB, 0xFD, 0xCB, 0x02, 0xEE, 0x21, 0x00, 0x00, 0x22, 0x00, 0x40, 0xCD,
@@ -188,6 +186,7 @@ void save_state(FAT_HANDLE hFat) {
 	printf("SAVE STATE WAS REQUESTED\r\n");
 	printf("NAME: %s\r\n", curr_game_filename);
 	printf("NAME LEN: %d\r\n", curr_game_filename_len);
+	printf()
 }
 
 void load_page(FILENAMES list) {
@@ -295,6 +294,7 @@ int main() {
 	//return load_SNA("DIABLO1.SNA");
 	//return load_SNA("CLOUD99.SNA");
 
+	printf("TEST\r\n");
 	DMA_init();
 
 	printf("Injecting menu...\r\n");
