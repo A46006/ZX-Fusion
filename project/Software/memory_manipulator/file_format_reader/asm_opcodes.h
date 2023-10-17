@@ -52,3 +52,7 @@
 #define JP_NN 0xC3
 
 #define POP_AF 0xF1
+
+#define PUSH_AF 0xF5
+
+#define HALT 0x76

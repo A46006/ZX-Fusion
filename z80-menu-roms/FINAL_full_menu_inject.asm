@@ -1,4 +1,4 @@
-#target rom
+#target ram
 
 
 #code EPROM, 0xB000, 0x1000

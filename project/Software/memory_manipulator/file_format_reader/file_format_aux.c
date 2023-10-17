@@ -319,59 +319,100 @@ alt_u8* generate_SAVE_routine(const enum file_type type, int routine_size) {
 	alt_u8* routine = (alt_u8*) malloc(routine_size * sizeof(alt_u8));
 	int i = 0;
 
-	// store SP value to SP_ADDR
+	// when NMI is triggered, PC will be in stack. IT IS VITAL TO KNOW SP AND PC
+
+	// Save SP somewhere known
+	// SP can be stored after the NMI code, like in 0x4100. This is in range of the first block, which can be used to "fix" the screen later
+
+	// store SP value to SP_ADDR (LD (ADDR), SP)
 	routine[i++] = LD_NN_dd;
 	routine[i++] = LD_NN_SP2;
 	routine[i++] = SP_ADDR_L;
 	routine[i++] = SP_ADDR_H;
 
-	//		when triggered, PC will be in stack. IT IS VITAL TO KNOW SP AND PC
+	// IDEA: overwrite NMI code with the values themselves as the instructions execute
+	// NEXT: the AF registers should be saved ASAP. Unfortunately, they don't have a LD instruction, only a PUSH.
+	routine[i++] = PUSH_AF;
+	routine[i++] = EX_AF;
+	routine[i++] = PUSH_AF;
 
-	//		Save SP somewhere known
-	//		SP can be stored after the NMI code, like in 0x4100. This is in range of the first block, which can be used to "fix" the screen later
-	//			LD ($4100), SP (little endian store)			INSTRUCTION LEN: 4 bytes (0x4000)
-	//
-	//		IDEA: overwrite NMI code with the values themselves as the instructions execute
-	//		NEXT: the AF registers should be saved ASAP. Unfortunately, they don't have a LD instruction, only a PUSH.
-	//			PUSH AF											INSTRUCTION LEN: 1 byte (0x4004)
-	//			EX AF, AF'										INSTRUCTION LEN: 1 byte (0x4005)
-	//			PUSH AF											INSTRUCTION LEN: 1 byte (0x4006)
+	// STACK now: --> AF', AF, PC, ...
 
+	// each register is now written to video memory:
 
-	//		STACK now: --> AF', AF, PC, ...
-	//		current instruction addr: 7
+	// HL saving
+	routine[i++] = LD_NN_HL;
+	routine[i++] = HL_ADDR_L;
+	routine[i++] = HL_ADDR_H;
 
-	//		each register is now written to video memory:
-	//			LD ($4000), HL									INSTRUCTION LEN: 3 bytes (0x4007)
-	//			LD ($4002), BC									INSTRUCTION LEN: 4 bytes (0x400A)
-	//			LD ($4004), DE									INSTRUCTION LEN: 4 bytes (0x400E)
+	// BC saving
+	routine[i++] = LD_NN_dd;
+	routine[i++] = LD_NN_BC2;
+	routine[i++] = BC_ADDR_L;
+	routine[i++] = BC_ADDR_H;
 
-	//			EXX												INSTRUCTION LEN: 1 byte (0x4012)
+	// DE saving
+	routine[i++] = LD_NN_dd;
+	routine[i++] = LD_NN_DE2;
+	routine[i++] = DE_ADDR_L;
+	routine[i++] = DE_ADDR_H;
 
-	//			LD ($4006), HL									INSTRUCTION LEN: 3 bytes (0x4013)
-	//			LD ($4008), BC									INSTRUCTION LEN: 4 bytes (0x4016)
-	//			LD ($400A), DE									INSTRUCTION LEN: 4 bytes (0x401A)
+	// switch between AUX registers
+	routine[i++] = EXX;
 
-	//			LD ($400C), IX									INSTRUCTION LEN: 4 bytes (0x401E)
-	//			LD ($400E), IY									INSTRUCTION LEN: 4 bytes (0x4022)
+	// HL' saving
+	routine[i++] = LD_NN_HL;
+	routine[i++] = HL_AUX_ADDR_L;
+	routine[i++] = HL_AUX_ADDR_H;
 
-	//		all other registers are saved. No more fear of losing them.
+	// BC' saving
+	routine[i++] = LD_NN_dd;
+	routine[i++] = LD_NN_BC2;
+	routine[i++] = BC_AUX_ADDR_L;
+	routine[i++] = BC_AUX_ADDR_H;
 
-	//			LD A, I											INSTRUCTION LEN: 2 bytes (0x4026)
-	//			LD (0x4010), A									INSTRUCTION LEN: 3 bytes (0x4028)
+	// DE' saving
+	routine[i++] = LD_NN_dd;
+	routine[i++] = LD_NN_DE2;
+	routine[i++] = DE_AUX_ADDR_L;
+	routine[i++] = DE_AUX_ADDR_H;
 
-	//			LD A, R											INSTRUCTION LEN: 2 bytes (0x402B)
-	//			LD (0x4011), A									INSTRUCTION LEN: 3 bytes (0x402D)
+	// IX saving
+	routine[i++] = LD_NN_IX1;
+	routine[i++] = LD_NN_IX2;
+	routine[i++] = IX_ADDR_L;
+	routine[i++] = IX_ADDR_H;
 
-	//		ALL registers now saved on screen. Border and Interrupt info missing
-	//		use BORDER_COLOR_ADDR_H and BORDER_COLOR_ADDR_L for border color addr
-	//			LD HL, (BORDER_ADDR)							INSTRUCTION LEN: 3 bytes (0x4030)
-	//			LD (0x4012), HL									INSTRUCTION LEN: 3 bytes (0x4033)
+	// IY saving
+	routine[i++] = LD_NN_IY1;
+	routine[i++] = LD_NN_IY2;
+	routine[i++] = IY_ADDR_L;
+	routine[i++] = IY_ADDR_H;
+
+	// I saving
+	routine[i++] = LD_A_I1;
+	routine[i++] = LD_A_I2;
+	routine[i++] = LD_NN_A;
+	routine[i++] = I_ADDR_L;
+	routine[i++] = I_ADDR_H;
+
+	// R saving
+	routine[i++] = LD_A_R1;
+	routine[i++] = LD_A_R2;
+	routine[i++] = LD_NN_A;
+	routine[i++] = R_ADDR_L;
+	routine[i++] = R_ADDR_H;
+
+	//		ALL registers now saved on screen. Interrupt info missing
 
 	//		No way of obtaining current interrupt info, so using default values based on how ZX Spectrum works:
 	//		Interrupt Mode: 1; IFF1: 0
 
-	//		LENGTH OF CODE UNTIL NOW: 54
+	// NOW ISSUE COMMAND TO NIOS TO NOTIFY THAT THE REGISTER VALUES ARE NOW AVAILABLE
+	
+	routine[i++] = HALT;
+
+	//		LENGTH OF CODE UNTIL NOW: 49
 	return routine;
 }
 
