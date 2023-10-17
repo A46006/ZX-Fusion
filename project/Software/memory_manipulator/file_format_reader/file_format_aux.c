@@ -10,13 +10,13 @@ alt_u16 reverse_16(alt_u16 data) {
 	return (data << 8) | (data >> 8);
 }
 
-int get_routine_size_SNA() {
+int get_LOAD_routine_size() {
 	return 52;
 }
 
-int get_routine_size_z80() {
-	//return 52;
-	return 52;
+int get_SAVE_routine_size() {
+	// TODO update
+	return 60;
 }
 
 //////////////////////////////////////
@@ -164,8 +164,8 @@ STACK_ADD generate_AF_stack_addition(REGS regs, const enum file_type type, bool 
 	return to_ret;
 }
 
-alt_u8* generate_routine(REGS regs, const enum file_type type, int routine_size) {
-	alt_u8* routine = (alt_u8*) malloc(1 * routine_size);
+alt_u8* generate_LOAD_routine(REGS regs, const enum file_type type, int routine_size) {
+	alt_u8* routine = (alt_u8*) malloc(routine_size * sizeof(alt_u8));
 	int i = 0;
 
 	// Load border color into A
@@ -314,3 +314,64 @@ alt_u8* generate_routine(REGS regs, const enum file_type type, int routine_size)
 
 	return routine;
 }
+
+alt_u8* generate_SAVE_routine(const enum file_type type, int routine_size) {
+	alt_u8* routine = (alt_u8*) malloc(routine_size * sizeof(alt_u8));
+	int i = 0;
+
+	// store SP value to SP_ADDR
+	routine[i++] = LD_NN_dd;
+	routine[i++] = LD_NN_SP2;
+	routine[i++] = SP_ADDR_L;
+	routine[i++] = SP_ADDR_H;
+
+	//		when triggered, PC will be in stack. IT IS VITAL TO KNOW SP AND PC
+
+	//		Save SP somewhere known
+	//		SP can be stored after the NMI code, like in 0x4100. This is in range of the first block, which can be used to "fix" the screen later
+	//			LD ($4100), SP (little endian store)			INSTRUCTION LEN: 4 bytes (0x4000)
+	//
+	//		IDEA: overwrite NMI code with the values themselves as the instructions execute
+	//		NEXT: the AF registers should be saved ASAP. Unfortunately, they don't have a LD instruction, only a PUSH.
+	//			PUSH AF											INSTRUCTION LEN: 1 byte (0x4004)
+	//			EX AF, AF'										INSTRUCTION LEN: 1 byte (0x4005)
+	//			PUSH AF											INSTRUCTION LEN: 1 byte (0x4006)
+
+
+	//		STACK now: --> AF', AF, PC, ...
+	//		current instruction addr: 7
+
+	//		each register is now written to video memory:
+	//			LD ($4000), HL									INSTRUCTION LEN: 3 bytes (0x4007)
+	//			LD ($4002), BC									INSTRUCTION LEN: 4 bytes (0x400A)
+	//			LD ($4004), DE									INSTRUCTION LEN: 4 bytes (0x400E)
+
+	//			EXX												INSTRUCTION LEN: 1 byte (0x4012)
+
+	//			LD ($4006), HL									INSTRUCTION LEN: 3 bytes (0x4013)
+	//			LD ($4008), BC									INSTRUCTION LEN: 4 bytes (0x4016)
+	//			LD ($400A), DE									INSTRUCTION LEN: 4 bytes (0x401A)
+
+	//			LD ($400C), IX									INSTRUCTION LEN: 4 bytes (0x401E)
+	//			LD ($400E), IY									INSTRUCTION LEN: 4 bytes (0x4022)
+
+	//		all other registers are saved. No more fear of losing them.
+
+	//			LD A, I											INSTRUCTION LEN: 2 bytes (0x4026)
+	//			LD (0x4010), A									INSTRUCTION LEN: 3 bytes (0x4028)
+
+	//			LD A, R											INSTRUCTION LEN: 2 bytes (0x402B)
+	//			LD (0x4011), A									INSTRUCTION LEN: 3 bytes (0x402D)
+
+	//		ALL registers now saved on screen. Border and Interrupt info missing
+	//		use BORDER_COLOR_ADDR_H and BORDER_COLOR_ADDR_L for border color addr
+	//			LD HL, (BORDER_ADDR)							INSTRUCTION LEN: 3 bytes (0x4030)
+	//			LD (0x4012), HL									INSTRUCTION LEN: 3 bytes (0x4033)
+
+	//		No way of obtaining current interrupt info, so using default values based on how ZX Spectrum works:
+	//		Interrupt Mode: 1; IFF1: 0
+
+	//		LENGTH OF CODE UNTIL NOW: 54
+	return routine;
+}
+

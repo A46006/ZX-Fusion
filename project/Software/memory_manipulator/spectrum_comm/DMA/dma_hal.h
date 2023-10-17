@@ -10,7 +10,7 @@ void DMA_init();
 int DMA_request(int tries);
 
 alt_u8 read_mem(alt_u16 addr);
-void read_buf_mem(alt_u16 addr, int len, alt_u8* ret);
+void read_buf_mem(alt_u16 addr, int start, int len, alt_u8* ret);
 
 void write_mem(alt_u16 addr, const alt_u8 data);
 void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);

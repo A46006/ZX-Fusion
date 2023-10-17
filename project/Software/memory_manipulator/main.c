@@ -234,8 +234,12 @@ void save_state(FAT_HANDLE hFat, FILENAMES list) {
 	strncat(filename, save_num, 2);
 	strncat(filename, ".sna", 4);
 	printf("FINAL FILENAME:%s\r\n", filename);
+	printf("FILENAME OOF: %02x", filename[4]); // there is a random 1 value in names with 4 letters
 
-
+	int ret = save_SNA(hFat, filename);
+	if (ret) {
+		printf("Save file went wrong\r\n");
+	}
 	//char filename[curr_game_filename_len+6];
 	//strncpy(filename, curr_game_filename, curr_game_filename_len);
 }

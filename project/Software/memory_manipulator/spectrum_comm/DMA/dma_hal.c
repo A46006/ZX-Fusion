@@ -59,8 +59,8 @@ alt_u8 read_mem(alt_u16 addr) {
 	return data;
 }
 
-void read_buf_mem(alt_u16 addr, int len, alt_u8* ret) {
-	for(int i = 0; i < len; i++) {
+void read_buf_mem(alt_u16 addr, int start, int len, alt_u8* ret) {
+	for(int i = start; i < start+len; i++) {
 		ret[i] = read_mem(addr++);
 	}
 }

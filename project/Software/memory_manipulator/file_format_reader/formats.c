@@ -79,7 +79,7 @@ int load_SNA(FAT_HANDLE hFat, char* filename) {
 
 	int data_offset = SNA_OFFSET_DATA;
 
-	int routine_size = get_routine_size_SNA();
+	int routine_size = get_LOAD_routine_size();
 
 	//REGS regs = write_sna_DMA_mem(hFile, data_offset, 0x4000);
 
@@ -139,19 +139,19 @@ int load_SNA(FAT_HANDLE hFat, char* filename) {
 
 
 	// Save data that routine will overwrite
-	int data_bk_len = get_routine_size_SNA();
+	int data_bk_len = get_LOAD_routine_size();
 	alt_u8* data_bk = (alt_u8*) malloc(data_bk_len * sizeof(alt_u8*));
-	read_buf_mem(NMI_ROUTINE_ADDR, data_bk_len, data_bk);
+	read_buf_mem(NMI_ROUTINE_ADDR, 0, data_bk_len, data_bk);
 
 	// Save data that the stack additions overwrite
 	alt_u8* bottom_data_bk = (alt_u8*) malloc(OLD_STACK_SIZE * sizeof(alt_u8*));
-	read_buf_mem(OLD_STACK_START_ADDR, OLD_STACK_SIZE, bottom_data_bk);
+	read_buf_mem(OLD_STACK_START_ADDR, 0, OLD_STACK_SIZE, bottom_data_bk);
 
 	/*
 	// Obtaining PC for later
 	alt_u8* pc_buf = (alt_u8*) malloc(2 * sizeof(alt_u8*));
 	alt_u16 sp_big = (regs.SP >> 8) | (regs.SP << 8);
-	read_buf_mem(sp_big, 2, pc_buf);
+	read_buf_mem(sp_big, 0, 2, pc_buf);
 	printf("SP: %04x\r\n", sp_big);
 	for(int i = 0; i < 2; i++) {
 		printf("0x%02x", pc_buf[i]);
@@ -165,7 +165,7 @@ int load_SNA(FAT_HANDLE hFat, char* filename) {
 	// Now all the data is loaded, and the routine must be formed with REGS
 	enum file_type type = SNA;
 
-	alt_u8* routine = generate_routine(regs, type, routine_size);
+	alt_u8* routine = generate_LOAD_routine(regs, type, routine_size);
 
 	write_buf_mem(NMI_ROUTINE_ADDR, routine, 0, routine_size);
 
@@ -223,6 +223,97 @@ int load_SNA(FAT_HANDLE hFat, char* filename) {
 	free(data_bk);
 
 	printf("\r\nLOADED");
+
+	return 0;
+}
+
+int save_SNA(FAT_HANDLE hFat, char* filename) {
+	printf("save dma req...\r\n");
+	int ret = DMA_request(10);
+
+	if (ret != 0) {
+		DMA_print_err(ret);
+		return -1;
+	}
+
+	// do something with hFat, like create the file/add metadata
+	// .SNA files are always the same size: 49,179 bytes
+
+	// file write begin, 512 bytes at a time
+	int remaining_bytes = 512;
+	alt_u8 write_buf[remaining_bytes];
+	alt_u16 addr = 0x4000;
+	bool first_block = TRUE;
+
+	int block_num = 2; // just to keep track of the block
+	while (TRUE) {
+		if (0xFFFF - addr < remaining_bytes) {
+			remaining_bytes = 0xFFFF - addr;
+			if (remaining_bytes == 0) break;
+		}
+
+		if (first_block) {
+			int data_len = remaining_bytes - SNA_OFFSET_DATA;
+			read_buf_mem(addr, SNA_OFFSET_DATA, data_len, write_buf);
+			addr += data_len;
+			/*printf("FIRST BLOCK:\r\n");
+			for(int i = 0; i < remaining_bytes; i++) {
+				if (i % 16 == 0) printf("\r\n");
+				printf("0x%02x ", write_buf[i]);
+			}
+			printf("\r\n");
+			*/
+			printf("first block read...\r\n");
+			// write first block to file start
+			// should also keep a backup here to recover from the assembly routine injected later
+
+			first_block = FALSE;
+			continue;
+		}
+
+		read_buf_mem(addr, 0, remaining_bytes, write_buf);
+		addr += remaining_bytes;
+
+		// Just to check final blocks
+		/*if (block_num > 95) {
+			printf("NEXT BLOCK:\r\n");
+			for(int i = 0; i < remaining_bytes; i++) {
+				if (i % 16 == 0) printf("\r\n");
+				printf("0x%02x ", write_buf[i]);
+			}
+			printf("\r\n");
+		}*/
+		printf("block %d read...\r\n", block_num++);
+		// append this block to file
+	}
+
+	/*
+	// write routine to extract reg values
+	enum file_type type = SNA;
+	int routine_size = get_SAVE_routine_size()
+	alt_u8* routine = generate_SAVE_routine(type, routine_size);
+
+	write_buf_mem(0x4000, routine, 0, routine_size)
+
+	DMA_stop_w_interrupt();
+
+	////// NOW WAIT FOR A COMMAND...
+
+	ret = DMA_request(10);
+
+	if (ret != 0) {
+		printf("SECOND DMA in SAVE went wrong...\r\n");
+		DMA_print_err(ret);
+		return -1;
+	}
+
+	///// EXTRACT VALUES OF REGISTERS...
+	///// WRITE LOAD REGISTER ROUTINE TO GUARANTEE THE SAME VALUES ARE KEPT
+
+	DMA_stop_w_interrupt();
+
+	//// FIX VISUALS AFTER PC > 0x5800...
+	*/
 
 	return 0;
 }
@@ -464,9 +555,7 @@ int load_z80(FAT_HANDLE hFat, char* filename) {
 		return -1;
 	}
 
-	int routine_size = get_routine_size_z80();
-
-
+	int routine_size = get_LOAD_routine_size();
 
 	// Next code based on DE2-115 SD Card reading test code:
 	alt_u8 szRead[256];
@@ -685,15 +774,15 @@ int load_z80(FAT_HANDLE hFat, char* filename) {
 	printf("|I: %02x\t\tR: %02x\r\n", regs.I, regs.R);
 
 	// Save data that routine will overwrite
-	int data_bk_len = get_routine_size_z80();
+	int data_bk_len = get_LOAD_routine_size();
 	alt_u8* data_bk = (alt_u8*) malloc(data_bk_len * sizeof(alt_u8*));
-	read_buf_mem(NMI_ROUTINE_ADDR, data_bk_len, data_bk);
+	read_buf_mem(NMI_ROUTINE_ADDR, 0, data_bk_len, data_bk);
 
 	// Save data that the stack additions overwrite
 	alt_u8* bottom_data_bk = (alt_u8*) malloc(OLD_STACK_SIZE * sizeof(alt_u8*));
-	read_buf_mem(OLD_STACK_START_ADDR, OLD_STACK_SIZE, bottom_data_bk);
+	read_buf_mem(OLD_STACK_START_ADDR, 0, OLD_STACK_SIZE, bottom_data_bk);
 
-	alt_u8* routine = generate_routine(regs, type, routine_size);
+	alt_u8* routine = generate_LOAD_routine(regs, type, routine_size);
 
 	write_buf_mem(NMI_ROUTINE_ADDR, routine, 0, routine_size);
 

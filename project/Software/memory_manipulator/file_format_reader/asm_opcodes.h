@@ -6,6 +6,12 @@
 #define LD_I_A 0x47 // Load contents of A into I (second byte)
 #define LD_R_A 0x4F // Load contents of A into R (second byte)
 
+#define LD_NN_A 0x32 // Load into (NN) contents of A
+#define LD_A_I1 0xED // Part 1 of loading contents of I into A
+#define LD_A_I2 0x57 // Part 2 of loading contents of I into A
+#define LD_A_R1 0xED // Part 1 of loading contents of R into A
+#define LD_A_R2 0x5F // Part 2 of loading contents of R into A
+
 // 16-bit loads
 #define LD_HL_NN 0x21
 #define LD_DE_NN 0x11
@@ -15,6 +21,18 @@
 #define LD_IY2_NN 0x21
 #define LD_IX1_NN 0xDD
 #define LD_IX2_NN 0x21
+
+#define LD_NN_dd 0xED
+#define LD_NN_SP2 0x73
+#define LD_NN_BC2 0x43
+#define LD_NN_DE2 0x53
+
+#define LD_NN_HL 0x22
+
+#define LD_NN_IX1 0xDD
+#define LD_NN_IX2 0x22
+#define LD_NN_IY1 0xFD
+#define LD_NN_IY2 0x22
 
 
 #define EXX 0xD9	// Exchance BC, DE and HL for aux versions
