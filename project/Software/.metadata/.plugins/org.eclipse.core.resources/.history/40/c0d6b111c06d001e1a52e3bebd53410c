@@ -10,16 +10,13 @@ alt_u16 reverse_16(alt_u16 data) {
 	return (data << 8) | (data >> 8);
 }
 
-alt_u16 conv_data_8_16_sep(alt_u8 data_l, alt_u8 data_h) {
-	return (data_h << 8) | data_l;
-}
-
 int get_LOAD_routine_size() {
 	return 52;
 }
 
 int get_SAVE_routine_size() {
-	return 51;
+	// TODO update
+	return 60;
 }
 
 //////////////////////////////////////
@@ -406,18 +403,18 @@ alt_u8* generate_SAVE_routine(const enum file_type type, int routine_size) {
 	routine[i++] = R_ADDR_L;
 	routine[i++] = R_ADDR_H;
 
-	// ALL registers now saved on screen. Interrupt info missing
+	//		ALL registers now saved on screen. Interrupt info missing
 
-	// No way of obtaining current interrupt info, so using default values based on how ZX Spectrum works:
-	// Interrupt Mode: 1; IFF1: 0
+	//		No way of obtaining current interrupt info, so using default values based on how ZX Spectrum works:
+	//		Interrupt Mode: 1; IFF1: 0
 
-	// Command to "notify" NIOS that the register values are there
+	// NOW ISSUE COMMAND TO NIOS TO NOTIFY THAT THE REGISTER VALUES ARE NOW AVAILABLE
 	routine[i++] = IN_A_N;
-	routine[i++] = STATE_IF;
+	routine[i++] =
 	
 	routine[i++] = HALT;
 
-	// LENGTH OF CODE UNTIL NOW: 51
+	//		LENGTH OF CODE UNTIL NOW: 51
 	return routine;
 }
 

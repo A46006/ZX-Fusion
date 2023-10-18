@@ -858,7 +858,5 @@ REGS generate_regs_save_state() {
 	read_buf_mem(addr, 0, 2, sp);
 
 	addr = conv_data_8_16_sep(HL_ADDR_L, HL_ADDR_H);
-	alt_u8* hl[2];
-	read_buf_mem(addr, 0, 2, hl);
 	//...
 }

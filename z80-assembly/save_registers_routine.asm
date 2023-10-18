@@ -26,5 +26,6 @@
 	
 	LD    A, R				; load R contents to 0x4011
 	LD    ($4011), A		; 
-
+	
+	IN A, (0x19)			; READ on port 0x19, save state command to notify that the registers are now there
 	HALT

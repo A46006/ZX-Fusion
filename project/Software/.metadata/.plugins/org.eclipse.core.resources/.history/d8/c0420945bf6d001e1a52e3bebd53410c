@@ -302,13 +302,10 @@ int save_SNA(FAT_HANDLE hFat, char* filename) {
 	// NOW WAIT FOR A COMMAND...
 	enum per_if_type cmd_type = get_if_type();
 	if (type != STATE || is_write()) {
-		/////// delete file?
+		// delete file?
 		printf("Wrong command received...\r\n");
 		return -1;
 	}
-
-	DMA_request(10);
-	generate_regs_save_state();
 
 	/*
 	ret = DMA_request(10);
@@ -850,15 +847,4 @@ int load_z80(FAT_HANDLE hFat, char* filename) {
 
 	return 0;
 
-}
-
-REGS generate_regs_save_state() {
-	alt_u16 addr = conv_data_8_16_sep(SP_ADDR_L, SP_ADDR_H);
-	alt_u8* sp[2];
-	read_buf_mem(addr, 0, 2, sp);
-
-	addr = conv_data_8_16_sep(HL_ADDR_L, HL_ADDR_H);
-	alt_u8* hl[2];
-	read_buf_mem(addr, 0, 2, hl);
-	//...
 }

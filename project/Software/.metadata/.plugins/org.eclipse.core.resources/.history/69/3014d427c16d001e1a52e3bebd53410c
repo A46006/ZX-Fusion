@@ -853,12 +853,5 @@ int load_z80(FAT_HANDLE hFat, char* filename) {
 }
 
 REGS generate_regs_save_state() {
-	alt_u16 addr = conv_data_8_16_sep(SP_ADDR_L, SP_ADDR_H);
-	alt_u8* sp[2];
-	read_buf_mem(addr, 0, 2, sp);
-
-	addr = conv_data_8_16_sep(HL_ADDR_L, HL_ADDR_H);
-	alt_u8* hl[2];
-	read_buf_mem(addr, 0, 2, hl);
-	//...
+	alt_u16 sp =
 }
