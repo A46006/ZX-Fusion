@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="REGS" key="selection"/>
+		<item value="list_files_of_page" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="list_files_of_page"/>
+			<item value="curr_page_file_list"/>
 			<item value="REGS"/>
 			<item value="LD_NN_A"/>
 			<item value="LD_NN"/>
 			<item value="write_io"/>
 			<item value="border"/>
 			<item value="generate_AF_stack_addition"/>
-			<item value="bottom_data_bk"/>
-			<item value="data_bk"/>
 		</list>
 		<list key="replacehistory">
 		</list>

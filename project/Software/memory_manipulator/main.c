@@ -124,6 +124,9 @@ char* curr_game_filename;
 int curr_game_filename_len;
 int curr_game_idx;
 
+int max_page; // holds the number of pages based on the number of supported files in the SD Card
+int curr_page;
+
 int string_to_num(char* string, int str_len, int num_len) {
 	int result = 0;
 	for (int i = str_len-num_len; i<str_len; i++) {
@@ -244,16 +247,17 @@ void save_state(FAT_HANDLE hFat, FILENAMES list) {
 	//strncpy(filename, curr_game_filename, curr_game_filename_len);
 }
 
-void load_page(FILENAMES list) {
+FILENAMES load_page(FAT_FILE_HANDLE hFat) {
 	int page_num = get_page_num();
 	printf("PAGE: %d\r\n", page_num);
-	int n_entries = 16;
-	int start_idx = page_num*16;
-
-	if (list.size < (start_idx + n_entries))
-		n_entries = list.size - page_num*16;
+	curr_page = page_num;
 
 	DMA_request(10);
+
+	// obtaining the list of file names from the requested page
+	FILENAMES list = list_files_of_page(hFat, page_num);
+
+	int n_entries = list.size;
 	n_entries++; // to account for the title
 
 	// Writing the menu text table for file list menu
@@ -264,28 +268,30 @@ void load_page(FILENAMES list) {
 	addr += strlen(title);
 	write_mem(addr++, 0xFF); // terminate char
 
-	for (int i = start_idx; i < start_idx + (n_entries-1); i++) {
+	printf("SIZE OF PAGE: %d\r\n", list.size);
+
+	// writing the filenames to the menu's data region
+	for (int i = 0; i < list.size; i++) {
 		int name_len = strlen(list.filenames[i]);
 		write_buf_mem(addr, list.filenames[i], 0, name_len);
 		addr += name_len;
 	}
 
 	// Forming page number string
-	int all_pages = ((list.size-1) / 16) + 1; // calculates number of existing pages
 	page_num++; // to start the page at number 1
 	int str_len = (int)((ceil(log10(page_num))+1)*sizeof(char)) // number of digits page_num has (WRONG)
 			+ sizeof(char)									// the '/' char's size
-			+ (int)((ceil(log10(all_pages))+1)*sizeof(char));  // number of digits all_pages has (WRONG)
+			+ (int)((ceil(log10(max_page))+1)*sizeof(char));  // number of digits all_pages has (WRONG)
 
 	char pages_str[str_len];
-    sprintf(pages_str, "%d/%d", page_num, all_pages);
+    sprintf(pages_str, "%d/%d", page_num, max_page);
     str_len = strlen(pages_str);
     write_buf_mem(addr, pages_str, 0, str_len); // writes the page string to memory
     addr += str_len;		// advances address
     write_mem(addr++, 0xFF); // terminate char
 
     // writes the number of pages left
-    alt_u8 remaining = all_pages-page_num;
+    alt_u8 remaining = max_page-page_num;
     addr = PAGES_LEFT_ADDR;
     write_mem(addr, remaining);
     printf("REMAINING: %d\r\n",remaining);
@@ -296,30 +302,41 @@ void load_page(FILENAMES list) {
 	write_mem(addr++, RETN2);
 
 	DMA_stop_w_interrupt();
+
+	print_filenames(list, 0);
+
+	return list;
 }
 
 void load_game(FAT_HANDLE hFat, FILENAMES list) {
+	FILENAMES list_to_use = list;
+
 	int page_num = get_page_num();
 	int game_num = get_game_num();
 	printf("PAGE: %d\r\n", page_num);
 	printf("GAME: %d\r\n", game_num);
 
-	int curr_game_idx = (page_num*16 + game_num);
-	printf("idx: %d\r\n", curr_game_idx);
-	if (list.size < curr_game_idx) {
-		printf("something went wrong :(\r\n");
+	//int curr_game_idx = (page_num*16 + game_num);
+	//printf("idx: %d\r\n", curr_game_idx);
+	if (page_num >= max_page) {
+		printf("Page number exceeds all pages\r\n");
 		return;
 	}
 
+	// this SHOULDN'T happen, but just in case the file requested is in a different page...
+	if (curr_page != page_num) {
+		list_to_use = list_files_of_page(hFat, page_num);
+	}
+
 	// restoring the name
-	int name_len = strlen(list.filenames[curr_game_idx]);
+	int name_len = strlen(list_to_use.filenames[game_num]);
 	char filename[name_len];
-	strncpy(filename, list.filenames[curr_game_idx], name_len);
-	filename[name_len] = '\0'; // have to stress this, cause sometimes it would have an extra unreadable characters
+	strncpy(filename, list_to_use.filenames[game_num], name_len);
+	filename[name_len] = '\0'; // have to stress this, because sometimes it would have an extra unreadable characters
 
 	// saving filename globally, without extension
 	curr_game_filename_len = name_len - 4;
-	strncpy(curr_game_filename, list.filenames[curr_game_idx], curr_game_filename_len);
+	strncpy(curr_game_filename, list_to_use.filenames[game_num], curr_game_filename_len);
 	curr_game_filename[curr_game_filename_len] = '\0';
 
 
@@ -327,12 +344,13 @@ void load_game(FAT_HANDLE hFat, FILENAMES list) {
 	filename[name_len-1] = filename[name_len-1] - 0x80;
 
 	printf("GAME SELECTED: %s\r\n", filename);
-	printf("FILENAME_LEN: %d (%d)\r\n", strlen(filename), name_len);
 
 	int ret = load_file(hFat, filename, name_len);
 	if (ret) {
 		printf("Load file went wrong\r\n");
 	}
+
+	printf("LOAD COMPLETE!\r\n");
 }
 
 int main() {
@@ -378,17 +396,25 @@ int main() {
 	//return load_z80(hFat, "MANICM.z80"); // NORMAL
 	//return load_z80("MISSILGZ.z80"); // CONTROLLER REQUIRED?
 
-	printf("\r\nRetrieving files");
+	/*printf("\r\nRetrieving files");
 	FILENAMES list = list_files(hFat);
 	if (list.size == 0 && list.filenames == NULL) {
 		printf("bad listing\r\n");
 		close_SD(hFat);
 		return -1;
-	}
+	}*/
+
+	// Loading files in page 1
+	curr_page = 0;
+	FILENAMES curr_page_file_list = list_files_of_page(hFat, curr_page);
+
+	// Calculating maximum amount of pages
+	max_page = num_of_pages(hFat);
+	printf("NUM OF PAGES: %d\r\n", max_page);
 
 	//////////////////////////
 
-	print_filenames(list, 0);
+	print_filenames(curr_page_file_list, 0);
 
 	/////////////////////////
 
@@ -406,16 +432,16 @@ int main() {
 				break;
 			case STATE:
 				if (is_write()) {
-					save_state(hFat, list);
+					save_state(hFat, curr_page_file_list);
 				} else {
 					printf("THERE IS NO READ FOR SAVE STATE CMD!\r\n");
 				}
 				break;
 			case SD:
 				if (is_read()) {
-					load_page(list);
+					curr_page_file_list = load_page(hFat);
 				} else if (is_write()) {
-					load_game(hFat, list);
+					load_game(hFat, curr_page_file_list);
 				}
 				break;
 			case INIT:

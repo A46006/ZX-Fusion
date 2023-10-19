@@ -507,8 +507,8 @@ begin
 --	LEDG(0) <= cpu_clock;
 
 	LEDR(17) <= nios_en_reg_out;
-	LEDR(1) <= nios_reg_en;
-	LEDR(0) <= save_state;
+	LEDR(16) <= save_state;
+	LEDR(3 downto 0) <= cpu_address_reg_out(3 downto 0);
 --	LEDR(16) <= not cpu_halt_n;
 --	LEDR(15) <= ula_speaker_out;
 --	LEDR(7 downto 0) <= ula_data_out;
@@ -612,7 +612,6 @@ begin
 	nios_reg_data_in <= cpu_data_out; 												-- unnecessary for save state
 	nios_reg_rd_n_in <= cpu_rd_n when save_state = '0' else '1';
 	nios_reg_wr_n_in <= cpu_wr_n when save_state = '0' else '0';			-- forcing a write for save state command
-	
 
 	nios_reg : nios_per_reg port map (
 			address_in	=> nios_reg_addr_in,

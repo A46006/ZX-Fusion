@@ -144,4 +144,4 @@ alt_u16 load_compressed_data_block_z80(alt_u16 addr, alt_u8* buffer, int data_of
 int load_z80(FAT_HANDLE hFat, char* filename);
 
 /* SAVE STATE */
-REGS generate_regs_save_state(alt_u8* data);
+REGS generate_regs_save_state();

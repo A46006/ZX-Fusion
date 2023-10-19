@@ -6,11 +6,11 @@
 
 int load_file(FAT_HANDLE hFat, char* filename, int name_len) {
 	char* extension = filename + (name_len-4);
-	printf("EXTENSION %s\r\n", extension);
+	//printf("EXTENSION %s\r\n", extension);
 	for (int i = 0; i < 4; i++) {
 		extension[i] = tolower(extension[i]);
 	}
-	printf("EXTENSION %s\r\n", extension);
+	//printf("EXTENSION %s\r\n", extension);
 	if (strncmp(extension, ".z80", 4) == 0) {
 		return load_z80(hFat, filename);
 	}
@@ -102,7 +102,14 @@ int load_SNA(FAT_HANDLE hFat, char* filename) {
 
 	if (nReadSize > sizeof(szRead))
 		nReadSize = sizeof(szRead);
+
+	int load_border_color = 0;
 	while(bSuccess && nTotalReadSize < nFileSize){
+
+		// Sets border color for loading
+		write_io(0xFFFE, (load_border_color++) & 0b111);
+		if (load_border_color > 7) load_border_color = 0;
+
 		nReadSize = sizeof(szRead);
 		if (nReadSize > (nFileSize - nTotalReadSize))
 			nReadSize = (nFileSize - nTotalReadSize);
@@ -601,11 +608,17 @@ int load_z80(FAT_HANDLE hFat, char* filename) {
 
 	if (nReadSize > sizeof(szRead))
 		nReadSize = sizeof(szRead);
+
+	int load_border_color = 0;
 	while(bSuccess && nTotalReadSize < nFileSize){
 		nReadSize = sizeof(szRead);
 		if (nReadSize > (nFileSize - nTotalReadSize))
 			nReadSize = (nFileSize - nTotalReadSize);
-		//
+
+		// Sets border color for loading
+		write_io(0xFFFE, (load_border_color++) & 0b111);
+		if (load_border_color > 7) load_border_color = 0;
+
 		if (Fat_FileRead(hFile, szRead, nReadSize)){
 			data_offset = 0;
 			if (first_block) {
@@ -820,7 +833,6 @@ int load_z80(FAT_HANDLE hFat, char* filename) {
 	usleep(100000);*/
 
 	// Sets actual border color
-	//write_mem(addr, regs.border & 0b111);
 	write_io(0xFFFE, regs.border & 0b111);
 
 	state = NONE; // redundant?

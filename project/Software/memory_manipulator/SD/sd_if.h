@@ -1,7 +1,7 @@
 #include ".\terasic_fat\FatFileSystem.h"
 #include "..\terasic_lib\terasic_includes.h"
 
-#define FILENAME_NUM 256
+#define FILENAME_NUM 50
 #define FILENAME_LEN_SD 50
 #define FILENAME_LEN 32
 #define FILES_PER_PAGE 16
@@ -13,7 +13,12 @@ typedef struct {
 
 FAT_HANDLE init_SD();
 bool is_supported_file(char* filename, size_t len);
+int format_file_name(FAT_BROWSE_HANDLE hBrowse, FILE_CONTEXT FileContext, char* name);
+
 FILENAMES list_files(FAT_HANDLE hFat);
+int num_of_pages(FAT_HANDLE hFat);
+FILENAMES list_files_of_page(FAT_HANDLE hFat, int page_num);
+
 void close_SD(FAT_HANDLE hFat);
 
 void print_filenames(FILENAMES files, bool free_en);
