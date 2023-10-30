@@ -58,4 +58,4 @@
 #define IN_A_N 0xDB
 #define STATE_IF 0x19 // save state interface
 
-#define HALT 0x76
+#define HALT_ASM 0x76

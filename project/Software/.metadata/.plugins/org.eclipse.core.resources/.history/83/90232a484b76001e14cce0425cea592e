@@ -1,0 +1,123 @@
+#include ".\ff15\ff.h"
+
+int main () {
+	FATFS *fs;
+
+	fs = malloc(sizeof (FATFS)); 	// Get work area for the volume
+	f_mount(fs, "", 0);				// Mount the default drive
+
+	printf("MOUNTED\r\n");
+
+	DIR dir;
+	FILINFO fno;
+	FRESULT err;
+
+	/*TCHAR* pattern = "*.z80";
+	err = f_findfirst(&dir, &fno, "/", pattern);
+	if (err) {
+		printf("findfirst ERROR: %d", err);
+		free(fs);
+		return -1;
+	}
+
+	do {
+		printf("----\r\nFNAME: %s\r\n-----\r\n", fno.fname);
+		err = f_findnext(&dir, &fno);
+		if (err) {
+			printf("readdir ERROR: %d", err);
+			free(fs);
+			return -1;
+		}
+	} while (fno.fname[0]);
+	 */
+
+	// a.txt has "Sup world!!!!"
+	FIL fil;
+	unsigned char buf[512];
+	/*
+	err = f_open(&fil, "a.txt", FA_READ);
+	if (err) {
+		printf("open to read a.txt FAILED: %d\r\n", err);
+		free(fs);
+		return -1;
+	}
+
+	int size = f_size(&fil);
+	printf("SIZE of a.txt: %d\r\n", size);
+	int bytes_read;
+	while(1) {
+		err = f_read(&fil, buf, size, &bytes_read);
+		if (err) {
+			printf("err: %d\r\n", err);
+			break;
+		}
+		printf("\r\n bytes_read: %d\r\n", bytes_read);
+		if (bytes_read == 0) break;
+		printf(buf);
+		printf("\r\n");
+	}
+	f_close(&fil);
+
+	printf("a.txt closed\r\n");
+	*/
+
+	// lets create counting_test_ff15.bin
+	err = f_open(&fil, "date_test.bin", FA_WRITE | FA_CREATE_ALWAYS);
+	if (err) {
+		printf("open to create counting_test_ff15.bin FAILED: %d\r\n", err);
+		free(fs);
+		return -1;
+	}
+	printf("counting_test_ff15 opened\r\n");
+
+	// write first 512 bytes as AA
+	for (int i = 0; i < sizeof(buf); i++) {
+		buf[i] = 0xAA;
+	}
+	int bytes_written;
+	err = f_write(&fil, buf, sizeof(buf), &bytes_written);
+	if (err) {
+		printf("err write1: %d\r\n", err);
+	}
+
+	// write second 512 bytes as 55
+	for (int i = 0; i < sizeof(buf); i++) {
+		buf[i] = 0x55;
+	}
+	err = f_write(&fil, buf, sizeof(buf), &bytes_written);
+	if (err) {
+		printf("err write1: %d\r\n", err);
+	}
+
+	f_close(&fil);
+	printf("write done\r\n");
+
+	// verify
+	err = f_open(&fil, "counting_test_ff15.bin", FA_READ);
+	if (err) {
+		printf("open to read counting_test_ff15.bin FAILED: %d\r\n", err);
+		free(fs);
+		return -1;
+	}
+
+	int bytes_read;
+	while(1) {
+		err = f_read(&fil, buf, sizeof(buf), &bytes_read);
+		if (err) {
+			printf("err: %d\r\n", err);
+			break;
+		}
+		printf("\r\n bytes_read: %d\r\n", bytes_read);
+		if (bytes_read == 0) break;
+		for (int i = 0; i < sizeof(buf); i++) {
+			if (i % 16 == 0) printf("\r\n");
+			printf("%02X ", buf[i]);
+		}
+		printf("\r\n");
+	}
+	f_close(&fil);
+
+	printf("END");
+	free(fs);
+	return 0;
+}

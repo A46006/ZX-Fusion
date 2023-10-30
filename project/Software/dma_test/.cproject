@@ -43,15 +43,6 @@
 		<project id="dma_test.null.992467595" name="dma_test"/>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
-	<storageModule moduleId="scannerConfiguration">
-		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		<scannerConfigBuildInfo instanceId="preference.org.eclipse.cdt.managedbuilder.core.configurationDataProvider.1764150842;preference.org.eclipse.cdt.managedbuilder.core.configurationDataProvider.1764150842.;altera.tool.gnu.cpp.compiler.mingw.856746928;cdt.managedbuild.tool.gnu.cpp.compiler.input.35235639">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="preference.org.eclipse.cdt.managedbuilder.core.configurationDataProvider.1764150842;preference.org.eclipse.cdt.managedbuilder.core.configurationDataProvider.1764150842.;altera.tool.gnu.c.compiler.mingw.65030126;cdt.managedbuild.tool.gnu.c.compiler.input.671017081">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		</scannerConfigBuildInfo>
-	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
 		<buildTargets>
 			<target name="mem_init_install" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
@@ -79,5 +70,14 @@
 				<runAllBuilders>false</runAllBuilders>
 			</target>
 		</buildTargets>
+	</storageModule>
+	<storageModule moduleId="scannerConfiguration">
+		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		<scannerConfigBuildInfo instanceId="preference.org.eclipse.cdt.managedbuilder.core.configurationDataProvider.1678436231;preference.org.eclipse.cdt.managedbuilder.core.configurationDataProvider.1678436231.;altera.tool.gnu.c.compiler.mingw.1141275034;cdt.managedbuild.tool.gnu.c.compiler.input.507478921">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="preference.org.eclipse.cdt.managedbuilder.core.configurationDataProvider.1678436231;preference.org.eclipse.cdt.managedbuilder.core.configurationDataProvider.1678436231.;altera.tool.gnu.cpp.compiler.mingw.1758556216;cdt.managedbuild.tool.gnu.cpp.compiler.input.1012695213">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
 	</storageModule>
 </cproject>

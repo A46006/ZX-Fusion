@@ -1,7 +1,0 @@
-#include <stdio.h>
-#include ".\spectrum_comm\DMA\dma_hal.h"
-
-int main() {
-	DMA_init();
-	DMA_request();
-}

@@ -2,29 +2,32 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="list_files_of_page" key="selection"/>
+		<item value="malloc" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="list_files_of_page"/>
+			<item value="malloc"/>
+			<item value="32"/>
+			<item value="curr_page_file_list.filenames[i] = n;"/>
+			<item value="0x80"/>
+			<item value="\0"/>
+			<item value="curr_game_filename"/>
 			<item value="curr_page_file_list"/>
-			<item value="REGS"/>
-			<item value="LD_NN_A"/>
-			<item value="LD_NN"/>
-			<item value="write_io"/>
-			<item value="border"/>
-			<item value="generate_AF_stack_addition"/>
+			<item value="list_files_of"/>
 		</list>
 		<list key="replacehistory">
+			<item value="50"/>
+			<item value=""/>
+			<item value="//"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="257" key="DIALOG_WIDTH"/>
 		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
 		<item value="381" key="DIALOG_HEIGHT"/>
-		<item value="1578" key="DIALOG_X_ORIGIN"/>
-		<item value="309" key="DIALOG_Y_ORIGIN"/>
+		<item value="1571" key="DIALOG_X_ORIGIN"/>
+		<item value="179" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

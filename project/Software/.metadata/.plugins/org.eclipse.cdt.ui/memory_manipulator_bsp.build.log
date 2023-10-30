@@ -1,6 +1,6 @@
-14:20:27 **** Incremental Build of configuration Nios II for project memory_manipulator_bsp ****
-make all 
-[BSP build complete]
+14:48:35 **** Clean-only build of configuration Nios II for project memory_manipulator_bsp ****
+make clean 
+[BSP clean complete]
 
-14:20:28 Build Finished (took 709ms)
+14:48:36 Build Finished (took 354ms)
 

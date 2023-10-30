@@ -319,8 +319,11 @@ architecture Behavior of top is
 			reset_reset_n                          : in    std_logic                     := '0';             --  reset
 			
 			sd_clk_external_connection_export      : out   std_logic;                                        --  sd_clk
-			sd_cmd_external_connection_export      : inout std_logic                     := '0';             --  sd_cmd
-			sd_dat_external_connection_export      : inout std_logic_vector(3 downto 0)  := (others => '0'); --  sd_dat
+--			sd_cmd_external_connection_export      : inout std_logic                     := '0';             --  sd_cmd SDIO
+--			sd_dat_external_connection_export      : inout std_logic_vector(3 downto 0)  := (others => '0'); --  sd_dat SDIO
+			sd_cs_external_connection_export       : out   std_logic;                                        --  sd SPI Chip Select
+			sd_miso_external_connection_export     : in    std_logic                     := '0';             --  sd SPI Data Out
+			sd_mosi_external_connection_export     : out   std_logic;                                        --  sd SPI Data In
 			sd_wp_n_external_connection_export     : in    std_logic                     := '0'              --  sd_wp_n
 		);
 	end component;
@@ -397,6 +400,11 @@ architecture Behavior of top is
 	signal nios_en_reg_out : std_logic := '0';
 	
 	signal nios_reg_reset : std_logic := '0';
+	
+	-- SPI SD --
+	signal sd_cs : std_logic := '1';
+	signal sd_do : std_logic := '0';
+	signal sd_di : std_logic := '0';
 	
 	-- CPU Shared signals --
 	signal read_en, write_en, mreq_n, iorq_n : std_logic;
@@ -508,7 +516,6 @@ begin
 
 	LEDR(17) <= nios_en_reg_out;
 	LEDR(16) <= save_state;
-	LEDR(3 downto 0) <= cpu_address_reg_out(3 downto 0);
 --	LEDR(16) <= not cpu_halt_n;
 --	LEDR(15) <= ula_speaker_out;
 --	LEDR(7 downto 0) <= ula_data_out;
@@ -567,6 +574,10 @@ begin
 	----------
 	-- NIOS --
 	----------
+	SD_DAT(3) <= sd_cs;
+	sd_do <= SD_DAT(0);
+	SD_CMD <= sd_di;
+	
 	sd_loader : nios_sd_loader port map(
 			clk_clk											=> CLOCK_50,
 			reset_reset_n									=> nios_reset_n,
@@ -574,8 +585,9 @@ begin
 			
 			-- SD --
 			sd_clk_external_connection_export		=> SD_CLK,
-			sd_cmd_external_connection_export		=> SD_CMD,
-			sd_dat_external_connection_export		=> SD_DAT,
+			sd_cs_external_connection_export			=> sd_cs,
+			sd_miso_external_connection_export		=> sd_do,
+			sd_mosi_external_connection_export		=> sd_di,
 			sd_wp_n_external_connection_export		=> SD_WP_N,
 		
 			-- CPU to NIOS --

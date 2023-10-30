@@ -1,0 +1,223 @@
+//#include <stdio.h>
+#include "./sd_if.h"
+
+FATFS* fs;
+FIL fil;
+
+const char* SUPPORTED_EXTENSIONS[] = {".z80", ".sna"};
+#define N_SUPPORTED_EXTENSIONS (sizeof SUPPORTED_EXTENSIONS / sizeof (const char *))
+
+void init_SD(void) {
+	fs = malloc(sizeof (FATFS)); 	// Get work area for the volume
+	f_mount(fs, "", 0);			// Mount the default drive
+}
+
+/**
+ * Checks input file's extension and compares it to supported ones
+ */
+bool is_supported_file(char* filename, size_t len) {
+	// Making extensions lower case for comparisons
+	char to_compare[len];
+	strncpy(to_compare, filename, len);
+	for(int i = 1; i < 5; i++) {
+		to_compare[len-i] = tolower(filename[len-i]);
+	}
+
+	// forcing the end of the filenames strings
+	to_compare[len] = '\0';
+
+	char* extension = to_compare + (len-4);
+	for (int i = 0; i < N_SUPPORTED_EXTENSIONS; i++) {
+		if (strncmp(extension, SUPPORTED_EXTENSIONS[i], 4) == 0) {
+			return TRUE;
+		}
+	}
+	return FALSE;
+}
+
+
+int num_of_pages() {
+	FRESULT err;
+	DIR dir;
+	FILINFO fno;
+	int num_of_files;
+
+	TCHAR* pattern = "*";
+	err = f_findfirst(&dir, &fno, "/", pattern);
+	if (!err) {
+		if (*fno.fname) {
+			num_of_files = 0;
+			do {
+				if (is_supported_file(fno.fname, strlen(fno.fname))) {
+					num_of_files++;
+				}
+				err = f_findnext(&dir, &fno);
+			} while (*fno.fname && !err);
+
+			if (err) {
+				printf("Error when finding another entry: 0x%02X\r\n", err);
+				return -1;
+			}
+
+			return ((num_of_files-1) / 16 ) + 1;
+		}
+
+	}
+	printf("Counting pages went wrong... 0x%02X\r\n", err);
+	return -1;
+}
+
+void free_file_list(FILENAMES filenames) {
+	for (int i = 0; i < FILES_PER_PAGE; i++)
+		free(filenames.filenames[i]);
+	free(filenames.filenames);
+	filenames.size = 0;
+	filenames.filenames = NULL;
+}
+
+void list_files_of_page(FILENAMES* filenames, int page_num) {
+	// allocate space for FILENAME_NUM file names
+	/*FILENAMES filenames = {0, NULL};
+	filenames.filenames = (char**) malloc(FILES_PER_PAGE*sizeof(char*));
+	for (int i = 0; i < FILES_PER_PAGE; i++) {
+		// allocating 50 chars for each file_name
+		filenames.filenames[i] = (char*)malloc(FILENAME_LEN_SD*sizeof(char));
+	}*/
+
+	int filename_num = 0;
+	int page_start = page_num * FILES_PER_PAGE;
+
+	FRESULT err;
+	DIR dir;
+	FILINFO fno;
+
+	TCHAR* pattern = "*";
+	err = f_findfirst(&dir, &fno, "/", pattern);
+
+	if (!err){
+		if (*fno.fname) {
+			// First loop to advance file browse until the beginning of the requested page, if not requesting the first page
+			if (page_num > 0) {
+				int discarded_filename_num = 0;
+				do {
+					// count if the file is supported
+					if (is_supported_file(fno.fname, strlen(fno.fname))) {
+						discarded_filename_num++;
+						// if the requested page's start index corresponds to the skipped files, leave
+						// so that the next file browse advancement is a wanted file
+						if (page_start == discarded_filename_num) break;
+					}
+
+					// get next entry
+					err = f_findnext(&dir, &fno);
+				} while (*fno.fname && !err);
+
+				if (err) {
+					filenames->size = 0;
+					printf("Error when finding entry, first loop in list: 0x%02X\r\n", err);
+					return filenames;
+				}
+
+				// if the loop stopped due to no more files to list, then the page requested does not exist
+				if (!*fno.fname) {
+					filenames->size = 0;
+					printf("Out of bounds...\r\n");
+					return filenames;
+				}
+			}
+
+			// Second loop, saving the 16 supported files to the FILENAMES struct
+			do {
+				char name[FILENAME_LEN];
+				int len = strlen(fno.fname);
+				// If the file is supported, save it
+				if (is_supported_file(fno.fname, len)) {
+					if (len > FILENAME_LEN) {
+						len = FILENAME_LEN;
+					}
+					strncpy(name, fno.fname, len);
+					// adding 0x80 to last char of string as a final byte (spectrum uses this in string tables)
+					name[len-1] += 0x80;
+
+					// add the filename to the list
+					snprintf(filenames->filenames[filename_num], len, name);
+					filename_num++;
+
+					// if all 16 filenames have been saved, leave
+					if (filename_num == FILES_PER_PAGE) break;
+				}
+
+				// get next entry
+				err = f_findnext(&dir, &fno);
+			} while(*fno.fname && !err);
+
+			if (err) {
+				printf("Error when finding entry, second loop in list: 0x%02X\r\n", err);
+				return filenames;
+			}
+			filenames->size = filename_num;
+			filenames->filenames = (char**) realloc(filenames.filenames, filenames.size*sizeof(char*));
+
+			return filenames;
+		}
+
+		// if the first entry did not have a name
+		printf("No files... list files\r\n");
+		filenames->size = 0;
+		return filenames;
+
+	}
+
+	// if the first entry finding resulted in error
+	printf("Listing files failed...\r\n");
+	filenames->size = 0;
+	return filenames;
+}
+
+void print_filenames(FILENAMES files, bool free_en) {
+	int filename;
+	size_t entries_left = files->size;
+	size_t files_in_page = FILES_PER_PAGE;
+
+	if (entries_left < files_in_page) {
+		files_in_page = entries_left;
+	}
+
+	for (filename = 0; filename < files_in_page; filename++) {
+		printf("\t[%d]: %s\r\n", filename, files.filenames[filename]);
+		if (free_en)
+			free(files.filenames[idx]);
+	}
+
+	if (free_en)
+		free(files.filenames);
+}
+
+FRESULT init_file_read(char* filename) {
+	return f_open(&fil, filename, FA_READ);
+}
+
+FRESULT init_file_write(char* filename) {
+	return f_open(&fil, filename, FA_WRITE | FA_CREATE_ALWAYS);
+}
+
+FRESULT file_read(alt_u8* buffer, unsigned int len, unsigned int* bytes_read) {
+	return f_read(&fil, buffer, len, bytes_read);
+}
+
+FRESULT file_write(alt_u8* buffer, unsigned int len, unsigned int* bytes_written) {
+	return f_write(&fil, buffer, len, bytes_written);
+}
+
+int file_size(void) {
+	return f_size(&fil);
+}
+
+void close_file(void) {
+	f_close(&fil);
+}
+
+void close_sd(void) {
+	free(fs);
+}
+

@@ -19,7 +19,7 @@ void DMA_init() {
 int DMA_request(int tries) {
 	int i;
 
-	if (DMA_state == 1 && BUS_ACK_GET == 1)
+	if (DMA_state && BUS_ACK_GET)
 		return ALREADY_DONE;
 
 
@@ -32,7 +32,7 @@ int DMA_request(int tries) {
 			return TIMEOUT;
 		}
 		i++;
-	} while (BUS_ACK_GET != 1);
+	} while (!BUS_ACK_GET);
 
 	DMA_state = 1;
 	return 0;

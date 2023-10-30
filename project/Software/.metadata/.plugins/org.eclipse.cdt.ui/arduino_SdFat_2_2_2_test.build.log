@@ -1,0 +1,12 @@
+10:53:22 **** Build of configuration Nios II for project arduino_SdFat_2_2_2_test ****
+make all 
+Info: Building ../memory_manipulator_bsp/
+C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
+[BSP build complete]
+Info: Compiling terasic_lib/debug.c to obj/default/terasic_lib/debug.o
+nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_INSTRUCTION_EMULATION -DALT_SINGLE_THREADED    -O0 -g -Wall -std=gnu++11  -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/terasic_lib/debug.o terasic_lib/debug.c
+cc1.exe: warning: command line option '-std=gnu++11' is valid for C++/ObjC++ but not for C
+Command canceled
+
+10:53:25 Build Cancelled (took 2s.585ms)
+

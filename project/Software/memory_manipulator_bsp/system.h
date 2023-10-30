@@ -4,7 +4,7 @@
  * Machine generated for CPU 'cpu' in SOPC Builder design 'nios_sd_loader'
  * SOPC Builder design path: ../../nios_sd_loader.sopcinfo
  *
- * Generated: Mon Oct 16 15:11:51 BST 2023
+ * Generated: Mon Oct 30 12:24:25 GMT 2023
  */
 
 /*
@@ -62,17 +62,17 @@
 
 #define ALT_CPU_ARCHITECTURE "altera_nios2_gen2"
 #define ALT_CPU_BIG_ENDIAN 0
-#define ALT_CPU_BREAK_ADDR 0x00040820
+#define ALT_CPU_BREAK_ADDR 0x00080820
 #define ALT_CPU_CPU_ARCH_NIOS2_R1
 #define ALT_CPU_CPU_FREQ 50000000u
 #define ALT_CPU_CPU_ID_SIZE 1
 #define ALT_CPU_CPU_ID_VALUE 0x00000000
 #define ALT_CPU_CPU_IMPLEMENTATION "tiny"
-#define ALT_CPU_DATA_ADDR_WIDTH 0x13
+#define ALT_CPU_DATA_ADDR_WIDTH 0x14
 #define ALT_CPU_DCACHE_LINE_SIZE 0
 #define ALT_CPU_DCACHE_LINE_SIZE_LOG2 0
 #define ALT_CPU_DCACHE_SIZE 0
-#define ALT_CPU_EXCEPTION_ADDR 0x00020020
+#define ALT_CPU_EXCEPTION_ADDR 0x00040020
 #define ALT_CPU_FLASH_ACCELERATOR_LINES 0
 #define ALT_CPU_FLASH_ACCELERATOR_LINE_SIZE 0
 #define ALT_CPU_FLUSHDA_SUPPORTED
@@ -87,10 +87,10 @@
 #define ALT_CPU_ICACHE_LINE_SIZE 0
 #define ALT_CPU_ICACHE_LINE_SIZE_LOG2 0
 #define ALT_CPU_ICACHE_SIZE 0
-#define ALT_CPU_INST_ADDR_WIDTH 0x13
+#define ALT_CPU_INST_ADDR_WIDTH 0x14
 #define ALT_CPU_NAME "cpu"
 #define ALT_CPU_OCI_VERSION 1
-#define ALT_CPU_RESET_ADDR 0x00020000
+#define ALT_CPU_RESET_ADDR 0x00040000
 
 
 /*
@@ -99,17 +99,17 @@
  */
 
 #define NIOS2_BIG_ENDIAN 0
-#define NIOS2_BREAK_ADDR 0x00040820
+#define NIOS2_BREAK_ADDR 0x00080820
 #define NIOS2_CPU_ARCH_NIOS2_R1
 #define NIOS2_CPU_FREQ 50000000u
 #define NIOS2_CPU_ID_SIZE 1
 #define NIOS2_CPU_ID_VALUE 0x00000000
 #define NIOS2_CPU_IMPLEMENTATION "tiny"
-#define NIOS2_DATA_ADDR_WIDTH 0x13
+#define NIOS2_DATA_ADDR_WIDTH 0x14
 #define NIOS2_DCACHE_LINE_SIZE 0
 #define NIOS2_DCACHE_LINE_SIZE_LOG2 0
 #define NIOS2_DCACHE_SIZE 0
-#define NIOS2_EXCEPTION_ADDR 0x00020020
+#define NIOS2_EXCEPTION_ADDR 0x00040020
 #define NIOS2_FLASH_ACCELERATOR_LINES 0
 #define NIOS2_FLASH_ACCELERATOR_LINE_SIZE 0
 #define NIOS2_FLUSHDA_SUPPORTED
@@ -123,9 +123,9 @@
 #define NIOS2_ICACHE_LINE_SIZE 0
 #define NIOS2_ICACHE_LINE_SIZE_LOG2 0
 #define NIOS2_ICACHE_SIZE 0
-#define NIOS2_INST_ADDR_WIDTH 0x13
+#define NIOS2_INST_ADDR_WIDTH 0x14
 #define NIOS2_OCI_VERSION 1
-#define NIOS2_RESET_ADDR 0x00020000
+#define NIOS2_RESET_ADDR 0x00040000
 
 
 /*
@@ -156,19 +156,19 @@
 #define ALT_NUM_INTERNAL_INTERRUPT_CONTROLLERS 1
 #define ALT_NUM_INTERRUPT_CONTROLLERS 1
 #define ALT_STDERR "/dev/jtag_uart"
-#define ALT_STDERR_BASE 0x41140
+#define ALT_STDERR_BASE 0x81150
 #define ALT_STDERR_DEV jtag_uart
 #define ALT_STDERR_IS_JTAG_UART
 #define ALT_STDERR_PRESENT
 #define ALT_STDERR_TYPE "altera_avalon_jtag_uart"
 #define ALT_STDIN "/dev/jtag_uart"
-#define ALT_STDIN_BASE 0x41140
+#define ALT_STDIN_BASE 0x81150
 #define ALT_STDIN_DEV jtag_uart
 #define ALT_STDIN_IS_JTAG_UART
 #define ALT_STDIN_PRESENT
 #define ALT_STDIN_TYPE "altera_avalon_jtag_uart"
 #define ALT_STDOUT "/dev/jtag_uart"
-#define ALT_STDOUT_BASE 0x41140
+#define ALT_STDOUT_BASE 0x81150
 #define ALT_STDOUT_DEV jtag_uart
 #define ALT_STDOUT_IS_JTAG_UART
 #define ALT_STDOUT_PRESENT
@@ -181,7 +181,7 @@
  *
  */
 
-#define ADDRESS_BASE 0x41090
+#define ADDRESS_BASE 0x810a0
 #define ADDRESS_BIT_CLEARING_EDGE_REGISTER 0
 #define ADDRESS_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define ADDRESS_CAPTURE 0
@@ -209,7 +209,7 @@
  */
 
 #define ALT_MODULE_CLASS_bus_ack_n altera_avalon_pio
-#define BUS_ACK_N_BASE 0x41060
+#define BUS_ACK_N_BASE 0x81070
 #define BUS_ACK_N_BIT_CLEARING_EDGE_REGISTER 0
 #define BUS_ACK_N_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define BUS_ACK_N_CAPTURE 0
@@ -236,7 +236,7 @@
  */
 
 #define ALT_MODULE_CLASS_bus_req_n altera_avalon_pio
-#define BUS_REQ_N_BASE 0x41070
+#define BUS_REQ_N_BASE 0x81080
 #define BUS_REQ_N_BIT_CLEARING_EDGE_REGISTER 0
 #define BUS_REQ_N_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define BUS_REQ_N_CAPTURE 0
@@ -263,7 +263,7 @@
  */
 
 #define ALT_MODULE_CLASS_cpu_address altera_avalon_pio
-#define CPU_ADDRESS_BASE 0x41040
+#define CPU_ADDRESS_BASE 0x81050
 #define CPU_ADDRESS_BIT_CLEARING_EDGE_REGISTER 0
 #define CPU_ADDRESS_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define CPU_ADDRESS_CAPTURE 0
@@ -290,7 +290,7 @@
  */
 
 #define ALT_MODULE_CLASS_cpu_address_direct altera_avalon_pio
-#define CPU_ADDRESS_DIRECT_BASE 0x41020
+#define CPU_ADDRESS_DIRECT_BASE 0x81030
 #define CPU_ADDRESS_DIRECT_BIT_CLEARING_EDGE_REGISTER 0
 #define CPU_ADDRESS_DIRECT_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define CPU_ADDRESS_DIRECT_CAPTURE 0
@@ -317,7 +317,7 @@
  */
 
 #define ALT_MODULE_CLASS_cpu_cmd altera_avalon_pio
-#define CPU_CMD_BASE 0x410b0
+#define CPU_CMD_BASE 0x810c0
 #define CPU_CMD_BIT_CLEARING_EDGE_REGISTER 0
 #define CPU_CMD_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define CPU_CMD_CAPTURE 0
@@ -344,7 +344,7 @@
  */
 
 #define ALT_MODULE_CLASS_cpu_cmd_ack altera_avalon_pio
-#define CPU_CMD_ACK_BASE 0x41030
+#define CPU_CMD_ACK_BASE 0x81040
 #define CPU_CMD_ACK_BIT_CLEARING_EDGE_REGISTER 0
 #define CPU_CMD_ACK_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define CPU_CMD_ACK_CAPTURE 0
@@ -371,7 +371,7 @@
  */
 
 #define ALT_MODULE_CLASS_cpu_cmd_en altera_avalon_pio
-#define CPU_CMD_EN_BASE 0x410e0
+#define CPU_CMD_EN_BASE 0x810f0
 #define CPU_CMD_EN_BIT_CLEARING_EDGE_REGISTER 0
 #define CPU_CMD_EN_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define CPU_CMD_EN_CAPTURE 0
@@ -398,7 +398,7 @@
  */
 
 #define ALT_MODULE_CLASS_cpu_rd_n altera_avalon_pio
-#define CPU_RD_N_BASE 0x410d0
+#define CPU_RD_N_BASE 0x810e0
 #define CPU_RD_N_BIT_CLEARING_EDGE_REGISTER 0
 #define CPU_RD_N_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define CPU_RD_N_CAPTURE 0
@@ -425,7 +425,7 @@
  */
 
 #define ALT_MODULE_CLASS_cpu_wr_n altera_avalon_pio
-#define CPU_WR_N_BASE 0x410c0
+#define CPU_WR_N_BASE 0x810d0
 #define CPU_WR_N_BIT_CLEARING_EDGE_REGISTER 0
 #define CPU_WR_N_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define CPU_WR_N_CAPTURE 0
@@ -452,7 +452,7 @@
  */
 
 #define ALT_MODULE_CLASS_ctrl_bus altera_avalon_pio
-#define CTRL_BUS_BASE 0x410a0
+#define CTRL_BUS_BASE 0x810b0
 #define CTRL_BUS_BIT_CLEARING_EDGE_REGISTER 0
 #define CTRL_BUS_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define CTRL_BUS_CAPTURE 0
@@ -479,7 +479,7 @@
  */
 
 #define ALT_MODULE_CLASS_data altera_avalon_pio
-#define DATA_BASE 0x41080
+#define DATA_BASE 0x81090
 #define DATA_BIT_CLEARING_EDGE_REGISTER 0
 #define DATA_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define DATA_CAPTURE 0
@@ -517,7 +517,7 @@
  */
 
 #define ALT_MODULE_CLASS_jtag_uart altera_avalon_jtag_uart
-#define JTAG_UART_BASE 0x41140
+#define JTAG_UART_BASE 0x81150
 #define JTAG_UART_IRQ 1
 #define JTAG_UART_IRQ_INTERRUPT_CONTROLLER_ID 0
 #define JTAG_UART_NAME "/dev/jtag_uart"
@@ -535,7 +535,7 @@
  */
 
 #define ALT_MODULE_CLASS_ledg_pio altera_avalon_pio
-#define LEDG_PIO_BASE 0x41130
+#define LEDG_PIO_BASE 0x81140
 #define LEDG_PIO_BIT_CLEARING_EDGE_REGISTER 0
 #define LEDG_PIO_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define LEDG_PIO_CAPTURE 0
@@ -562,7 +562,7 @@
  */
 
 #define ALT_MODULE_CLASS_nmi_n altera_avalon_pio
-#define NMI_N_BASE 0x41050
+#define NMI_N_BASE 0x81060
 #define NMI_N_BIT_CLEARING_EDGE_REGISTER 0
 #define NMI_N_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define NMI_N_CAPTURE 0
@@ -591,7 +591,7 @@
 #define ALT_MODULE_CLASS_onchip_memory altera_avalon_onchip_memory2
 #define ONCHIP_MEMORY_ALLOW_IN_SYSTEM_MEMORY_CONTENT_EDITOR 0
 #define ONCHIP_MEMORY_ALLOW_MRAM_SIM_CONTENTS_ONLY_FILE 0
-#define ONCHIP_MEMORY_BASE 0x20000
+#define ONCHIP_MEMORY_BASE 0x40000
 #define ONCHIP_MEMORY_CONTENTS_INFO ""
 #define ONCHIP_MEMORY_DUAL_PORT 0
 #define ONCHIP_MEMORY_GUI_RAM_BLOCK_TYPE "AUTO"
@@ -606,8 +606,8 @@
 #define ONCHIP_MEMORY_READ_DURING_WRITE_MODE "DONT_CARE"
 #define ONCHIP_MEMORY_SINGLE_CLOCK_OP 0
 #define ONCHIP_MEMORY_SIZE_MULTIPLE 1
-#define ONCHIP_MEMORY_SIZE_VALUE 98304
-#define ONCHIP_MEMORY_SPAN 98304
+#define ONCHIP_MEMORY_SIZE_VALUE 262144
+#define ONCHIP_MEMORY_SPAN 262144
 #define ONCHIP_MEMORY_TYPE "altera_avalon_onchip_memory2"
 #define ONCHIP_MEMORY_WRITABLE 1
 
@@ -618,7 +618,7 @@
  */
 
 #define ALT_MODULE_CLASS_sd_clk altera_avalon_pio
-#define SD_CLK_BASE 0x41110
+#define SD_CLK_BASE 0x81120
 #define SD_CLK_BIT_CLEARING_EDGE_REGISTER 0
 #define SD_CLK_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define SD_CLK_CAPTURE 0
@@ -640,57 +640,84 @@
 
 
 /*
- * sd_cmd configuration
+ * sd_cs configuration
  *
  */
 
-#define ALT_MODULE_CLASS_sd_cmd altera_avalon_pio
-#define SD_CMD_BASE 0x41100
-#define SD_CMD_BIT_CLEARING_EDGE_REGISTER 0
-#define SD_CMD_BIT_MODIFYING_OUTPUT_REGISTER 0
-#define SD_CMD_CAPTURE 0
-#define SD_CMD_DATA_WIDTH 1
-#define SD_CMD_DO_TEST_BENCH_WIRING 0
-#define SD_CMD_DRIVEN_SIM_VALUE 0
-#define SD_CMD_EDGE_TYPE "NONE"
-#define SD_CMD_FREQ 50000000
-#define SD_CMD_HAS_IN 0
-#define SD_CMD_HAS_OUT 0
-#define SD_CMD_HAS_TRI 1
-#define SD_CMD_IRQ -1
-#define SD_CMD_IRQ_INTERRUPT_CONTROLLER_ID -1
-#define SD_CMD_IRQ_TYPE "NONE"
-#define SD_CMD_NAME "/dev/sd_cmd"
-#define SD_CMD_RESET_VALUE 0
-#define SD_CMD_SPAN 16
-#define SD_CMD_TYPE "altera_avalon_pio"
+#define ALT_MODULE_CLASS_sd_cs altera_avalon_pio
+#define SD_CS_BASE 0x81020
+#define SD_CS_BIT_CLEARING_EDGE_REGISTER 0
+#define SD_CS_BIT_MODIFYING_OUTPUT_REGISTER 0
+#define SD_CS_CAPTURE 0
+#define SD_CS_DATA_WIDTH 1
+#define SD_CS_DO_TEST_BENCH_WIRING 0
+#define SD_CS_DRIVEN_SIM_VALUE 0
+#define SD_CS_EDGE_TYPE "NONE"
+#define SD_CS_FREQ 50000000
+#define SD_CS_HAS_IN 0
+#define SD_CS_HAS_OUT 1
+#define SD_CS_HAS_TRI 0
+#define SD_CS_IRQ -1
+#define SD_CS_IRQ_INTERRUPT_CONTROLLER_ID -1
+#define SD_CS_IRQ_TYPE "NONE"
+#define SD_CS_NAME "/dev/sd_cs"
+#define SD_CS_RESET_VALUE 0
+#define SD_CS_SPAN 16
+#define SD_CS_TYPE "altera_avalon_pio"
 
 
 /*
- * sd_dat configuration
+ * sd_miso configuration
  *
  */
 
-#define ALT_MODULE_CLASS_sd_dat altera_avalon_pio
-#define SD_DAT_BASE 0x410f0
-#define SD_DAT_BIT_CLEARING_EDGE_REGISTER 0
-#define SD_DAT_BIT_MODIFYING_OUTPUT_REGISTER 0
-#define SD_DAT_CAPTURE 0
-#define SD_DAT_DATA_WIDTH 4
-#define SD_DAT_DO_TEST_BENCH_WIRING 0
-#define SD_DAT_DRIVEN_SIM_VALUE 0
-#define SD_DAT_EDGE_TYPE "NONE"
-#define SD_DAT_FREQ 50000000
-#define SD_DAT_HAS_IN 0
-#define SD_DAT_HAS_OUT 0
-#define SD_DAT_HAS_TRI 1
-#define SD_DAT_IRQ -1
-#define SD_DAT_IRQ_INTERRUPT_CONTROLLER_ID -1
-#define SD_DAT_IRQ_TYPE "NONE"
-#define SD_DAT_NAME "/dev/sd_dat"
-#define SD_DAT_RESET_VALUE 0
-#define SD_DAT_SPAN 16
-#define SD_DAT_TYPE "altera_avalon_pio"
+#define ALT_MODULE_CLASS_sd_miso altera_avalon_pio
+#define SD_MISO_BASE 0x81100
+#define SD_MISO_BIT_CLEARING_EDGE_REGISTER 0
+#define SD_MISO_BIT_MODIFYING_OUTPUT_REGISTER 0
+#define SD_MISO_CAPTURE 0
+#define SD_MISO_DATA_WIDTH 1
+#define SD_MISO_DO_TEST_BENCH_WIRING 0
+#define SD_MISO_DRIVEN_SIM_VALUE 0
+#define SD_MISO_EDGE_TYPE "NONE"
+#define SD_MISO_FREQ 50000000
+#define SD_MISO_HAS_IN 1
+#define SD_MISO_HAS_OUT 0
+#define SD_MISO_HAS_TRI 0
+#define SD_MISO_IRQ -1
+#define SD_MISO_IRQ_INTERRUPT_CONTROLLER_ID -1
+#define SD_MISO_IRQ_TYPE "NONE"
+#define SD_MISO_NAME "/dev/sd_miso"
+#define SD_MISO_RESET_VALUE 0
+#define SD_MISO_SPAN 16
+#define SD_MISO_TYPE "altera_avalon_pio"
+
+
+/*
+ * sd_mosi configuration
+ *
+ */
+
+#define ALT_MODULE_CLASS_sd_mosi altera_avalon_pio
+#define SD_MOSI_BASE 0x81110
+#define SD_MOSI_BIT_CLEARING_EDGE_REGISTER 0
+#define SD_MOSI_BIT_MODIFYING_OUTPUT_REGISTER 0
+#define SD_MOSI_CAPTURE 0
+#define SD_MOSI_DATA_WIDTH 1
+#define SD_MOSI_DO_TEST_BENCH_WIRING 0
+#define SD_MOSI_DRIVEN_SIM_VALUE 0
+#define SD_MOSI_EDGE_TYPE "NONE"
+#define SD_MOSI_FREQ 50000000
+#define SD_MOSI_HAS_IN 0
+#define SD_MOSI_HAS_OUT 1
+#define SD_MOSI_HAS_TRI 0
+#define SD_MOSI_IRQ -1
+#define SD_MOSI_IRQ_INTERRUPT_CONTROLLER_ID -1
+#define SD_MOSI_IRQ_TYPE "NONE"
+#define SD_MOSI_NAME "/dev/sd_mosi"
+#define SD_MOSI_RESET_VALUE 0
+#define SD_MOSI_SPAN 16
+#define SD_MOSI_TYPE "altera_avalon_pio"
 
 
 /*
@@ -699,7 +726,7 @@
  */
 
 #define ALT_MODULE_CLASS_sd_wp_n altera_avalon_pio
-#define SD_WP_N_BASE 0x41120
+#define SD_WP_N_BASE 0x81130
 #define SD_WP_N_BIT_CLEARING_EDGE_REGISTER 0
 #define SD_WP_N_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define SD_WP_N_CAPTURE 0
@@ -727,7 +754,7 @@
 
 #define ALT_MODULE_CLASS_timer altera_avalon_timer
 #define TIMER_ALWAYS_RUN 0
-#define TIMER_BASE 0x41000
+#define TIMER_BASE 0x81000
 #define TIMER_COUNTER_SIZE 32
 #define TIMER_FIXED_PERIOD 0
 #define TIMER_FREQ 50000000

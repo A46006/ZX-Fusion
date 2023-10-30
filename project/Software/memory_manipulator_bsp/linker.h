@@ -4,7 +4,7 @@
  * Machine generated for CPU 'cpu' in SOPC Builder design 'nios_sd_loader'
  * SOPC Builder design path: ../../nios_sd_loader.sopcinfo
  *
- * Generated: Thu Sep 28 22:35:36 BST 2023
+ * Generated: Mon Oct 30 12:24:25 GMT 2023
  */
 
 /*
@@ -65,9 +65,9 @@
  *
  */
 
-#define ONCHIP_MEMORY_REGION_BASE 0x20020
-#define ONCHIP_MEMORY_REGION_SPAN 98272
-#define RESET_REGION_BASE 0x20000
+#define ONCHIP_MEMORY_REGION_BASE 0x40020
+#define ONCHIP_MEMORY_REGION_SPAN 262112
+#define RESET_REGION_BASE 0x40000
 #define RESET_REGION_SPAN 32
 
 

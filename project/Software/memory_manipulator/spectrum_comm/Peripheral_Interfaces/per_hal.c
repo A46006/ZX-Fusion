@@ -2,18 +2,29 @@
 
 void listen_for_en() {
 	int read, write, en;
-	while(1) {
+	/*do {
 		en = EN_GET;
-		if (!en) {
-			continue;
-		}
 		read = CPU_RD_GET;
 		write = CPU_WR_GET;
-		if (read != write) {
-			printf("RD != WR\r\n");
-			break;
-		}
-	}
+	} while(!en && read==write);
+	*/
+	/*do {
+		do {
+			en = EN_GET;
+		} while (!en);
+		printf("en\r\n");
+		read = CPU_RD_GET;
+		write = CPU_WR_GET;
+	} while (read == write);
+	*/
+	do {
+		en = EN_GET;
+	} while (!en);
+
+	do {
+		read = CPU_RD_GET;
+		write = CPU_WR_GET;
+	} while (read == write);
 }
 
 enum per_if_type get_if_type() {
@@ -56,10 +67,10 @@ int get_game_num() {
 }
 
 bool is_read() {
-	return CPU_RD_GET == 1;
+	return CPU_RD_GET;
 }
 bool is_write() {
-	return CPU_WR_GET == 1;
+	return CPU_WR_GET;
 }
 
 void per_cmd_ack() {

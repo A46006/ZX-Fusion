@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;testing_cpp/classes/FatSfn.cpp&apos; to &apos;FatSfn.h&apos;" description="Rename resource &apos;FatSfn.cpp&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="classes/FatSfn.cpp" name="FatSfn.h" stamp="1698256626396" updateReferences="true"/>
+</session>

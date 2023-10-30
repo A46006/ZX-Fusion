@@ -1,147 +1,159 @@
-// --------------------------------------------------------------------
-// Copyright (c) 2010 by Terasic Technologies Inc.
-// --------------------------------------------------------------------
-//
-// Permission:
-//
-//   Terasic grants permission to use and modify this code for use
-//   in synthesis for all Terasic Development Boards and Altera Development
-//   Kits made by Terasic.  Other use of this code, including the selling
-//   ,duplication, or modification of any portion is strictly prohibited.
-//
-// Disclaimer:
-//
-//   This VHDL/Verilog or C/C++ source code is intended as a design reference
-//   which illustrates how these types of functions can be implemented.
-//   It is the user's responsibility to verify their design for
-//   consistency and functionality through the use of formal
-//   verification methods.  Terasic provides no warranty regarding the use
-//   or functionality of this code.
-//
-// --------------------------------------------------------------------
-//
-//                     Terasic Technologies Inc
-//                     356 Fu-Shin E. Rd Sec. 1. JhuBei City,
-//                     HsinChu County, Taiwan
-//                     302
-//
-//                     web: http://www.terasic.com/
-//                     email: support@terasic.com
-//
-// --------------------------------------------------------------------
-// Last built by: Quartus 9.1 SP2 build 350
-// Supported File Format: FAT16 & FAT 32
-// Supported SDCARD: SD, HCSD
-
-#include <stdio.h>
-#include ".\terasic_fat\FatFileSystem.h"
+#include ".\sd_if.h"
 #include "..\terasic_lib\terasic_includes.h"
 
+int test_sd () {
+	init_SD();
+	printf("MOUNTED\r\n");
 
-bool Fat_Test(FAT_HANDLE hFat, char *pDumpFile){
-    bool bSuccess;
-    int nCount = 0;
-    FAT_BROWSE_HANDLE hBrowse;
-    FILE_CONTEXT FileContext;
+	printf("Displaying number of pages of .z80 and .sna files:\r\n");
 
-    bSuccess = Fat_FileBrowseBegin(hFat, &hBrowse);
-	printf("LIST %d\r\n", bSuccess);
-    if (bSuccess){
-    	printf("AAAA\r\n");
-        while(Fat_FileBrowseNext(&hBrowse, &FileContext)){
-            if (FileContext.bLongFilename){
-                alt_u16 *pData16;
-                alt_u8 *pData8;
-                pData16 = (alt_u16 *)FileContext.szName;
-                pData8 = FileContext.szName;
-                printf("[%d]", nCount);
-                while(*pData16){
-                    if (*pData8)
-                        printf("%c", *pData8);
-                    pData8++;
-                    if (*pData8)
-                        printf("%c", *pData8);
-                    pData8++;
-                    //
-                    pData16++;
-                }
-                printf("\n");
-            }else{
-                printf("[%d]%s\n", nCount, FileContext.szName);
-            }
-            nCount++;
-        }
-    }
-    if (bSuccess && pDumpFile && strlen(pDumpFile)){
-        FAT_FILE_HANDLE hFile;
-        hFile =  Fat_FileOpen(hFat, pDumpFile);
-        if (hFile){
-            alt_u8 szRead[256];
-            int nReadSize, nFileSize, nTotalReadSize=0;
-            nFileSize = Fat_FileSize(hFile);
-            if (nReadSize > sizeof(szRead))
-                nReadSize = sizeof(szRead);
-            printf("%s dump:\n", pDumpFile);
-            while(bSuccess && nTotalReadSize < nFileSize){
-                nReadSize = sizeof(szRead);
-                if (nReadSize > (nFileSize - nTotalReadSize))
-                    nReadSize = (nFileSize - nTotalReadSize);
-                //
-                if (Fat_FileRead(hFile, szRead, nReadSize)){
-                    int i;
-                    int l = 0;
-                    for(i=0;i<16;i++){
-                        //printf("%c", szRead[i]);
-                    	printf("0x%x ", szRead[i]);
-                    	if (l++ == 16) {
-                            printf("\r\n");
-                            l = 0;
-                        };
-                    }
-                    nTotalReadSize += nReadSize;
-                }else{
-                    bSuccess = FALSE;
-                    printf("\nFailed to read the file \"%s\"\n", pDumpFile);
-                }
-            } // while
-            if (bSuccess)
-                printf("\n");
-            Fat_FileClose(hFile);
-        }else{
-            bSuccess = FALSE;
-            printf("Cannot find the file \"%s\"\n", pDumpFile);
-        }
-    }
+	int pages = num_of_pages();
+	printf("num of pages: %d\r\n", pages);
 
-    return bSuccess;
-}
+	/*printf("Listing each page of .z80 and .sna files:\r\n");
+
+	FILENAMES names;
+	names = list_files_of_page(0);
+	print_filenames(names, TRUE);
+
+	names = list_files_of_page(1);
+	print_filenames(names, TRUE);
+
+	names = list_files_of_page(2);
+	print_filenames(names, TRUE);
+	*/
+	FRESULT err;
+
+	err = init_file_write("test.txt");
+	if (err) {
+		printf("open to write test.txt FAILED: %d\r\n", err);
+		close_sd();
+		return -1;
+	}
+	int bytes_read;
+	char* buffer = "Hello World!";
+
+	printf("test.txt opened/created\r\n");
+
+	int bytes_written;
+	err = file_write(buffer, strlen(buffer), &bytes_written);
+	if (err) {
+		printf("err write1: %d\r\n", err);
+	}
+
+	close_file();
+	printf("write done\r\n");
 
 
-int SD_Test(char* file) {
-    FAT_HANDLE hFat;
+	memset(buffer, 0, strlen(buffer));
 
-    printf("========== DE2-115 SDCARD Demo ==========\n");
+	err = init_file_read("test.txt");
+	if (err) {
+		printf("open to read test.txt FAILED: %d\r\n", err);
+		close_sd();
+		return -1;
+	}
+	printf("test.txt opened to read\r\n");
 
-    //while(1){
-        printf("Processing...\r\n");
-        hFat = Fat_Mount(FAT_SD_CARD, 0);
-        if (hFat){
-            printf("sdcard mount success!\n");
-            printf("Root Directory Item Count:%d\n", Fat_FileCount(hFat));
-            //Fat_Test(hFat, "text.txt");
-            Fat_Test(hFat, file);
-            Fat_Unmount(hFat);
+	int size = file_size();
+	printf("text.txt size: %d bytes\r\n");
 
-            printf("===== Test Done =====\r\nPress KEY3 to test again.\r\n");
-        }else{
-            //printf("Failed to mount the SDCARD!\r\nPlease insert the SDCARD into DE2-115 board and press KEY3.\r\n");
-        	printf("Failed to mount the SDCARD!\r\nPlease insert the SDCARD into DE2-115 board and reset.\r\n");
-        }
-        // wait users to press BUTTON3
-        //while ((IORD_ALTERA_AVALON_PIO_DATA(KEY_BASE) & 0x08) == 0x08);
-        usleep(400*1000); // debounce
-    //} // while
+	while(1) {
+		err = file_read(buffer, size, &bytes_read);
+		if (err) {
+			printf("err: %d\r\n", err);
+			break;
+		}
+		printf("\r\n bytes_read: %d\r\n", bytes_read);
+		if (bytes_read == 0) break;
+		printf("%s\r\n", buffer);
+		printf("\r\n");
+	}
+	close_file();
 
 
-  return 0;
+	// a.txt has "Sup world!!!!"
+	/*
+	FIL fil;
+	unsigned char buf[512];
+
+
+	int size = f_size(&fil);
+	printf("SIZE of a.txt: %d\r\n", size);
+	int bytes_read;
+	while(1) {
+		err = f_read(&fil, buf, size, &bytes_read);
+		if (err) {
+			printf("err: %d\r\n", err);
+			break;
+		}
+		printf("\r\n bytes_read: %d\r\n", bytes_read);
+		if (bytes_read == 0) break;
+		printf(buf);
+		printf("\r\n");
+	}
+	f_close(&fil);
+
+	printf("a.txt closed\r\n");
+
+
+	// lets create counting_test_ff15.bin
+	err = f_open(&fil, "date_test.bin", FA_WRITE | FA_CREATE_ALWAYS);
+	if (err) {
+		printf("open to create counting_test_ff15.bin FAILED: %d\r\n", err);
+		free(fs);
+		return -1;
+	}
+	printf("counting_test_ff15 opened\r\n");
+
+	// write first 512 bytes as AA
+	for (int i = 0; i < sizeof(buf); i++) {
+		buf[i] = 0x55;
+	}
+	int bytes_written;
+	err = f_write(&fil, buf, sizeof(buf), &bytes_written);
+	if (err) {
+		printf("err write1: %d\r\n", err);
+	}
+
+	// write second 512 bytes as 55
+	for (int i = 0; i < sizeof(buf); i++) {
+		buf[i] = 0xAB;
+	}
+	err = f_write(&fil, buf, sizeof(buf), &bytes_written);
+	if (err) {
+		printf("err write1: %d\r\n", err);
+	}
+
+	f_close(&fil);
+	printf("write done\r\n");
+
+	// verify
+	err = f_open(&fil, "counting_test_ff15.bin", FA_READ);
+	if (err) {
+		printf("open to read counting_test_ff15.bin FAILED: %d\r\n", err);
+		free(fs);
+		return -1;
+	}
+
+	int bytes_read;
+	while(1) {
+		err = f_read(&fil, buf, sizeof(buf), &bytes_read);
+		if (err) {
+			printf("err: %d\r\n", err);
+			break;
+		}
+		printf("\r\n bytes_read: %d\r\n", bytes_read);
+		if (bytes_read == 0) break;
+		for (int i = 0; i < sizeof(buf); i++) {
+			if (i % 16 == 0) printf("\r\n");
+			printf("%02X ", buf[i]);
+		}
+		printf("\r\n");
+	}
+	f_close(&fil);
+	*/
+	printf("END");
+	close_sd();
+	return 0;
 }

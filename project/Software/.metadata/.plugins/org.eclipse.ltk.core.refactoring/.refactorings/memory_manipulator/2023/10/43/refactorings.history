@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;memory_manipulator/SD/main.c&apos; to &apos;test_sd.c&apos;" description="Rename resource &apos;main.c&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="SD/main.c" name="test_sd.c" stamp="1698166251628" updateReferences="true"/>
+</session>

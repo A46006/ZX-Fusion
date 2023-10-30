@@ -3,7 +3,7 @@
 # Machine generated for CPU 'cpu' in SOPC Builder design 'nios_sd_loader'
 # SOPC Builder design path: ../../nios_sd_loader.sopcinfo
 #
-# Generated: Thu Sep 28 22:35:36 BST 2023
+# Generated: Mon Oct 30 12:24:25 GMT 2023
 
 # DO NOT MODIFY THIS FILE
 #
@@ -47,4 +47,4 @@
 # by allowing GDB to cache memory contents on the host.
 
 # onchip_memory
-memory 0x20000 0x38000 cache
+memory 0x40000 0x80000 cache

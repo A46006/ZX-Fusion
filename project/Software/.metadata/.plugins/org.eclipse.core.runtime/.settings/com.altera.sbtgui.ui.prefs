@@ -1,5 +1,5 @@
 eclipse.preferences.version=1
-newApplicationWizardPage.defaultLocation=H\:\\MI13D\\TFM\\TFM-SPEC\\04-SD_impl\\project\\Software\\dma_test
-newSoftwareExampleWizardPage.defaultLocation=H\:\\MI13D\\TFM\\TFM-SPEC\\04-SD_impl\\project\\software\\memory_manipulator
-newSoftwareExampleWizardPage.sopcinfoFile=H\:\\MI13D\\TFM\\TFM-SPEC\\04-SD_impl\\project\\nios_sd_loader.sopcinfo
-newSoftwareExampleWizardPage2.newBspLocation=H\:\\MI13D\\TFM\\TFM-SPEC\\04-SD_impl\\project\\software\\memory_manipulator_bsp
+newApplicationWizardPage.defaultLocation=H\:\\MI13D\\TFM\\FINAL-REPO-actual-46006\\ZX-Fusion\\project\\Software\\memory_manip_attempt
+newSoftwareExampleWizardPage.defaultLocation=H\:\\MI13D\\TFM\\FINAL-REPO-actual-46006\\ZX-Fusion\\project\\software\\memory_manipulator
+newSoftwareExampleWizardPage.sopcinfoFile=H\:\\MI13D\\TFM\\FINAL-REPO-actual-46006\\ZX-Fusion\\project\\nios_sd_loader.sopcinfo
+newSoftwareExampleWizardPage2.newBspLocation=H\:\\MI13D\\TFM\\FINAL-REPO-actual-46006\\ZX-Fusion\\project\\software\\memory_manipulator_bsp

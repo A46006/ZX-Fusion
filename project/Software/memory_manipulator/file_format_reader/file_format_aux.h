@@ -46,7 +46,7 @@ typedef struct {
 typedef struct {
 	alt_u16 SP;
 	size_t size;
-	alt_u8* data;
+	alt_u8 data[10];
 } STACK_ADD;
 
 alt_u16 conv_data_8_16(alt_u8* data, int offset);
@@ -55,9 +55,9 @@ alt_u16 reverse_16(alt_u16 data);
 int get_LOAD_routine_size();
 int get_SAVE_routine_size();
 
-STACK_ADD generate_full_stack_addition(REGS regs, const enum file_type type);
+//STACK_ADD generate_full_stack_addition(REGS regs, const enum file_type type);
 
-STACK_ADD generate_AF_stack_addition(REGS regs, const enum file_type type, bool add_pc);
+void generate_AF_stack_addition(STACK_ADD* stack_add, REGS* regs, const enum file_type type, bool add_pc);
 
-alt_u8* generate_LOAD_routine(REGS regs, const enum file_type type, int routine_size);
-alt_u8* generate_SAVE_routine(const enum file_type type, int routine_size);
+void generate_LOAD_routine(alt_u8* routine, REGS regs, const enum file_type type);
+void generate_SAVE_routine(alt_u8* routine, const enum file_type type);

@@ -2,8 +2,8 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>16/out/2023 15:11:50</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1697465510640</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>30/out/2023 12:24:24</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1698668664902</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>H:\MI13D\TFM\FINAL-REPO-actual-46006\ZX-Fusion\project\Software\memory_manipulator_bsp</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>..\..\nios_sd_loader.sopcinfo</SopcDesignFile>
@@ -734,7 +734,7 @@
                 <SettingName>hal.enable_small_c_library</SettingName>
                 <Identifier>none</Identifier>
                 <Type>Boolean</Type>
-                <Value>1</Value>
+                <Value>0</Value>
                 <DefaultValue>0</DefaultValue>
                 <DestinationFile>public_mk_define</DestinationFile>
                 <Description>Causes the small newlib (C library) to be used. This reduces code and data footprint at the expense of reduced functionality. Several newlib features are removed such as floating-point support in printf(), stdin input routines, and buffered I/O. The small C library is not compatible with Micrium MicroC/OS-II. If true, adds -msmallc to ALT_LDFLAGS in public.mk.</Description>
@@ -782,7 +782,7 @@
                 <SettingName>hal.enable_c_plus_plus</SettingName>
                 <Identifier>ALT_NO_C_PLUS_PLUS</Identifier>
                 <Type>Boolean</Type>
-                <Value>0</Value>
+                <Value>1</Value>
                 <DefaultValue>1</DefaultValue>
                 <DestinationFile>public_mk_define</DestinationFile>
                 <Description>Enable support for a subset of the C++ language. This option increases code footprint by adding support for C++ constructors. Certain features, such as multiple inheritance and exceptions are not supported. If false, adds -DALT_NO_C_PLUS_PLUS to ALT_CPPFLAGS in public.mk, and reduces code footprint.</Description>
@@ -794,7 +794,7 @@
                 <SettingName>hal.enable_reduced_device_drivers</SettingName>
                 <Identifier>ALT_USE_SMALL_DRIVERS</Identifier>
                 <Type>Boolean</Type>
-                <Value>1</Value>
+                <Value>0</Value>
                 <DefaultValue>0</DefaultValue>
                 <DestinationFile>public_mk_define</DestinationFile>
                 <Description>Certain drivers are compiled with reduced functionality to reduce code footprint. Not all drivers observe this setting. The altera_avalon_uart and altera_avalon_jtag_uart drivers switch from interrupt-driven to polled operation. CAUTION: Several device drivers are disabled entirely. These include the altera_avalon_cfi_flash, altera_avalon_epcs_flash_controller, and altera_avalon_lcd_16207 drivers. This can result in certain API (HAL flash access routines) to fail. You can define a symbol provided by each driver to prevent it from being removed. If true, adds -DALT_USE_SMALL_DRIVERS to ALT_CPPFLAGS in public.mk.</Description>
@@ -900,127 +900,133 @@
         </Setting>
         <MemoryMap>
                 <slaveDescriptor>onchip_memory</slaveDescriptor>
-                <addressRange>0x00020000 - 0x00037FFF</addressRange>
-                <addressSpan>98304</addressSpan>
+                <addressRange>0x00040000 - 0x0007FFFF</addressRange>
+                <addressSpan>262144</addressSpan>
                 <attributes>memory</attributes>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>timer</slaveDescriptor>
-                <addressRange>0x00041000 - 0x0004101F</addressRange>
+                <addressRange>0x00081000 - 0x0008101F</addressRange>
                 <addressSpan>32</addressSpan>
                 <attributes>timer</attributes>
         </MemoryMap>
         <MemoryMap>
+                <slaveDescriptor>sd_cs</slaveDescriptor>
+                <addressRange>0x00081020 - 0x0008102F</addressRange>
+                <addressSpan>16</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
                 <slaveDescriptor>cpu_address_direct</slaveDescriptor>
-                <addressRange>0x00041020 - 0x0004102F</addressRange>
+                <addressRange>0x00081030 - 0x0008103F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>cpu_cmd_ack</slaveDescriptor>
-                <addressRange>0x00041030 - 0x0004103F</addressRange>
+                <addressRange>0x00081040 - 0x0008104F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>cpu_address</slaveDescriptor>
-                <addressRange>0x00041040 - 0x0004104F</addressRange>
+                <addressRange>0x00081050 - 0x0008105F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>nmi_n</slaveDescriptor>
-                <addressRange>0x00041050 - 0x0004105F</addressRange>
+                <addressRange>0x00081060 - 0x0008106F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>bus_ack_n</slaveDescriptor>
-                <addressRange>0x00041060 - 0x0004106F</addressRange>
+                <addressRange>0x00081070 - 0x0008107F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>bus_req_n</slaveDescriptor>
-                <addressRange>0x00041070 - 0x0004107F</addressRange>
+                <addressRange>0x00081080 - 0x0008108F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>data</slaveDescriptor>
-                <addressRange>0x00041080 - 0x0004108F</addressRange>
+                <addressRange>0x00081090 - 0x0008109F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>address</slaveDescriptor>
-                <addressRange>0x00041090 - 0x0004109F</addressRange>
+                <addressRange>0x000810A0 - 0x000810AF</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>ctrl_bus</slaveDescriptor>
-                <addressRange>0x000410A0 - 0x000410AF</addressRange>
+                <addressRange>0x000810B0 - 0x000810BF</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>cpu_cmd</slaveDescriptor>
-                <addressRange>0x000410B0 - 0x000410BF</addressRange>
+                <addressRange>0x000810C0 - 0x000810CF</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>cpu_wr_n</slaveDescriptor>
-                <addressRange>0x000410C0 - 0x000410CF</addressRange>
+                <addressRange>0x000810D0 - 0x000810DF</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>cpu_rd_n</slaveDescriptor>
-                <addressRange>0x000410D0 - 0x000410DF</addressRange>
+                <addressRange>0x000810E0 - 0x000810EF</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>cpu_cmd_en</slaveDescriptor>
-                <addressRange>0x000410E0 - 0x000410EF</addressRange>
+                <addressRange>0x000810F0 - 0x000810FF</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>sd_dat</slaveDescriptor>
-                <addressRange>0x000410F0 - 0x000410FF</addressRange>
+                <slaveDescriptor>sd_miso</slaveDescriptor>
+                <addressRange>0x00081100 - 0x0008110F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>sd_cmd</slaveDescriptor>
-                <addressRange>0x00041100 - 0x0004110F</addressRange>
+                <slaveDescriptor>sd_mosi</slaveDescriptor>
+                <addressRange>0x00081110 - 0x0008111F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>sd_clk</slaveDescriptor>
-                <addressRange>0x00041110 - 0x0004111F</addressRange>
+                <addressRange>0x00081120 - 0x0008112F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>sd_wp_n</slaveDescriptor>
-                <addressRange>0x00041120 - 0x0004112F</addressRange>
+                <addressRange>0x00081130 - 0x0008113F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>ledg_pio</slaveDescriptor>
-                <addressRange>0x00041130 - 0x0004113F</addressRange>
+                <addressRange>0x00081140 - 0x0008114F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>jtag_uart</slaveDescriptor>
-                <addressRange>0x00041140 - 0x00041147</addressRange>
+                <addressRange>0x00081150 - 0x00081157</addressRange>
                 <addressSpan>8</addressSpan>
                 <attributes>printable</attributes>
         </MemoryMap>

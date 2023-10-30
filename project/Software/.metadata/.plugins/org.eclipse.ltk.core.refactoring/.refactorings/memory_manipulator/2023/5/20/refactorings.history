@@ -1,3 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">&#x0A;<refactoring comment="Rename resource &apos;memory_manipulator/hello_world.c&apos; to &apos;main.c&apos;" description="Rename resource &apos;hello_world.c&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="hello_world.c" name="main.c" stamp="1684250189096" updateReferences="true"/>&#x0A;<refactoring comment="Move &apos;terasic_lib&apos; to &apos;memory_manipulator&apos;" description="Move &apos;terasic_lib&apos; to &apos;memory_manipulator&apos;" destination="/memory_manipulator" element1="SD/terasic_lib" flags="7" id="org.eclipse.ltk.core.refactoring.move.resources" resources="1" stamp="1684250863775" updateReferences="true"/>
-</session>

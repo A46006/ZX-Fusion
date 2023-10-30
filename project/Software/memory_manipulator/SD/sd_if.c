@@ -1,26 +1,34 @@
-#include <stdio.h>
+//#include <stdio.h>
 #include "./sd_if.h"
 
-const char* SUPPORTED_EXTENSIONS[2] = {".z80", ".sna"};
+FATFS fs;
+FIL fil;
+
+const char* SUPPORTED_EXTENSIONS[] = {".z80", ".sna"};
 #define N_SUPPORTED_EXTENSIONS (sizeof SUPPORTED_EXTENSIONS / sizeof (const char *))
 
-
-FAT_HANDLE init_SD() {
-	return Fat_Mount(FAT_SD_CARD, 0);
+void init_SD(void) {
+	memset(&fs, 0, sizeof(FATFS));
+	//fs = malloc(sizeof (FATFS)); 	// Get work area for the volume
+	f_mount(&fs, "", 0);			// Mount the default drive
 }
 
 /**
  * Checks input file's extension and compares it to supported ones
  */
 bool is_supported_file(char* filename, size_t len) {
+	if (len > FILENAME_LEN) return FALSE;
 	// Making extensions lower case for comparisons
-	char to_compare[FILENAME_LEN_SD];
+	char to_compare[len];
 	strncpy(to_compare, filename, len);
 	for(int i = 1; i < 5; i++) {
 		to_compare[len-i] = tolower(filename[len-i]);
 	}
 
-	char* extension = to_compare + (len-5);
+	// forcing the end of the filenames strings
+	to_compare[len] = '\0';
+
+	char* extension = to_compare + (len-4);
 	for (int i = 0; i < N_SUPPORTED_EXTENSIONS; i++) {
 		if (strncmp(extension, SUPPORTED_EXTENSIONS[i], 4) == 0) {
 			return TRUE;
@@ -29,229 +37,184 @@ bool is_supported_file(char* filename, size_t len) {
 	return FALSE;
 }
 
-int format_file_name(FAT_BROWSE_HANDLE hBrowse, FILE_CONTEXT FileContext, char* name) {
-	int len = 0;
-	//if (page_num == 1) entries = {0};
 
-	if (FileContext.bLongFilename){
+int num_of_pages() {
+	FRESULT err;
+	DIR dir;
+	FILINFO fno;
+	int num_of_files;
 
-		alt_u16 *pData16;
-		alt_u8 *pData8;
-		pData16 = (alt_u16 *)FileContext.szName;
-		pData8 = FileContext.szName;
+	TCHAR* pattern = "*";
+	err = f_findfirst(&dir, &fno, "/", pattern);
+	if (!err) {
+		if (*fno.fname) {
+			num_of_files = 0;
+			do {
+				if (is_supported_file(fno.fname, strlen(fno.fname))) {
+					num_of_files++;
+				}
+				err = f_findnext(&dir, &fno);
+			} while (*fno.fname && !err);
 
-		//printf("[%d]", nCount);
-		while(*pData16 && len < FILENAME_LEN){
-			if (*pData8)
-				name[len++] = *pData8;
-			pData8++;
-			if (*pData8)
-				name[len++] = *pData8;
-			pData8++;
-			//
-			pData16++;
-		}
-		name[len++] = '\0';
-	}else {
-		len = strlen(FileContext.szName);
-		name[len++] = '\0';
-		strncpy(name, FileContext.szName, len);
-	}
-	return len;
-}
-
-FILENAMES list_files(FAT_HANDLE hFat) {
-	// allocate space for FILENAME_NUM file names
-	FILENAMES filenames = {0, NULL};
-	filenames.filenames = (char**) malloc(FILENAME_NUM*sizeof(char*));
-	for (int i = 0; i < FILENAME_NUM; i++) {
-		// allocating 50 chars for each file_name
-		filenames.filenames[i] = (char*)malloc(FILENAME_LEN_SD*sizeof(char));
-	}
-	int filename_num = 0;
-
-	bool bSuccess;
-	FAT_BROWSE_HANDLE hBrowse;
-	FILE_CONTEXT FileContext;
-
-	bSuccess = Fat_FileBrowseBegin(hFat, &hBrowse);
-
-	if (bSuccess){
-		while(Fat_FileBrowseNext(&hBrowse, &FileContext)) {
-			char name[FILENAME_LEN];
-			//char *name = (char *) malloc(51);
-
-			int len = format_file_name(hBrowse, FileContext, name);
-
-			// Skip unsupported files
-			if (!is_supported_file(name, len)) {
-				continue;
+			if (err) {
+				printf("Error when finding another entry: 0x%02X\r\n", err);
+				return -1;
 			}
 
-			if (len > FILENAME_LEN) {
-				len = FILENAME_LEN;
-			}
-
-			// adding 0x80 to last char of string as a final byte (spectrum uses this in string tables)
-			name[len-2] += 0x80;
-
-			snprintf(filenames.filenames[filename_num], len, name);
-			filename_num++;
+			return ((num_of_files-1) / 16 ) + 1;
 		}
-		filenames.size = filename_num;
-		filenames.filenames = (char**) realloc(filenames.filenames, filenames.size*sizeof(char*));
 
-		return filenames;
 	}
-
-	printf("Listing files failed somehow...\r\n");
-	for(int i = 0; i < FILENAME_NUM; i++) {
-		free(filenames.filenames[i]);
-	}
-	free(filenames.filenames);
-
-	filenames.size = 0;
-	filenames.filenames = NULL;
-	return filenames;
-}
-
-int num_of_pages(FAT_HANDLE hFat) {
-	int num_of_files = 0;
-	bool bSuccess;
-	FAT_BROWSE_HANDLE hBrowse;
-	FILE_CONTEXT FileContext;
-
-	bSuccess = Fat_FileBrowseBegin(hFat, &hBrowse);
-
-	if (bSuccess){
-		while(Fat_FileBrowseNext(&hBrowse, &FileContext)) {
-			char name[FILENAME_LEN];
-			int len = format_file_name(hBrowse, FileContext, name);
-
-			// Skip unsupported files
-			if (!is_supported_file(name, len)) {
-				continue;
-			}
-			num_of_files++;
-		}
-		return ((num_of_files-1) / 16 ) + 1;
-	}
-
-	printf("Counting pages went wrong...");
+	printf("Counting pages went wrong... 0x%02X\r\n", err);
 	return -1;
 }
 
-FILENAMES list_files_of_page(FAT_HANDLE hFat, int page_num) {
-	// allocate space for FILENAME_NUM file names
-	FILENAMES filenames = {0, NULL};
-	filenames.filenames = (char**) malloc(FILES_PER_PAGE*sizeof(char*));
-	for (int i = 0; i < FILES_PER_PAGE; i++) {
-		// allocating 50 chars for each file_name
-		filenames.filenames[i] = (char*)malloc(FILENAME_LEN_SD*sizeof(char));
-	}
+void free_file_list(FILENAMES* filenames) {
+	//for (int i = 0; i < FILES_PER_PAGE; i++)
+	//	free(filenames->filenames[i]);
+	//free(filenames->filenames);
+	filenames->size = 0;
+	//filenames->filenames = NULL;
+}
 
+void list_files_of_page(FILENAMES* filenames, int page_num) {
 	int filename_num = 0;
 	int page_start = page_num * FILES_PER_PAGE;
 
-	bool bSuccess;
-	FAT_BROWSE_HANDLE hBrowse;
-	FILE_CONTEXT FileContext;
+	FRESULT err;
+	DIR dir;
+	FILINFO fno;
 
-	bSuccess = Fat_FileBrowseBegin(hFat, &hBrowse);
+	TCHAR* pattern = "*";
+	err = f_findfirst(&dir, &fno, "/", pattern);
 
-	if (bSuccess){
-		// First loop to advance file browse until the beginning of the requested page, if not requesting the first page
-		if (page_num > 0) {
-			int discarded_filename_num = 0;
-			while(Fat_FileBrowseNext(&hBrowse, &FileContext)) {
-				char name[FILENAME_LEN];
-				int len = format_file_name(hBrowse, FileContext, name);
-				// Skip unsupported files in the counting
-				if (!is_supported_file(name, len)) {
-					continue;
+	if (!err){
+		if (*fno.fname) {
+			// First loop to advance file browse until the beginning of the requested page, if not requesting the first page
+			if (page_num > 0) {
+				int discarded_filename_num = 0;
+				do {
+					// count if the file is supported
+					if (is_supported_file(fno.fname, strlen(fno.fname))) {
+						discarded_filename_num++;
+						// if the requested page's start index corresponds to the skipped files, leave
+						// so that the next file browse advancement is a wanted file
+						if (page_start == discarded_filename_num) break;
+					}
+
+					// get next entry
+					err = f_findnext(&dir, &fno);
+				} while (*fno.fname && !err);
+
+				if (err) {
+					filenames->size = 0;
+					printf("Error when finding entry, first loop in list: 0x%02X\r\n", err);
+					return;
 				}
-				discarded_filename_num++;
 
-				// if the requested page's start index corresponds to the skipped files, leave
-				// so that the next file browse advancement is a wanted file
-				if (page_start == discarded_filename_num) break;
+				// if the loop stopped due to no more files to list, then the page requested does not exist
+				if (!*fno.fname) {
+					filenames->size = 0;
+					printf("Out of bounds...\r\n");
+					return;
+				}
 			}
+
+			// Second loop, saving the 16 supported files to the FILENAMES struct
+			do {
+				char name[FILENAME_LEN];
+				int len = strlen(fno.fname);
+				// If the file is supported, save it
+				if (is_supported_file(fno.fname, len)) {
+					if (len > FILENAME_LEN) {
+						len = FILENAME_LEN;
+					}
+					strncpy(name, fno.fname, len);
+					// adding 0x80 to last char of string as a final byte (spectrum uses this in string tables)
+					name[len-1] += 0x80;
+					name[len] = '\0';
+
+					// add the filename to the list
+					memcpy(filenames->filenames + (filename_num * FILENAME_LEN), name, len+1);
+					//snprintf(filenames->filenames[filename_num * FILENAME_LEN], len+1, name);
+					filename_num++;
+
+					// if all 16 filenames have been saved, leave
+					if (filename_num == FILES_PER_PAGE) break;
+				}
+
+				// get next entry
+				err = f_findnext(&dir, &fno);
+			} while(*fno.fname && !err);
+
+			if (err) {
+				printf("Error when finding entry, second loop in list: 0x%02X\r\n", err);
+				return;
+			}
+			filenames->size = filename_num;
+			//filenames->filenames = (char**) realloc(filenames.filenames, filenames.size*sizeof(char*));
+
+			return;
 		}
 
-		// Second loop, saving the 16 supported files to the FILENAMES struct
-		while(Fat_FileBrowseNext(&hBrowse, &FileContext)) {
-			char name[FILENAME_LEN];
-			int len = format_file_name(hBrowse, FileContext, name);
+		// if the first entry did not have a name
+		printf("No files... list files\r\n");
+		filenames->size = 0;
+		return;
 
-			// Skip unsupported files
-			if (!is_supported_file(name, len)) {
-				continue;
-			}
-
-			if (len > FILENAME_LEN) {
-				len = FILENAME_LEN;
-			}
-
-			// adding 0x80 to last char of string as a final byte (spectrum uses this in string tables)
-			name[len-2] += 0x80;
-
-			snprintf(filenames.filenames[filename_num], len, name);
-			filename_num++;
-			if (filename_num == FILES_PER_PAGE) break;
-		}
-		filenames.size = filename_num;
-		filenames.filenames = (char**) realloc(filenames.filenames, filenames.size*sizeof(char*));
-
-		return filenames;
 	}
 
-	printf("Listing files failed somehow...\r\n");
-	for(int i = 0; i < FILES_PER_PAGE; i++) {
-		free(filenames.filenames[i]);
-	}
-	free(filenames.filenames);
-
-	filenames.size = 0;
-	filenames.filenames = NULL;
-	return filenames;
+	// if the first entry finding resulted in error
+	printf("Listing files failed...\r\n");
+	filenames->size = 0;
+	return;
 }
 
-
-void close_SD(FAT_HANDLE hFat) {
-	Fat_Unmount(hFat);
-}
-
-
-void print_filenames(FILENAMES files, bool free_en) {
-	int page, filename;
-	size_t page_max = (files.size + (FILES_PER_PAGE-1)) / FILES_PER_PAGE;
-	size_t entries_left = files.size;
+void print_filenames(FILENAMES* files, bool free_en) {
+	int filename;
+	size_t entries_left = files->size;
 	size_t files_in_page = FILES_PER_PAGE;
 
-	for (page = 0; page < page_max; page++) {
-		printf("Page %d:\r\n", page);
-
-		if (entries_left < files_in_page) {
-			files_in_page = entries_left;
-		}
-
-		for (filename = 0; filename < files_in_page; filename++) {
-			int idx = (page*FILES_PER_PAGE) + filename;
-			printf("\t[%d]: %s\r\n", filename, files.filenames[idx]);
-			if (free_en)
-				free(files.filenames[idx]);
-		}
-		entries_left -= FILES_PER_PAGE;
+	if (entries_left < files_in_page) {
+		files_in_page = entries_left;
 	}
-	if (free_en)
-		free(files.filenames);
+
+	for (filename = 0; filename < files_in_page; filename++) {
+		printf("\t[%d]: %s\r\n", filename, files->filenames + (filename * FILENAME_LEN));
+//		if (free_en)
+//			free(files->filenames[filename]);
+//
+	}
+
+//	if (free_en)
+//		free(files->filenames);
 }
 
-
-FAT_FILE_HANDLE init_file(FAT_HANDLE hFat, const char *pFilename) {
-	return Fat_FileOpen(hFat, pFilename);
+FRESULT init_file_read(char* filename) {
+	return f_open(&fil, filename, FA_READ);
 }
 
-void close_file(FAT_FILE_HANDLE hFile) {
-	Fat_FileClose(hFile);
+FRESULT init_file_write(char* filename) {
+	return f_open(&fil, filename, FA_WRITE | FA_CREATE_ALWAYS);
 }
+
+FRESULT file_read(alt_u8* buffer, unsigned int len, unsigned int* bytes_read) {
+	return f_read(&fil, buffer, len, bytes_read);
+}
+
+FRESULT file_write(alt_u8* buffer, unsigned int len, unsigned int* bytes_written) {
+	return f_write(&fil, buffer, len, bytes_written);
+}
+
+int file_size(void) {
+	return f_size(&fil);
+}
+
+void close_file(void) {
+	f_close(&fil);
+}
+
+void close_sd(void) {
+	//free(fs);
+}
+

@@ -81,6 +81,7 @@ int get_SAVE_routine_size() {
 // INT
 // PC (manual if !.SNA)
 
+/*
 STACK_ADD generate_full_stack_addition(REGS regs, const enum file_type type) {
 	//alt_u16 sp = regs.SP;
 	size_t size = 0;
@@ -137,39 +138,38 @@ STACK_ADD generate_full_stack_addition(REGS regs, const enum file_type type) {
 	STACK_ADD to_ret = {
 		.SP = regs.SP - size,
 		.size = size,
-		.data = data
+		.data = *data
 	};
 	return to_ret;
 }
+*/
 
-STACK_ADD generate_AF_stack_addition(REGS regs, const enum file_type type, bool add_pc) {
+void generate_AF_stack_addition(STACK_ADD* stack_add, REGS* regs, const enum file_type type, bool add_pc) {
 	size_t size = 0;
-	STACK_ADD to_ret = {0, 0, NULL};
-	to_ret.data = (alt_u8*) malloc(10*sizeof(char*));
+	//memset(to_ret.data, 0, 10);
+	//to_ret.data = (alt_u8*) malloc(10*sizeof(char*));
 
-	to_ret.data[size++] = regs.Fl;
-	to_ret.data[size++] = regs.Al;
-	printf("AF': 0x%04x\r\n", (regs.Fl <<8) | regs.Al);
+	stack_add->data[size++] = regs->Fl;
+	stack_add->data[size++] = regs->Al;
+	//printf("AF': 0x%04x\r\n", (regs.Fl <<8) | regs.Al);
 
-	to_ret.data[size++] = regs.F;
-	to_ret.data[size++] = regs.A;
-	printf("AF: 0x%04x\r\n", (regs.F <<8) | regs.A);
+	stack_add->data[size++] = regs->F;
+	stack_add->data[size++] = regs->A;
+	//printf("AF: 0x%04x\r\n", (regs.F <<8) | regs.A);
 
 	if (add_pc) {
-		to_ret.data[size++] = regs.PC >> 8;
-		to_ret.data[size++] = regs.PC & 0xFF;
-		printf("PC: 0x%04x\r\n", regs.PC);
+		stack_add->data[size++] = regs->PC >> 8;
+		stack_add->data[size++] = regs->PC & 0xFF;
+		//printf("PC: 0x%04x\r\n", regs.PC);
 	}
 
-	to_ret.SP = regs.SP - (size << 8); // since this is in little endian, must subtract this value instead of just size
-	printf("STACK POINTER in STACK_ADD: 0x%04x\r\n", to_ret.SP);
-	to_ret.size = size;
-	return to_ret;
+	stack_add->SP = regs->SP - (size << 8); // since this is in little endian, must subtract this value instead of just size
+	//printf("STACK POINTER in STACK_ADD: 0x%04x\r\n", to_ret.SP);
+	stack_add->size = size;
 }
 
-alt_u8* generate_LOAD_routine(REGS regs, const enum file_type type, int routine_size) {
-	alt_u8* routine = (alt_u8*) malloc(routine_size * sizeof(alt_u8));
-	int i = 0;
+void generate_LOAD_routine(alt_u8* routine, REGS regs, const enum file_type type) {
+	short i = 0;
 
 	// Load border color into A
 	//routine[i++] = LD_A_N;
@@ -270,9 +270,9 @@ alt_u8* generate_LOAD_routine(REGS regs, const enum file_type type, int routine_
 	if (type != SNA) {
 		sp = sp - 0x200; // For the PC that I will add to the stack
 	}
-	printf("SP in routine: %04x\r\n", sp);
+	//printf("SP in routine: %04x\r\n", sp);
 	sp -= 0x400;
-	printf("SP in routine: %04x\r\n", sp);
+	//printf("SP in routine: %04x\r\n", sp);
 	routine[i++] = sp >> 8;//(sp >> 8) - 4;//(regs.SP >> 8) - 4; // setting sp for AF' and AF in it
 	routine[i++] = sp & 0xFF;
 
@@ -303,23 +303,11 @@ alt_u8* generate_LOAD_routine(REGS regs, const enum file_type type, int routine_
 	} else {
 		routine[i++] = DI;
 	}
-
-	//if (type == SNA) {
-		// Supposedly, right before a .SNA is made, the PC is pushed to stack,
-		// so it is set after the instruction RETN
-		routine[i++] = RETN1;
-		routine[i++] = RETN2;
-	//} else if (type == Z80) {
-	//	routine[i++] = JP_NN;
-	//	routine[i++] = regs.PC >> 8;
-	//	routine[i++] = regs.PC & 0xFF;
-	//}
-
-	return routine;
+	routine[i++] = RETN1;
+	routine[i++] = RETN2;
 }
 
-alt_u8* generate_SAVE_routine(const enum file_type type, int routine_size) {
-	alt_u8* routine = (alt_u8*) malloc(routine_size * sizeof(alt_u8));
+void generate_SAVE_routine(alt_u8* routine, const enum file_type type) {
 	int i = 0;
 
 	// when NMI is triggered, PC will be in stack. IT IS VITAL TO KNOW SP AND PC
@@ -415,9 +403,8 @@ alt_u8* generate_SAVE_routine(const enum file_type type, int routine_size) {
 	routine[i++] = IN_A_N;
 	routine[i++] = STATE_IF;
 	
-	routine[i++] = HALT;
+	routine[i++] = HALT_ASM;
 
 	// LENGTH OF CODE UNTIL NOW: 51
-	return routine;
 }
 

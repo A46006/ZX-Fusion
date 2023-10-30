@@ -1,10 +1,28 @@
+/*long f;
+char buf[8];
+void* h = 0; // heap
+
+extern unsigned char __data_start;
+extern unsigned char __data_end;
+extern unsigned char __bss_start;
+extern unsigned char __bss_end;
+extern unsigned char __heap_start;
+
+
+int FreeRam() {
+  unsigned char top;
+  return &top - &__bss_end;
+  //return __brkval ? &top - __brkval : &top - &__bss_end;
+}
+*/
+
 #include <stdio.h>
+#include <math.h>
 //#include <time.h>
 //#include ".\SD\test_sd.c"
 #include ".\file_format_reader\formats.h"
 #include ".\file_format_reader\asm_opcodes.h"
 #include ".\spectrum_comm\Peripheral_Interfaces\per_hal.h"
-//#include ".\file_format_reader\file_format_aux.h"
 
 #define PAGE_DATA_ADDR 0xC000
 #define MENU_CODE_ADDR 0xB000
@@ -120,7 +138,32 @@ const alt_u8 menu_code[MENU_CODE_LEN] = {
 	0x00, 0x00, 0x00, 0x04, 0x10, 0x14
 };
 
-char* curr_game_filename;
+//void volume_mounted_cb(char* volume_label);
+
+/*
+char a[50] = "01234567890123456789012";
+char b[50] = "01234567890123456789012";
+char c[50] = "01234567890123456789012";
+char d[50] = "01234567890123456789012";
+char e[50] = "01234567890123456789012";
+char f[50] = "01234567890123456789012";
+char g[50] = "01234567890123456789012";
+char h[50] = "01234567890123456789012";
+char i[50] = "01234567890123456789012";
+char j[50] = "01234567890123456789012";
+char k[50] = "01234567890123456789012";
+char l[50] = "01234567890123456789012";
+char m[50] = "01234567890123456789012";
+char n[50] = "01234567890123456789012";
+char o[50] = "01234567890123456789012";
+char p[50] = "01234567890123456789012";
+*/
+//char** files = {a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p};
+
+
+//char names[FILES_PER_PAGE * FILENAME_LEN];
+FILENAMES curr_page_file_list;// = {0, names};
+char curr_game_filename[FILENAME_LEN_SD];
 int curr_game_filename_len;
 int curr_game_idx;
 
@@ -139,7 +182,7 @@ int inject_menu() {
 
 	printf("\r\nListening...\r\n");
 	listen_for_en();
-	printf("enable happened\r\n");
+	printf("menu\r\n");
 
 	enum per_if_type type = get_if_type();
 
@@ -162,7 +205,7 @@ int inject_menu() {
 	return 0;
 }
 
-int my_list_test() {
+/*int my_list_test() {
 	printf("Processing...\r\n");
 
 	FAT_HANDLE hFat = 0;
@@ -193,9 +236,9 @@ int my_list_test() {
 	close_SD(hFat);
 
 	return 0;
-}
+}*/
 
-void save_state(FAT_HANDLE hFat, FILENAMES list) {
+void save_state(FILENAMES* list) {
 	printf("SAVE STATE WAS REQUESTED\r\n");
 
 	// false if no game was selected (length = 0)
@@ -203,7 +246,12 @@ void save_state(FAT_HANDLE hFat, FILENAMES list) {
 		printf("NAME: %s\r\n", curr_game_filename);
 		printf("NAME LEN: %d\r\n", curr_game_filename_len);
 	} else {
-		curr_game_filename = "save";
+		//curr_game_filename = "save";
+		curr_game_filename[0] = 's';
+		curr_game_filename[1] = 'a';
+		curr_game_filename[2] = 'v';
+		curr_game_filename[3] = 'e';
+		curr_game_filename[4] = '\0';
 		curr_game_filename_len = 4;
 	}
 
@@ -217,11 +265,12 @@ void save_state(FAT_HANDLE hFat, FILENAMES list) {
 	}
 
 	// obtaining the last save number
-	for (int i = curr_game_idx+1; i < list.size; i++) { // maybe use 0 at beginning?
-		if (strncmp(curr_game_filename, list.filenames[i], curr_game_filename_len) == 0 && list.filenames[i][curr_game_filename_len] == '_') {
-			printf("STRING: %s\r\n", list.filenames[i]);
+	for (int i = curr_game_idx+1; i < list->size; i++) { // maybe use 0 at beginning?
+		int idx = i * FILENAME_LEN;
+		if (strncmp(curr_game_filename, list->filenames + idx, curr_game_filename_len) == 0 && (list->filenames[idx + curr_game_filename_len]) == '_') {
+			printf("STRING: %s\r\n", list->filenames + idx);
 
-			int next_num = string_to_num(list.filenames[i], curr_game_filename_len+3, 2);
+			int next_num = string_to_num(list->filenames + idx, curr_game_filename_len+3, 2);
 			printf("FOUND ANOTHER: %d\r\n", next_num);
 			if (next_num > curr_save_num) curr_save_num = next_num;
 		}
@@ -230,24 +279,29 @@ void save_state(FAT_HANDLE hFat, FILENAMES list) {
 	char save_num[3];
 	snprintf(save_num, 3, "%02d", curr_save_num);
 
-	printf("BASE NAME LEN: %d\r\n", curr_game_filename_len);
+	// saving the base filename (without extension) to force the end char
+	char base_filename[curr_game_filename_len];
+	strncpy(base_filename, curr_game_filename, curr_game_filename_len);
+	base_filename[curr_game_filename_len] = '\0';
+
 	char filename[curr_game_filename_len+3+4]; // +3 for save state tag, +4 for extension
-	strncpy(filename, curr_game_filename, curr_game_filename_len);
+	strncpy(filename, base_filename, curr_game_filename_len+1);
 	strncat(filename, "_", 1);
 	strncat(filename, save_num, 2);
 	strncat(filename, ".sna", 4);
 	printf("FINAL FILENAME:%s\r\n", filename);
 	printf("FILENAME OOF: %02x", filename[4]); // there is a random 1 value in names with 4 letters
 
-	int ret = save_SNA(hFat, filename);
+	/*int ret = save_SNA(filename);
 	if (ret) {
 		printf("Save file went wrong\r\n");
 	}
-	//char filename[curr_game_filename_len+6];
+	*/
+	//	 */char filename[curr_game_filename_len+6];
 	//strncpy(filename, curr_game_filename, curr_game_filename_len);
 }
 
-FILENAMES load_page(FAT_FILE_HANDLE hFat) {
+void load_page(FILENAMES* list) {
 	int page_num = get_page_num();
 	printf("PAGE: %d\r\n", page_num);
 	curr_page = page_num;
@@ -255,9 +309,9 @@ FILENAMES load_page(FAT_FILE_HANDLE hFat) {
 	DMA_request(10);
 
 	// obtaining the list of file names from the requested page
-	FILENAMES list = list_files_of_page(hFat, page_num);
+	list_files_of_page(list, page_num);
 
-	int n_entries = list.size;
+	int n_entries = list->size;
 	n_entries++; // to account for the title
 
 	// Writing the menu text table for file list menu
@@ -268,12 +322,13 @@ FILENAMES load_page(FAT_FILE_HANDLE hFat) {
 	addr += strlen(title);
 	write_mem(addr++, 0xFF); // terminate char
 
-	printf("SIZE OF PAGE: %d\r\n", list.size);
+	printf("SIZE OF PAGE: %d\r\n", list->size);
 
 	// writing the filenames to the menu's data region
-	for (int i = 0; i < list.size; i++) {
-		int name_len = strlen(list.filenames[i]);
-		write_buf_mem(addr, list.filenames[i], 0, name_len);
+	for (int i = 0; i < list->size; i++) {
+		int idx = i * FILENAME_LEN;
+		int name_len = strlen((list->filenames + idx));
+		write_buf_mem(addr, list->filenames + idx, 0, name_len);
 		addr += name_len;
 	}
 
@@ -304,12 +359,10 @@ FILENAMES load_page(FAT_FILE_HANDLE hFat) {
 	DMA_stop_w_interrupt();
 
 	print_filenames(list, 0);
-
-	return list;
 }
 
-void load_game(FAT_HANDLE hFat, FILENAMES list) {
-	FILENAMES list_to_use = list;
+void load_game(FILENAMES* list) {
+	FILENAMES* list_to_use = list;
 
 	int page_num = get_page_num();
 	int game_num = get_game_num();
@@ -325,18 +378,19 @@ void load_game(FAT_HANDLE hFat, FILENAMES list) {
 
 	// this SHOULDN'T happen, but just in case the file requested is in a different page...
 	if (curr_page != page_num) {
-		list_to_use = list_files_of_page(hFat, page_num);
+		list_files_of_page(list_to_use, page_num);
 	}
 
 	// restoring the name
-	int name_len = strlen(list_to_use.filenames[game_num]);
+	int idx = game_num * FILENAME_LEN;
+	int name_len = strlen(list_to_use->filenames + idx);
 	char filename[name_len];
-	strncpy(filename, list_to_use.filenames[game_num], name_len);
+	strncpy(filename, list_to_use->filenames + idx, name_len);
 	filename[name_len] = '\0'; // have to stress this, because sometimes it would have an extra unreadable characters
 
 	// saving filename globally, without extension
 	curr_game_filename_len = name_len - 4;
-	strncpy(curr_game_filename, list_to_use.filenames[game_num], curr_game_filename_len);
+	strncpy(curr_game_filename, list_to_use->filenames + idx, curr_game_filename_len);
 	curr_game_filename[curr_game_filename_len] = '\0';
 
 
@@ -345,7 +399,7 @@ void load_game(FAT_HANDLE hFat, FILENAMES list) {
 
 	printf("GAME SELECTED: %s\r\n", filename);
 
-	int ret = load_file(hFat, filename, name_len);
+	int ret = load_file(filename, name_len);
 	if (ret) {
 		printf("Load file went wrong\r\n");
 	}
@@ -353,10 +407,59 @@ void load_game(FAT_HANDLE hFat, FILENAMES list) {
 	printf("LOAD COMPLETE!\r\n");
 }
 
-int main() {
+//unsigned int freeBytes;
+
+int main(int argc, char *argv[]) {
+	//h = malloc(1); // dynamic alloc 1byte to get heap position
+
+	//printf("START\r\n");
+
+	curr_page_file_list.size = 0;
+	//char* filenames[FILES_PER_PAGE] = {0};
+	//char n[32] = "01234567890123456789012";
+	/*for (int i = 0; i < FILES_PER_PAGE; i++) {
+		//memset(filenames[i], 0, 32);
+		char n[32] = "01234567890123456789012";
+		filenames[i] = n;
+		//memcpy(filenames[i], n, strlen(n));
+		//curr_page_file_list->filenames[i] = n;
+	}*/
+	//memset(curr_page_file_list.filenames, 0, FILES_PER_PAGE * sizeof(char**));
+	/*for (int i = 0; i < FILES_PER_PAGE; i++) {
+		char n[32];
+		memset(n, i, 32);
+		curr_page_file_list.filenames[i] = n;
+	}*/
+	/*
+	curr_page_file_list.filenames[0] = a;
+	curr_page_file_list.filenames[1] = b;
+	curr_page_file_list.filenames[2] = c;
+	curr_page_file_list.filenames[3] = d;
+	curr_page_file_list.filenames[4] = e;
+	curr_page_file_list.filenames[5] = f;
+	curr_page_file_list.filenames[6] = g;
+	curr_page_file_list.filenames[7] = h;
+	curr_page_file_list.filenames[8] = i;
+	curr_page_file_list.filenames[9] = j;
+	curr_page_file_list.filenames[10] = k;
+	curr_page_file_list.filenames[11] = l;
+	curr_page_file_list.filenames[12] = m;
+	curr_page_file_list.filenames[13] = n;
+	curr_page_file_list.filenames[14] = o;
+	curr_page_file_list.filenames[15] = p
+	*/
+
+	//curr_page_file_list.filenames = files;
+	//memcpy(curr_page_file_list.filenames, filenames, FILES_PER_PAGE);
+	//memcpy(names, 'f', FILES_PER_PAGE * FILENAME_LEN);
+	memcpy(curr_page_file_list.filenames, (int)'f', FILES_PER_PAGE * FILENAME_LEN);
+	//curr_page_file_list.filenames = names;
+
 	curr_game_idx = 0;
 	curr_game_filename_len = 0;
-	curr_game_filename = malloc(50 * sizeof(char));
+	//curr_game_filename = malloc(50 * sizeof(char));
+	//test_sd();
+
 	//SD_Test("SENBAL.SNA");
 
 	//my_list_test();
@@ -371,6 +474,7 @@ int main() {
 	//return load_SNA("CLOUD99.SNA");
 
 	DMA_init();
+	printf("4");
 
 	printf("Injecting menu...\r\n");
 	int res = inject_menu();
@@ -380,14 +484,13 @@ int main() {
 	}
 
 	printf("Initializing SD...\r\n");
-	FAT_HANDLE hFat = 0;
-	int tries = 10;
-	while (tries-- > 0) {
-		hFat = init_SD();
-		if (hFat) break;
-		printf("retrying...");
-	}
-	printf("LOAD\r\n");
+//	int tries = 10;
+//	while (tries-- > 0) {
+//		sd_card = init_SD();
+//		if (sd_card.context.id) break;
+//		printf("retrying...");
+//	}
+	init_SD();
 
 	//return load_z80(hFat, "BOMBJ.z80");
 	//return load_z80(hFat, "BUBBOB.z80");
@@ -396,25 +499,44 @@ int main() {
 	//return load_z80(hFat, "MANICM.z80"); // NORMAL
 	//return load_z80("MISSILGZ.z80"); // CONTROLLER REQUIRED?
 
-	/*printf("\r\nRetrieving files");
-	FILENAMES list = list_files(hFat);
-	if (list.size == 0 && list.filenames == NULL) {
-		printf("bad listing\r\n");
-		close_SD(hFat);
-		return -1;
-	}*/
-
-	// Loading files in page 1
-	curr_page = 0;
-	FILENAMES curr_page_file_list = list_files_of_page(hFat, curr_page);
+//	printf("\r\nRetrieving files");
+//	FILENAMES list = list_files(hFat);
+//	if (list.size == 0 && list.filenames == NULL) {
+//		printf("bad listing\r\n");
+//		close_SD(hFat);
+//		return -1;
+//	}
 
 	// Calculating maximum amount of pages
-	max_page = num_of_pages(hFat);
+	max_page = num_of_pages();
 	printf("NUM OF PAGES: %d\r\n", max_page);
+	curr_page = 0;
+
+//	void* sp = NULL;
+//	freeBytes = FreeRam();
+//	sprintf(buf, "%p", &sp);
+//	printf(buf);
+//	sprintf(buf, " %p", &h);
+//	printf(buf);
+//	sprintf(buf, " %d ", (unsigned int)&sp - (unsigned int)&h);
+//	printf(buf);
+//	printf(freeBytes);
+	//list_files_of_page(&curr_page_file_list, curr_page);
+
+
+//	freeBytes = FreeRam();
+//	sprintf(buf, "%p", &sp);
+//	printf(buf);
+//	sprintf(buf, " %p", &h);
+//	printf(buf);
+//	sprintf(buf, " %d ", (unsigned int)&sp - (unsigned int)&h);
+//	printf(buf);
+//	printf(freeBytes);
+//
 
 	//////////////////////////
 
-	print_filenames(curr_page_file_list, 0);
+	//print_filenames(&curr_page_file_list, 0);
 
 	/////////////////////////
 
@@ -422,7 +544,7 @@ int main() {
 	while (1) {
 		printf("\r\nListening...\r\n");
 		listen_for_en();
-		printf("enable happened\r\n");
+		printf("cmd\r\n");
 
 		enum per_if_type type = get_if_type();
 
@@ -432,20 +554,24 @@ int main() {
 				break;
 			case STATE:
 				if (is_write()) {
-					save_state(hFat, curr_page_file_list);
+					save_state(&curr_page_file_list);
 				} else {
-					printf("THERE IS NO READ FOR SAVE STATE CMD!\r\n");
+					//printf("THERE IS NO READ FOR SAVE STATE CMD!\r\n");
+					printf("F\r\n");
 				}
 				break;
 			case SD:
 				if (is_read()) {
-					curr_page_file_list = load_page(hFat);
+					// free old list first
+					//free_file_list(curr_page_file_list);
+					// get new list
+					load_page(&curr_page_file_list);
 				} else if (is_write()) {
-					load_game(hFat, curr_page_file_list);
+					load_game(&curr_page_file_list);
 				}
 				break;
 			case INIT:
-				printf("shouldnt be happening\r\n");
+				printf("shouldn't be happening\r\n");
 				break;
 			default:
 				printf("default\r\n");
@@ -456,8 +582,10 @@ int main() {
 
 	//my_list_test();
 
-	close_SD(hFat);
-	free(curr_game_filename);
+	//close_SD(hFat);
+
+	//free_file_list(curr_page_file_list);
+	//free(curr_game_filename);
 	return 0;
 
 }

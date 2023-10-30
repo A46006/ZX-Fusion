@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="com.altera.sbtgui.launch.hardware.Nios2HardwareLaunchConfiguration">
+<booleanAttribute key="acceptBadSysId" value="true"/>
+<booleanAttribute key="acceptBadTimestamp" value="true"/>
+<stringAttribute key="byteStreamDeviceCableName" value="USB-Blaster on localhost [USB-0]"/>
+<stringAttribute key="byteStreamDeviceDeviceID" value="1"/>
+<stringAttribute key="byteStreamDeviceInstanceID" value="0"/>
+<stringAttribute key="com.altera.sbtgui.launch.REMOTE_PORT" value="55287"/>
+<booleanAttribute key="downloadProgram" value="true"/>
+<stringAttribute key="elfFile" value="H:\MI13D\TFM\FINAL-REPO-actual-46006\ZX-Fusion\project\Software\fat32lib_test\fat32lib_test.elf"/>
+<stringAttribute key="org.eclipse.cdt.debug.mi.core.GDB_INIT" value=""/>
+<stringAttribute key="org.eclipse.cdt.debug.mi.core.commandFactory" value="com.altera.debug.cdi.gdb.plugin.Nios2GDBServerCommandFactory"/>
+<stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_ID" value="com.altera.debug.cdi.gdb.plugin.Nios2GdbCdiDebugger"/>
+<stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_REGISTER_GROUPS" value=""/>
+<stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_START_MODE" value="run"/>
+<booleanAttribute key="org.eclipse.cdt.launch.DEBUGGER_STOP_AT_MAIN" value="true"/>
+<stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_STOP_AT_MAIN_SYMBOL" value="main"/>
+<booleanAttribute key="org.eclipse.cdt.launch.ENABLE_REGISTER_BOOKKEEPING" value="false"/>
+<booleanAttribute key="org.eclipse.cdt.launch.ENABLE_VARIABLE_BOOKKEEPING" value="false"/>
+<stringAttribute key="org.eclipse.cdt.launch.FORMAT" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&lt;contentList&gt;&lt;content id=&quot;data-spi_read-(format)&quot; val=&quot;2&quot;/&gt;&lt;content id=&quot;tmp-sd_write-(format)&quot; val=&quot;2&quot;/&gt;&lt;content id=&quot;buffer-sd_write-(cast)&quot; val=&quot;char *&quot;/&gt;&lt;content id=&quot;first_data_sector-volume-fat_mount_volume-(format)&quot; val=&quot;4&quot;/&gt;&lt;content id=&quot;address-sd_read_sector-(format)&quot; val=&quot;4&quot;/&gt;&lt;content id=&quot;*(char *)buffer-buffer-sd_write-(format)&quot; val=&quot;4&quot;/&gt;&lt;content id=&quot;address-sd_send_io_command-(format)&quot; val=&quot;2&quot;/&gt;&lt;content id=&quot;cmd-sd_send_io_command-(format)&quot; val=&quot;4&quot;/&gt;&lt;content id=&quot;data-spi_write-(format)&quot; val=&quot;4&quot;/&gt;&lt;content id=&quot;media-fat_mount_volume-(format)&quot; val=&quot;4&quot;/&gt;&lt;content id=&quot;*data-data-sd_wait_for_response-(format)&quot; val=&quot;2&quot;/&gt;&lt;/contentList&gt;"/>
+<stringAttribute key="org.eclipse.cdt.launch.GLOBAL_VARIABLES" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;globalVariableList/&gt;&#13;&#10;"/>
+<stringAttribute key="org.eclipse.cdt.launch.MEMORY_BLOCKS" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;memoryBlockExpressionList&gt;&#13;&#10;&lt;memoryBlockExpressionItem&gt;&#13;&#10;&lt;expression text=&quot;0x6e8a8&quot;/&gt;&#13;&#10;&lt;/memoryBlockExpressionItem&gt;&#13;&#10;&lt;memoryBlockExpressionItem&gt;&#13;&#10;&lt;expression text=&quot;0x77f34&quot;/&gt;&#13;&#10;&lt;/memoryBlockExpressionItem&gt;&#13;&#10;&lt;memoryBlockExpressionItem&gt;&#13;&#10;&lt;expression text=&quot;0x77f37&quot;/&gt;&#13;&#10;&lt;/memoryBlockExpressionItem&gt;&#13;&#10;&lt;/memoryBlockExpressionList&gt;&#13;&#10;"/>
+<stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="fat32lib_test.elf"/>
+<stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="fat32lib_test"/>
+<stringAttribute key="processorCableName" value="USB-Blaster on localhost [USB-0]"/>
+<stringAttribute key="processorDeviceIndex" value="1"/>
+<stringAttribute key="processorInstanceId" value="0"/>
+<booleanAttribute key="runProgram" value="true"/>
+</launchConfiguration>

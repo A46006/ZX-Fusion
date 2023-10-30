@@ -125,12 +125,12 @@ enum comp_state { NONE, ZERO, ED1, ED2, XX };
 
 #define DATA_BLOCK_HEADER_SIZE 3
 
-int load_file(FAT_HANDLE hFat, char* filename, int name_len);
+int load_file(char* filename, int name_len);
 
 /* SNA */
 REGS generate_regs_SNA(alt_u8* data);
-int load_SNA(FAT_HANDLE hFat, char* filename);
-int save_SNA(FAT_HANDLE hFat, char* filename);
+int load_SNA(char* filename);
+int save_SNA(char* filename);
 
 /* Z80 */
 int get_version_z80(alt_u8* data);
@@ -141,7 +141,7 @@ alt_u16 get_addr_from_page(alt_u8 page);
 alt_u8 get_data_offset(alt_u8* data, int version);
 REGS generate_regs_z80(alt_u8* data, int version);
 alt_u16 load_compressed_data_block_z80(alt_u16 addr, alt_u8* buffer, int data_offset, int nReadSize);
-int load_z80(FAT_HANDLE hFat, char* filename);
+int load_z80(char* filename);
 
 /* SAVE STATE */
 REGS generate_regs_save_state();

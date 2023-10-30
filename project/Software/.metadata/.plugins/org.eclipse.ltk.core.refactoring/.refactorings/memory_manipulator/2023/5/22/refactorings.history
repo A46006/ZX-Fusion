@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Rename resource &apos;memory_manipulator/file_format_reader/memory_addrs.h&apos; to &apos;mem_addrs.h&apos;" description="Rename resource &apos;memory_addrs.h&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="file_format_reader/memory_addrs.h" name="mem_addrs.h" stamp="1685477956480" updateReferences="true"/>
-</session>

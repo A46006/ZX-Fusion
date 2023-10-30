@@ -139,28 +139,24 @@ ACDS_VERSION := 18.1
 # Define path to the application ELF. 
 # It may be used by the makefile fragments so is defined before including them. 
 # 
-ELF := memory_manipulator.elf
+ELF := memory_manip_attempt.elf
 
 # Paths to C, C++, and assembly source files.
-C_SRCS += main.c
-C_SRCS += SD/terasic_fat/FatFileSystem.c
-C_SRCS += SD/terasic_fat/FatInternal.c
-C_SRCS += SD/terasic_sdcard/crc16.c
-C_SRCS += SD/terasic_sdcard/crc7.c
-C_SRCS += SD/terasic_sdcard/sd_hal.c
-C_SRCS += SD/terasic_sdcard/sd_lib.c
-C_SRCS += SD/terasic_sdcard/sd_protocol.c
-C_SRCS += terasic_lib/debug.c
-C_SRCS += SD/test_sd.c
-C_SRCS += spectrum_comm/DMA/dma_hal.c
+C_SRCS += SD/ff15/diskio.c
+C_SRCS += SD/ff15/ff.c
+C_SRCS += SD/ff15/ffsystem.c
+C_SRCS += SD/ff15/ffunicode.c
+C_SRCS += SD/ff15/sdmmc.c
 C_SRCS += SD/sd_if.c
+C_SRCS += SD/test_sd.c
 C_SRCS += file_format_reader/file_format_aux.c
 C_SRCS += file_format_reader/formats.c
+C_SRCS += main.c
+C_SRCS += spectrum_comm/DMA/dma_hal.c
 C_SRCS += spectrum_comm/Peripheral_Interfaces/per_hal.c
+C_SRCS += terasic_lib/debug.c
 CXX_SRCS :=
 ASM_SRCS :=
-#C_SRCS += file_format_reader/z80_example.c
-#C_SRCS += file_format_reader/sna_example.c
 
 
 # Path to root of object file tree.
@@ -168,7 +164,7 @@ OBJ_ROOT_DIR := obj
 
 # Options to control objdump.
 CREATE_OBJDUMP := 1
-OBJDUMP_INCLUDE_SOURCE := 1
+OBJDUMP_INCLUDE_SOURCE := 0
 OBJDUMP_FULL_CONTENTS := 0
 
 # Options to enable/disable optional files.
@@ -204,7 +200,6 @@ APP_LIBRARY_NAMES :=
 BUILD_PRE_PROCESS :=
 BUILD_POST_PROCESS :=
 
-QUARTUS_PROJECT_DIR := ../../
 
 
 #END GENERATED

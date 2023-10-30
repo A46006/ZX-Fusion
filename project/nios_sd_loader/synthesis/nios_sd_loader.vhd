@@ -25,8 +25,9 @@ entity nios_sd_loader is
 		nmi_n_external_connection_export              : out   std_logic;                                        --              nmi_n_external_connection.export
 		reset_reset_n                                 : in    std_logic                     := '0';             --                                  reset.reset_n
 		sd_clk_external_connection_export             : out   std_logic;                                        --             sd_clk_external_connection.export
-		sd_cmd_external_connection_export             : inout std_logic                     := '0';             --             sd_cmd_external_connection.export
-		sd_dat_external_connection_export             : inout std_logic_vector(3 downto 0)  := (others => '0'); --             sd_dat_external_connection.export
+		sd_cs_external_connection_export              : out   std_logic;                                        --              sd_cs_external_connection.export
+		sd_miso_external_connection_export            : in    std_logic                     := '0';             --            sd_miso_external_connection.export
+		sd_mosi_external_connection_export            : out   std_logic;                                        --            sd_mosi_external_connection.export
 		sd_wp_n_external_connection_export            : in    std_logic                     := '0'              --            sd_wp_n_external_connection.export
 	);
 end entity nios_sd_loader;
@@ -73,7 +74,7 @@ architecture rtl of nios_sd_loader is
 			clk                                 : in  std_logic                     := 'X';             -- clk
 			reset_n                             : in  std_logic                     := 'X';             -- reset_n
 			reset_req                           : in  std_logic                     := 'X';             -- reset_req
-			d_address                           : out std_logic_vector(18 downto 0);                    -- address
+			d_address                           : out std_logic_vector(19 downto 0);                    -- address
 			d_byteenable                        : out std_logic_vector(3 downto 0);                     -- byteenable
 			d_read                              : out std_logic;                                        -- read
 			d_readdata                          : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
@@ -81,7 +82,7 @@ architecture rtl of nios_sd_loader is
 			d_write                             : out std_logic;                                        -- write
 			d_writedata                         : out std_logic_vector(31 downto 0);                    -- writedata
 			debug_mem_slave_debugaccess_to_roms : out std_logic;                                        -- debugaccess
-			i_address                           : out std_logic_vector(18 downto 0);                    -- address
+			i_address                           : out std_logic_vector(19 downto 0);                    -- address
 			i_read                              : out std_logic;                                        -- read
 			i_readdata                          : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
 			i_waitrequest                       : in  std_logic                     := 'X';             -- waitrequest
@@ -189,7 +190,7 @@ architecture rtl of nios_sd_loader is
 	component nios_sd_loader_onchip_memory is
 		port (
 			clk        : in  std_logic                     := 'X';             -- clk
-			address    : in  std_logic_vector(14 downto 0) := (others => 'X'); -- address
+			address    : in  std_logic_vector(15 downto 0) := (others => 'X'); -- address
 			clken      : in  std_logic                     := 'X';             -- clken
 			chipselect : in  std_logic                     := 'X';             -- chipselect
 			write      : in  std_logic                     := 'X';             -- write
@@ -201,32 +202,6 @@ architecture rtl of nios_sd_loader is
 			freeze     : in  std_logic                     := 'X'              -- freeze
 		);
 	end component nios_sd_loader_onchip_memory;
-
-	component nios_sd_loader_sd_cmd is
-		port (
-			clk        : in    std_logic                     := 'X';             -- clk
-			reset_n    : in    std_logic                     := 'X';             -- reset_n
-			address    : in    std_logic_vector(1 downto 0)  := (others => 'X'); -- address
-			write_n    : in    std_logic                     := 'X';             -- write_n
-			writedata  : in    std_logic_vector(31 downto 0) := (others => 'X'); -- writedata
-			chipselect : in    std_logic                     := 'X';             -- chipselect
-			readdata   : out   std_logic_vector(31 downto 0);                    -- readdata
-			bidir_port : inout std_logic                     := 'X'              -- export
-		);
-	end component nios_sd_loader_sd_cmd;
-
-	component nios_sd_loader_sd_dat is
-		port (
-			clk        : in    std_logic                     := 'X';             -- clk
-			reset_n    : in    std_logic                     := 'X';             -- reset_n
-			address    : in    std_logic_vector(1 downto 0)  := (others => 'X'); -- address
-			write_n    : in    std_logic                     := 'X';             -- write_n
-			writedata  : in    std_logic_vector(31 downto 0) := (others => 'X'); -- writedata
-			chipselect : in    std_logic                     := 'X';             -- chipselect
-			readdata   : out   std_logic_vector(31 downto 0);                    -- readdata
-			bidir_port : inout std_logic_vector(3 downto 0)  := (others => 'X')  -- export
-		);
-	end component nios_sd_loader_sd_dat;
 
 	component nios_sd_loader_timer is
 		port (
@@ -245,7 +220,7 @@ architecture rtl of nios_sd_loader is
 		port (
 			clk_clk_clk                             : in  std_logic                     := 'X';             -- clk
 			cpu_reset_reset_bridge_in_reset_reset   : in  std_logic                     := 'X';             -- reset
-			cpu_data_master_address                 : in  std_logic_vector(18 downto 0) := (others => 'X'); -- address
+			cpu_data_master_address                 : in  std_logic_vector(19 downto 0) := (others => 'X'); -- address
 			cpu_data_master_waitrequest             : out std_logic;                                        -- waitrequest
 			cpu_data_master_byteenable              : in  std_logic_vector(3 downto 0)  := (others => 'X'); -- byteenable
 			cpu_data_master_read                    : in  std_logic                     := 'X';             -- read
@@ -253,7 +228,7 @@ architecture rtl of nios_sd_loader is
 			cpu_data_master_write                   : in  std_logic                     := 'X';             -- write
 			cpu_data_master_writedata               : in  std_logic_vector(31 downto 0) := (others => 'X'); -- writedata
 			cpu_data_master_debugaccess             : in  std_logic                     := 'X';             -- debugaccess
-			cpu_instruction_master_address          : in  std_logic_vector(18 downto 0) := (others => 'X'); -- address
+			cpu_instruction_master_address          : in  std_logic_vector(19 downto 0) := (others => 'X'); -- address
 			cpu_instruction_master_waitrequest      : out std_logic;                                        -- waitrequest
 			cpu_instruction_master_read             : in  std_logic                     := 'X';             -- read
 			cpu_instruction_master_readdata         : out std_logic_vector(31 downto 0);                    -- readdata
@@ -321,7 +296,7 @@ architecture rtl of nios_sd_loader is
 			nmi_n_s1_readdata                       : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
 			nmi_n_s1_writedata                      : out std_logic_vector(31 downto 0);                    -- writedata
 			nmi_n_s1_chipselect                     : out std_logic;                                        -- chipselect
-			onchip_memory_s1_address                : out std_logic_vector(14 downto 0);                    -- address
+			onchip_memory_s1_address                : out std_logic_vector(15 downto 0);                    -- address
 			onchip_memory_s1_write                  : out std_logic;                                        -- write
 			onchip_memory_s1_readdata               : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
 			onchip_memory_s1_writedata              : out std_logic_vector(31 downto 0);                    -- writedata
@@ -333,16 +308,18 @@ architecture rtl of nios_sd_loader is
 			sd_clk_s1_readdata                      : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
 			sd_clk_s1_writedata                     : out std_logic_vector(31 downto 0);                    -- writedata
 			sd_clk_s1_chipselect                    : out std_logic;                                        -- chipselect
-			sd_cmd_s1_address                       : out std_logic_vector(1 downto 0);                     -- address
-			sd_cmd_s1_write                         : out std_logic;                                        -- write
-			sd_cmd_s1_readdata                      : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
-			sd_cmd_s1_writedata                     : out std_logic_vector(31 downto 0);                    -- writedata
-			sd_cmd_s1_chipselect                    : out std_logic;                                        -- chipselect
-			sd_dat_s1_address                       : out std_logic_vector(1 downto 0);                     -- address
-			sd_dat_s1_write                         : out std_logic;                                        -- write
-			sd_dat_s1_readdata                      : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
-			sd_dat_s1_writedata                     : out std_logic_vector(31 downto 0);                    -- writedata
-			sd_dat_s1_chipselect                    : out std_logic;                                        -- chipselect
+			sd_cs_s1_address                        : out std_logic_vector(1 downto 0);                     -- address
+			sd_cs_s1_write                          : out std_logic;                                        -- write
+			sd_cs_s1_readdata                       : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
+			sd_cs_s1_writedata                      : out std_logic_vector(31 downto 0);                    -- writedata
+			sd_cs_s1_chipselect                     : out std_logic;                                        -- chipselect
+			sd_miso_s1_address                      : out std_logic_vector(1 downto 0);                     -- address
+			sd_miso_s1_readdata                     : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
+			sd_mosi_s1_address                      : out std_logic_vector(1 downto 0);                     -- address
+			sd_mosi_s1_write                        : out std_logic;                                        -- write
+			sd_mosi_s1_readdata                     : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
+			sd_mosi_s1_writedata                    : out std_logic_vector(31 downto 0);                    -- writedata
+			sd_mosi_s1_chipselect                   : out std_logic;                                        -- chipselect
 			sd_wp_n_s1_address                      : out std_logic_vector(1 downto 0);                     -- address
 			sd_wp_n_s1_readdata                     : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
 			timer_s1_address                        : out std_logic_vector(2 downto 0);                     -- address
@@ -432,14 +409,14 @@ architecture rtl of nios_sd_loader is
 	signal cpu_data_master_readdata                                      : std_logic_vector(31 downto 0); -- mm_interconnect_0:cpu_data_master_readdata -> cpu:d_readdata
 	signal cpu_data_master_waitrequest                                   : std_logic;                     -- mm_interconnect_0:cpu_data_master_waitrequest -> cpu:d_waitrequest
 	signal cpu_data_master_debugaccess                                   : std_logic;                     -- cpu:debug_mem_slave_debugaccess_to_roms -> mm_interconnect_0:cpu_data_master_debugaccess
-	signal cpu_data_master_address                                       : std_logic_vector(18 downto 0); -- cpu:d_address -> mm_interconnect_0:cpu_data_master_address
+	signal cpu_data_master_address                                       : std_logic_vector(19 downto 0); -- cpu:d_address -> mm_interconnect_0:cpu_data_master_address
 	signal cpu_data_master_byteenable                                    : std_logic_vector(3 downto 0);  -- cpu:d_byteenable -> mm_interconnect_0:cpu_data_master_byteenable
 	signal cpu_data_master_read                                          : std_logic;                     -- cpu:d_read -> mm_interconnect_0:cpu_data_master_read
 	signal cpu_data_master_write                                         : std_logic;                     -- cpu:d_write -> mm_interconnect_0:cpu_data_master_write
 	signal cpu_data_master_writedata                                     : std_logic_vector(31 downto 0); -- cpu:d_writedata -> mm_interconnect_0:cpu_data_master_writedata
 	signal cpu_instruction_master_readdata                               : std_logic_vector(31 downto 0); -- mm_interconnect_0:cpu_instruction_master_readdata -> cpu:i_readdata
 	signal cpu_instruction_master_waitrequest                            : std_logic;                     -- mm_interconnect_0:cpu_instruction_master_waitrequest -> cpu:i_waitrequest
-	signal cpu_instruction_master_address                                : std_logic_vector(18 downto 0); -- cpu:i_address -> mm_interconnect_0:cpu_instruction_master_address
+	signal cpu_instruction_master_address                                : std_logic_vector(19 downto 0); -- cpu:i_address -> mm_interconnect_0:cpu_instruction_master_address
 	signal cpu_instruction_master_read                                   : std_logic;                     -- cpu:i_read -> mm_interconnect_0:cpu_instruction_master_read
 	signal mm_interconnect_0_jtag_uart_avalon_jtag_slave_chipselect      : std_logic;                     -- mm_interconnect_0:jtag_uart_avalon_jtag_slave_chipselect -> jtag_uart:av_chipselect
 	signal mm_interconnect_0_jtag_uart_avalon_jtag_slave_readdata        : std_logic_vector(31 downto 0); -- jtag_uart:av_readdata -> mm_interconnect_0:jtag_uart_avalon_jtag_slave_readdata
@@ -458,7 +435,7 @@ architecture rtl of nios_sd_loader is
 	signal mm_interconnect_0_cpu_debug_mem_slave_writedata               : std_logic_vector(31 downto 0); -- mm_interconnect_0:cpu_debug_mem_slave_writedata -> cpu:debug_mem_slave_writedata
 	signal mm_interconnect_0_onchip_memory_s1_chipselect                 : std_logic;                     -- mm_interconnect_0:onchip_memory_s1_chipselect -> onchip_memory:chipselect
 	signal mm_interconnect_0_onchip_memory_s1_readdata                   : std_logic_vector(31 downto 0); -- onchip_memory:readdata -> mm_interconnect_0:onchip_memory_s1_readdata
-	signal mm_interconnect_0_onchip_memory_s1_address                    : std_logic_vector(14 downto 0); -- mm_interconnect_0:onchip_memory_s1_address -> onchip_memory:address
+	signal mm_interconnect_0_onchip_memory_s1_address                    : std_logic_vector(15 downto 0); -- mm_interconnect_0:onchip_memory_s1_address -> onchip_memory:address
 	signal mm_interconnect_0_onchip_memory_s1_byteenable                 : std_logic_vector(3 downto 0);  -- mm_interconnect_0:onchip_memory_s1_byteenable -> onchip_memory:byteenable
 	signal mm_interconnect_0_onchip_memory_s1_write                      : std_logic;                     -- mm_interconnect_0:onchip_memory_s1_write -> onchip_memory:write
 	signal mm_interconnect_0_onchip_memory_s1_writedata                  : std_logic_vector(31 downto 0); -- mm_interconnect_0:onchip_memory_s1_writedata -> onchip_memory:writedata
@@ -480,16 +457,13 @@ architecture rtl of nios_sd_loader is
 	signal mm_interconnect_0_sd_clk_s1_address                           : std_logic_vector(1 downto 0);  -- mm_interconnect_0:sd_clk_s1_address -> sd_clk:address
 	signal mm_interconnect_0_sd_clk_s1_write                             : std_logic;                     -- mm_interconnect_0:sd_clk_s1_write -> mm_interconnect_0_sd_clk_s1_write:in
 	signal mm_interconnect_0_sd_clk_s1_writedata                         : std_logic_vector(31 downto 0); -- mm_interconnect_0:sd_clk_s1_writedata -> sd_clk:writedata
-	signal mm_interconnect_0_sd_cmd_s1_chipselect                        : std_logic;                     -- mm_interconnect_0:sd_cmd_s1_chipselect -> sd_cmd:chipselect
-	signal mm_interconnect_0_sd_cmd_s1_readdata                          : std_logic_vector(31 downto 0); -- sd_cmd:readdata -> mm_interconnect_0:sd_cmd_s1_readdata
-	signal mm_interconnect_0_sd_cmd_s1_address                           : std_logic_vector(1 downto 0);  -- mm_interconnect_0:sd_cmd_s1_address -> sd_cmd:address
-	signal mm_interconnect_0_sd_cmd_s1_write                             : std_logic;                     -- mm_interconnect_0:sd_cmd_s1_write -> mm_interconnect_0_sd_cmd_s1_write:in
-	signal mm_interconnect_0_sd_cmd_s1_writedata                         : std_logic_vector(31 downto 0); -- mm_interconnect_0:sd_cmd_s1_writedata -> sd_cmd:writedata
-	signal mm_interconnect_0_sd_dat_s1_chipselect                        : std_logic;                     -- mm_interconnect_0:sd_dat_s1_chipselect -> sd_dat:chipselect
-	signal mm_interconnect_0_sd_dat_s1_readdata                          : std_logic_vector(31 downto 0); -- sd_dat:readdata -> mm_interconnect_0:sd_dat_s1_readdata
-	signal mm_interconnect_0_sd_dat_s1_address                           : std_logic_vector(1 downto 0);  -- mm_interconnect_0:sd_dat_s1_address -> sd_dat:address
-	signal mm_interconnect_0_sd_dat_s1_write                             : std_logic;                     -- mm_interconnect_0:sd_dat_s1_write -> mm_interconnect_0_sd_dat_s1_write:in
-	signal mm_interconnect_0_sd_dat_s1_writedata                         : std_logic_vector(31 downto 0); -- mm_interconnect_0:sd_dat_s1_writedata -> sd_dat:writedata
+	signal mm_interconnect_0_sd_mosi_s1_chipselect                       : std_logic;                     -- mm_interconnect_0:sd_mosi_s1_chipselect -> sd_mosi:chipselect
+	signal mm_interconnect_0_sd_mosi_s1_readdata                         : std_logic_vector(31 downto 0); -- sd_mosi:readdata -> mm_interconnect_0:sd_mosi_s1_readdata
+	signal mm_interconnect_0_sd_mosi_s1_address                          : std_logic_vector(1 downto 0);  -- mm_interconnect_0:sd_mosi_s1_address -> sd_mosi:address
+	signal mm_interconnect_0_sd_mosi_s1_write                            : std_logic;                     -- mm_interconnect_0:sd_mosi_s1_write -> mm_interconnect_0_sd_mosi_s1_write:in
+	signal mm_interconnect_0_sd_mosi_s1_writedata                        : std_logic_vector(31 downto 0); -- mm_interconnect_0:sd_mosi_s1_writedata -> sd_mosi:writedata
+	signal mm_interconnect_0_sd_miso_s1_readdata                         : std_logic_vector(31 downto 0); -- sd_miso:readdata -> mm_interconnect_0:sd_miso_s1_readdata
+	signal mm_interconnect_0_sd_miso_s1_address                          : std_logic_vector(1 downto 0);  -- mm_interconnect_0:sd_miso_s1_address -> sd_miso:address
 	signal mm_interconnect_0_cpu_cmd_en_s1_readdata                      : std_logic_vector(31 downto 0); -- cpu_cmd_en:readdata -> mm_interconnect_0:cpu_cmd_en_s1_readdata
 	signal mm_interconnect_0_cpu_cmd_en_s1_address                       : std_logic_vector(1 downto 0);  -- mm_interconnect_0:cpu_cmd_en_s1_address -> cpu_cmd_en:address
 	signal mm_interconnect_0_cpu_rd_n_s1_readdata                        : std_logic_vector(31 downto 0); -- cpu_rd_n:readdata -> mm_interconnect_0:cpu_rd_n_s1_readdata
@@ -534,6 +508,11 @@ architecture rtl of nios_sd_loader is
 	signal mm_interconnect_0_cpu_cmd_ack_s1_writedata                    : std_logic_vector(31 downto 0); -- mm_interconnect_0:cpu_cmd_ack_s1_writedata -> cpu_cmd_ack:writedata
 	signal mm_interconnect_0_cpu_address_direct_s1_readdata              : std_logic_vector(31 downto 0); -- cpu_address_direct:readdata -> mm_interconnect_0:cpu_address_direct_s1_readdata
 	signal mm_interconnect_0_cpu_address_direct_s1_address               : std_logic_vector(1 downto 0);  -- mm_interconnect_0:cpu_address_direct_s1_address -> cpu_address_direct:address
+	signal mm_interconnect_0_sd_cs_s1_chipselect                         : std_logic;                     -- mm_interconnect_0:sd_cs_s1_chipselect -> sd_cs:chipselect
+	signal mm_interconnect_0_sd_cs_s1_readdata                           : std_logic_vector(31 downto 0); -- sd_cs:readdata -> mm_interconnect_0:sd_cs_s1_readdata
+	signal mm_interconnect_0_sd_cs_s1_address                            : std_logic_vector(1 downto 0);  -- mm_interconnect_0:sd_cs_s1_address -> sd_cs:address
+	signal mm_interconnect_0_sd_cs_s1_write                              : std_logic;                     -- mm_interconnect_0:sd_cs_s1_write -> mm_interconnect_0_sd_cs_s1_write:in
+	signal mm_interconnect_0_sd_cs_s1_writedata                          : std_logic_vector(31 downto 0); -- mm_interconnect_0:sd_cs_s1_writedata -> sd_cs:writedata
 	signal irq_mapper_receiver0_irq                                      : std_logic;                     -- jtag_uart:av_irq -> irq_mapper:receiver0_irq
 	signal irq_mapper_receiver1_irq                                      : std_logic;                     -- timer:irq -> irq_mapper:receiver1_irq
 	signal cpu_irq_irq                                                   : std_logic_vector(31 downto 0); -- irq_mapper:sender_irq -> cpu:irq
@@ -545,15 +524,15 @@ architecture rtl of nios_sd_loader is
 	signal mm_interconnect_0_timer_s1_write_ports_inv                    : std_logic;                     -- mm_interconnect_0_timer_s1_write:inv -> timer:write_n
 	signal mm_interconnect_0_ledg_pio_s1_write_ports_inv                 : std_logic;                     -- mm_interconnect_0_ledg_pio_s1_write:inv -> ledg_pio:write_n
 	signal mm_interconnect_0_sd_clk_s1_write_ports_inv                   : std_logic;                     -- mm_interconnect_0_sd_clk_s1_write:inv -> sd_clk:write_n
-	signal mm_interconnect_0_sd_cmd_s1_write_ports_inv                   : std_logic;                     -- mm_interconnect_0_sd_cmd_s1_write:inv -> sd_cmd:write_n
-	signal mm_interconnect_0_sd_dat_s1_write_ports_inv                   : std_logic;                     -- mm_interconnect_0_sd_dat_s1_write:inv -> sd_dat:write_n
+	signal mm_interconnect_0_sd_mosi_s1_write_ports_inv                  : std_logic;                     -- mm_interconnect_0_sd_mosi_s1_write:inv -> sd_mosi:write_n
 	signal mm_interconnect_0_ctrl_bus_s1_write_ports_inv                 : std_logic;                     -- mm_interconnect_0_ctrl_bus_s1_write:inv -> ctrl_bus:write_n
 	signal mm_interconnect_0_address_s1_write_ports_inv                  : std_logic;                     -- mm_interconnect_0_address_s1_write:inv -> address:write_n
 	signal mm_interconnect_0_data_s1_write_ports_inv                     : std_logic;                     -- mm_interconnect_0_data_s1_write:inv -> data:write_n
 	signal mm_interconnect_0_bus_req_n_s1_write_ports_inv                : std_logic;                     -- mm_interconnect_0_bus_req_n_s1_write:inv -> bus_req_n:write_n
 	signal mm_interconnect_0_nmi_n_s1_write_ports_inv                    : std_logic;                     -- mm_interconnect_0_nmi_n_s1_write:inv -> nmi_n:write_n
 	signal mm_interconnect_0_cpu_cmd_ack_s1_write_ports_inv              : std_logic;                     -- mm_interconnect_0_cpu_cmd_ack_s1_write:inv -> cpu_cmd_ack:write_n
-	signal rst_controller_reset_out_reset_ports_inv                      : std_logic;                     -- rst_controller_reset_out_reset:inv -> [address:reset_n, bus_ack_n:reset_n, bus_req_n:reset_n, cpu:reset_n, cpu_address:reset_n, cpu_address_direct:reset_n, cpu_cmd:reset_n, cpu_cmd_ack:reset_n, cpu_cmd_en:reset_n, cpu_rd_n:reset_n, cpu_wr_n:reset_n, ctrl_bus:reset_n, data:reset_n, jtag_uart:rst_n, ledg_pio:reset_n, nmi_n:reset_n, sd_clk:reset_n, sd_cmd:reset_n, sd_dat:reset_n, sd_wp_n:reset_n, timer:reset_n]
+	signal mm_interconnect_0_sd_cs_s1_write_ports_inv                    : std_logic;                     -- mm_interconnect_0_sd_cs_s1_write:inv -> sd_cs:write_n
+	signal rst_controller_reset_out_reset_ports_inv                      : std_logic;                     -- rst_controller_reset_out_reset:inv -> [address:reset_n, bus_ack_n:reset_n, bus_req_n:reset_n, cpu:reset_n, cpu_address:reset_n, cpu_address_direct:reset_n, cpu_cmd:reset_n, cpu_cmd_ack:reset_n, cpu_cmd_en:reset_n, cpu_rd_n:reset_n, cpu_wr_n:reset_n, ctrl_bus:reset_n, data:reset_n, jtag_uart:rst_n, ledg_pio:reset_n, nmi_n:reset_n, sd_clk:reset_n, sd_cs:reset_n, sd_miso:reset_n, sd_mosi:reset_n, sd_wp_n:reset_n, timer:reset_n]
 
 begin
 
@@ -775,28 +754,37 @@ begin
 			out_port   => sd_clk_external_connection_export            -- external_connection.export
 		);
 
-	sd_cmd : component nios_sd_loader_sd_cmd
+	sd_cs : component nios_sd_loader_cpu_cmd_ack
 		port map (
-			clk        => clk_clk,                                     --                 clk.clk
-			reset_n    => rst_controller_reset_out_reset_ports_inv,    --               reset.reset_n
-			address    => mm_interconnect_0_sd_cmd_s1_address,         --                  s1.address
-			write_n    => mm_interconnect_0_sd_cmd_s1_write_ports_inv, --                    .write_n
-			writedata  => mm_interconnect_0_sd_cmd_s1_writedata,       --                    .writedata
-			chipselect => mm_interconnect_0_sd_cmd_s1_chipselect,      --                    .chipselect
-			readdata   => mm_interconnect_0_sd_cmd_s1_readdata,        --                    .readdata
-			bidir_port => sd_cmd_external_connection_export            -- external_connection.export
+			clk        => clk_clk,                                    --                 clk.clk
+			reset_n    => rst_controller_reset_out_reset_ports_inv,   --               reset.reset_n
+			address    => mm_interconnect_0_sd_cs_s1_address,         --                  s1.address
+			write_n    => mm_interconnect_0_sd_cs_s1_write_ports_inv, --                    .write_n
+			writedata  => mm_interconnect_0_sd_cs_s1_writedata,       --                    .writedata
+			chipselect => mm_interconnect_0_sd_cs_s1_chipselect,      --                    .chipselect
+			readdata   => mm_interconnect_0_sd_cs_s1_readdata,        --                    .readdata
+			out_port   => sd_cs_external_connection_export            -- external_connection.export
 		);
 
-	sd_dat : component nios_sd_loader_sd_dat
+	sd_miso : component nios_sd_loader_bus_ack_n
 		port map (
-			clk        => clk_clk,                                     --                 clk.clk
-			reset_n    => rst_controller_reset_out_reset_ports_inv,    --               reset.reset_n
-			address    => mm_interconnect_0_sd_dat_s1_address,         --                  s1.address
-			write_n    => mm_interconnect_0_sd_dat_s1_write_ports_inv, --                    .write_n
-			writedata  => mm_interconnect_0_sd_dat_s1_writedata,       --                    .writedata
-			chipselect => mm_interconnect_0_sd_dat_s1_chipselect,      --                    .chipselect
-			readdata   => mm_interconnect_0_sd_dat_s1_readdata,        --                    .readdata
-			bidir_port => sd_dat_external_connection_export            -- external_connection.export
+			clk      => clk_clk,                                  --                 clk.clk
+			reset_n  => rst_controller_reset_out_reset_ports_inv, --               reset.reset_n
+			address  => mm_interconnect_0_sd_miso_s1_address,     --                  s1.address
+			readdata => mm_interconnect_0_sd_miso_s1_readdata,    --                    .readdata
+			in_port  => sd_miso_external_connection_export        -- external_connection.export
+		);
+
+	sd_mosi : component nios_sd_loader_cpu_cmd_ack
+		port map (
+			clk        => clk_clk,                                      --                 clk.clk
+			reset_n    => rst_controller_reset_out_reset_ports_inv,     --               reset.reset_n
+			address    => mm_interconnect_0_sd_mosi_s1_address,         --                  s1.address
+			write_n    => mm_interconnect_0_sd_mosi_s1_write_ports_inv, --                    .write_n
+			writedata  => mm_interconnect_0_sd_mosi_s1_writedata,       --                    .writedata
+			chipselect => mm_interconnect_0_sd_mosi_s1_chipselect,      --                    .chipselect
+			readdata   => mm_interconnect_0_sd_mosi_s1_readdata,        --                    .readdata
+			out_port   => sd_mosi_external_connection_export            -- external_connection.export
 		);
 
 	sd_wp_n : component nios_sd_loader_bus_ack_n
@@ -912,16 +900,18 @@ begin
 			sd_clk_s1_readdata                      => mm_interconnect_0_sd_clk_s1_readdata,                      --                                .readdata
 			sd_clk_s1_writedata                     => mm_interconnect_0_sd_clk_s1_writedata,                     --                                .writedata
 			sd_clk_s1_chipselect                    => mm_interconnect_0_sd_clk_s1_chipselect,                    --                                .chipselect
-			sd_cmd_s1_address                       => mm_interconnect_0_sd_cmd_s1_address,                       --                       sd_cmd_s1.address
-			sd_cmd_s1_write                         => mm_interconnect_0_sd_cmd_s1_write,                         --                                .write
-			sd_cmd_s1_readdata                      => mm_interconnect_0_sd_cmd_s1_readdata,                      --                                .readdata
-			sd_cmd_s1_writedata                     => mm_interconnect_0_sd_cmd_s1_writedata,                     --                                .writedata
-			sd_cmd_s1_chipselect                    => mm_interconnect_0_sd_cmd_s1_chipselect,                    --                                .chipselect
-			sd_dat_s1_address                       => mm_interconnect_0_sd_dat_s1_address,                       --                       sd_dat_s1.address
-			sd_dat_s1_write                         => mm_interconnect_0_sd_dat_s1_write,                         --                                .write
-			sd_dat_s1_readdata                      => mm_interconnect_0_sd_dat_s1_readdata,                      --                                .readdata
-			sd_dat_s1_writedata                     => mm_interconnect_0_sd_dat_s1_writedata,                     --                                .writedata
-			sd_dat_s1_chipselect                    => mm_interconnect_0_sd_dat_s1_chipselect,                    --                                .chipselect
+			sd_cs_s1_address                        => mm_interconnect_0_sd_cs_s1_address,                        --                        sd_cs_s1.address
+			sd_cs_s1_write                          => mm_interconnect_0_sd_cs_s1_write,                          --                                .write
+			sd_cs_s1_readdata                       => mm_interconnect_0_sd_cs_s1_readdata,                       --                                .readdata
+			sd_cs_s1_writedata                      => mm_interconnect_0_sd_cs_s1_writedata,                      --                                .writedata
+			sd_cs_s1_chipselect                     => mm_interconnect_0_sd_cs_s1_chipselect,                     --                                .chipselect
+			sd_miso_s1_address                      => mm_interconnect_0_sd_miso_s1_address,                      --                      sd_miso_s1.address
+			sd_miso_s1_readdata                     => mm_interconnect_0_sd_miso_s1_readdata,                     --                                .readdata
+			sd_mosi_s1_address                      => mm_interconnect_0_sd_mosi_s1_address,                      --                      sd_mosi_s1.address
+			sd_mosi_s1_write                        => mm_interconnect_0_sd_mosi_s1_write,                        --                                .write
+			sd_mosi_s1_readdata                     => mm_interconnect_0_sd_mosi_s1_readdata,                     --                                .readdata
+			sd_mosi_s1_writedata                    => mm_interconnect_0_sd_mosi_s1_writedata,                    --                                .writedata
+			sd_mosi_s1_chipselect                   => mm_interconnect_0_sd_mosi_s1_chipselect,                   --                                .chipselect
 			sd_wp_n_s1_address                      => mm_interconnect_0_sd_wp_n_s1_address,                      --                      sd_wp_n_s1.address
 			sd_wp_n_s1_readdata                     => mm_interconnect_0_sd_wp_n_s1_readdata,                     --                                .readdata
 			timer_s1_address                        => mm_interconnect_0_timer_s1_address,                        --                        timer_s1.address
@@ -1017,9 +1007,7 @@ begin
 
 	mm_interconnect_0_sd_clk_s1_write_ports_inv <= not mm_interconnect_0_sd_clk_s1_write;
 
-	mm_interconnect_0_sd_cmd_s1_write_ports_inv <= not mm_interconnect_0_sd_cmd_s1_write;
-
-	mm_interconnect_0_sd_dat_s1_write_ports_inv <= not mm_interconnect_0_sd_dat_s1_write;
+	mm_interconnect_0_sd_mosi_s1_write_ports_inv <= not mm_interconnect_0_sd_mosi_s1_write;
 
 	mm_interconnect_0_ctrl_bus_s1_write_ports_inv <= not mm_interconnect_0_ctrl_bus_s1_write;
 
@@ -1032,6 +1020,8 @@ begin
 	mm_interconnect_0_nmi_n_s1_write_ports_inv <= not mm_interconnect_0_nmi_n_s1_write;
 
 	mm_interconnect_0_cpu_cmd_ack_s1_write_ports_inv <= not mm_interconnect_0_cpu_cmd_ack_s1_write;
+
+	mm_interconnect_0_sd_cs_s1_write_ports_inv <= not mm_interconnect_0_sd_cs_s1_write;
 
 	rst_controller_reset_out_reset_ports_inv <= not rst_controller_reset_out_reset;
 
