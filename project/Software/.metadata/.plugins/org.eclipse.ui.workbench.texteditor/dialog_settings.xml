@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="malloc" key="selection"/>
+		<item value="generate_regs_save_state" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="generate_regs_save_state"/>
+			<item value="REGS regs"/>
 			<item value="malloc"/>
-			<item value="32"/>
-			<item value="curr_page_file_list.filenames[i] = n;"/>
-			<item value="0x80"/>
-			<item value="\0"/>
-			<item value="curr_game_filename"/>
-			<item value="curr_page_file_list"/>
-			<item value="list_files_of"/>
+			<item value="f_unlink"/>
+			<item value="f_unlinkl"/>
+			<item value="ff_open"/>
+			<item value="ff_dele"/>
+			<item value="delete"/>
 		</list>
 		<list key="replacehistory">
 			<item value="50"/>

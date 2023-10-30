@@ -1,15 +1,24 @@
-14:48:24 **** Clean-only build of configuration Nios II for project memory_manipulator ****
-make clean 
-[memory_manip_attempt clean complete]
-14:48:35 **** Clean-only build of configuration Nios II for project dma_test ****
-make clean 
-[dma_test clean complete]
-14:48:35 **** Clean-only build of configuration Nios II for project ff15_test ****
-make clean 
-[ff15_test clean complete]
-14:48:35 **** Clean-only build of configuration Nios II for project memory_manipulator ****
-make clean 
-[memory_manip_attempt clean complete]
-14:48:35 **** Clean-only build of configuration Nios II for project memory_manipulator_bsp ****
-make clean 
-[BSP clean complete]
+16:08:08 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+make all 
+Info: Building ../memory_manipulator_bsp/
+C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
+[BSP build complete]
+[memory_manip_attempt build complete]
+16:08:14 **** Build of configuration Nios II for project memory_manipulator ****
+make all 
+Info: Building ../memory_manipulator_bsp/
+C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
+[BSP build complete]
+[memory_manip_attempt build complete]
+16:08:15 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+make all 
+Info: Building ../memory_manipulator_bsp/
+C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
+[BSP build complete]
+[memory_manip_attempt build complete]
+16:08:35 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+make all 
+Info: Building ../memory_manipulator_bsp/
+C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
+[BSP build complete]
+[memory_manip_attempt build complete]

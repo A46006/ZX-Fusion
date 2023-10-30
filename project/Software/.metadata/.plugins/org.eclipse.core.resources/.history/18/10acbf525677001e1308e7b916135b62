@@ -1,0 +1,1016 @@
+#include "formats.h"
+#include "asm_opcodes.h"
+#include "mem_addrs.h"
+
+#include "..\spectrum_comm\Peripheral_Interfaces\per_hal.h"
+
+#define OPEN_ERR_STR "opening %s failed: 0x%04X\r\n"
+
+int load_file(char* filename, int name_len) {
+	char* extension = filename + (name_len-4);
+	//printf("EXTENSION %s\r\n", extension);
+	for (int i = 0; i < 4; i++) {
+		extension[i] = tolower(extension[i]);
+	}
+	//printf("EXTENSION %s\r\n", extension);
+	if (strncmp(extension, ".z80", 4) == 0) {
+		return load_z80(filename);
+	}
+	if (strncmp(extension, ".sna", 4) == 0) {
+		return load_SNA(filename);
+	}
+	return -1;
+}
+
+
+/* *******************
+ * .SNA format
+ * *******************/
+REGS generate_regs_SNA(alt_u8* data) {
+	alt_u16 sp = conv_data_8_16(data, SNA_OFFSET_SP);
+
+	REGS regs = {
+		.R = data[SNA_OFFSET_R],
+		.I = data[SNA_OFFSET_I],
+
+		.Al = data[SNA_OFFSET_A_AUX],
+		.Fl = data[SNA_OFFSET_F_AUX],
+		.Hl = data[SNA_OFFSET_HL_AUX+1], // because little endian
+		.Ll = data[SNA_OFFSET_HL_AUX],
+		.Dl = data[SNA_OFFSET_DE_AUX+1],
+		.El = data[SNA_OFFSET_DE_AUX],
+		.Bl = data[SNA_OFFSET_BC_AUX+1],
+		.Cl = data[SNA_OFFSET_BC_AUX],
+
+		.A = data[SNA_OFFSET_A],
+		.F = data[SNA_OFFSET_F],
+		.H = data[SNA_OFFSET_HL+1], // because little endian
+		.L = data[SNA_OFFSET_HL],
+		.D = data[SNA_OFFSET_DE+1],
+		.E = data[SNA_OFFSET_DE],
+		.B = data[SNA_OFFSET_BC+1],
+		.C = data[SNA_OFFSET_BC],
+
+		//.IY = ((data[SNA_OFFSET_IY] << 8) & 0xFF00) | data[SNA_OFFSET_IY+1],
+		.IY = conv_data_8_16(data, SNA_OFFSET_IY),
+		.IX = conv_data_8_16(data, SNA_OFFSET_IX),
+
+		.SP = sp,
+		.PC = 0, // PC is in the stack
+
+		.IM = data[SNA_OFFSET_INT_MODE],
+		.IFF1 = data[SNA_OFFSET_IFF2] & 4,
+		.IFF2 = data[SNA_OFFSET_IFF2] & 4,
+		.border = data[SNA_OFFSET_BORDER]
+
+	};
+
+	return regs;
+}
+
+int load_SNA(char* filename) {
+	alt_u16 err = init_file_read(filename);
+
+	if (err) {
+		printf(OPEN_ERR_STR, filename, err);
+		return -1;
+	}
+
+	int ret = DMA_request(10);
+
+	if (ret != 0) {
+		DMA_print_err(ret);
+		close_file();
+		return -1;
+	}
+
+	int data_offset = SNA_OFFSET_DATA;
+
+	int routine_size = get_LOAD_routine_size();
+
+	//REGS regs = write_sna_DMA_mem(hFile, data_offset, 0x4000);
+
+
+
+	// Next code based on DE2-115 SD Card reading test code:
+	alt_u8 szRead[512];
+	int nReadSize=0, nFileSize, nTotalReadSize=0;
+
+	nFileSize = file_size();
+
+	alt_u16 addr = 0x4000;
+	REGS regs;
+
+	uint32_t bytes_read = 0;
+
+	bool bSuccess = TRUE;
+	bool first_block = TRUE;
+
+	if (nReadSize > sizeof(szRead))
+		nReadSize = sizeof(szRead);
+
+	int load_border_color = 0;
+	while(bSuccess && nTotalReadSize < nFileSize){
+
+		// Sets border color for loading
+		write_io(0xFFFE, (load_border_color++) & 0b111);
+		if (load_border_color > 7) load_border_color = 0;
+
+		nReadSize = sizeof(szRead);
+		if (nReadSize > (nFileSize - nTotalReadSize))
+			nReadSize = (nFileSize - nTotalReadSize);
+
+		err = file_read(szRead, nReadSize, &bytes_read);
+		if (!err && bytes_read > 0) {
+			if (first_block) {
+				// Save REG values
+				regs = generate_regs_SNA(szRead);
+
+				write_buf_mem(addr, szRead, data_offset, nReadSize - data_offset);
+				addr += (nReadSize - data_offset);
+				first_block = FALSE;
+			} else {
+				write_buf_mem(addr, szRead, 0, nReadSize);
+				addr += nReadSize;
+			}
+			nTotalReadSize += nReadSize;
+
+		} else {
+			bSuccess = FALSE;
+			close_file();
+
+			// writing NMI code (just a return)
+			addr = NMI_ROUTINE_ADDR;
+			write_mem(addr++, RETN1);
+			write_mem(addr++, RETN2);
+
+			// stop DMA with NMI on
+			DMA_stop_w_interrupt();
+			printf("\nFailed to read the file (err: 0x%04X)\n", err);
+			return -1;
+		}
+	} // while
+
+
+	// Save data that routine will overwrite
+	int data_bk_len = get_LOAD_routine_size();
+	alt_u8 data_bk[data_bk_len];
+	read_buf_mem(NMI_ROUTINE_ADDR, 0, data_bk_len, data_bk);
+
+	// Save data that the stack additions overwrite
+	alt_u8 bottom_data_bk[OLD_STACK_SIZE];
+	read_buf_mem(OLD_STACK_START_ADDR, 0, OLD_STACK_SIZE, bottom_data_bk);
+
+	// Now all the data is loaded, and the routine must be formed with REGS
+	enum file_type type = SNA;
+
+	alt_u8 routine[routine_size];
+	generate_LOAD_routine(routine, regs, type);
+
+	write_buf_mem(NMI_ROUTINE_ADDR, routine, 0, routine_size);
+
+	for(int i = 0; i < routine_size; i++) {
+		printf("0x%02x ", routine[i]);
+	}
+
+	// Add data of regs with flags to stack
+	STACK_ADD stack_addition = {0, 0, {0}};
+	generate_AF_stack_addition(&stack_addition, &regs, type, FALSE);
+	alt_u16 sp_value = reverse_16(stack_addition.SP); // making it big endian
+	write_buf_mem(sp_value, stack_addition.data, 0, stack_addition.size);
+	for(int i = 0; i < stack_addition.size; i++) {
+		printf("0x%02x ", stack_addition.data[i]);
+	}
+
+	// border addr
+	//addr = 0x5C48;
+
+	// Quick flash of colors to signify end of loading file
+	/*write_io(addr, 0b100);
+	usleep(100000);
+	write_io(addr, 0b010);
+	usleep(100000);
+	write_io(addr, 0b001);
+	usleep(100000);*/
+
+	// Sets actual border color
+	//write_mem(addr, regs.border & 0b111);
+	printf("\r\nBORDER: %x\r\n", regs.border);
+	write_io(0xFFFE, regs.border & 0b111);
+
+	//free(stack_addition.data);
+	//free(routine);
+	close_file();
+
+	//write_buf_mem(0x4000, data, data_offset, sizeof data);
+
+	// stop DMA with NMI on
+	DMA_stop_w_interrupt();
+
+
+	// Restore data overwritten by routine as soon as the snapshot's PC is detected in z80 address bus
+	// This means the z80 is about to start executing the loaded code
+	//int wait_res = wait_for_pc(regs.PC, 10000);
+	int wait_res = wait_until_routine_ends(10000);
+	printf("wait res: %d\r\n", wait_res);
+	if (!wait_res) {
+		DMA_request(10);
+
+		write_buf_mem(NMI_ROUTINE_ADDR, data_bk, 0, data_bk_len);
+		write_buf_mem(OLD_STACK_START_ADDR, bottom_data_bk, 0, OLD_STACK_SIZE);
+
+		DMA_stop(10);
+	}
+	//free(data_bk);
+
+	printf("\r\nLOADED");
+
+	return 0;
+}
+
+int save_SNA(char* filename) {
+	printf("save dma req...\r\n");
+	int ret = DMA_request(10);
+
+	if (ret != 0) {
+		DMA_print_err(ret);
+		return -1;
+	}
+
+	alt_u16 err = init_file_write(filename);
+	if (err) {
+		printf(OPEN_ERR_STR, filename, err);
+		return -1;
+	}
+	// .SNA files are always the same size: 49,179 bytes
+
+	// file write begin, 512 bytes at a time
+	int remaining_bytes = 512;
+	alt_u8 write_buf[remaining_bytes];
+	alt_u16 addr = 0x4000;
+	bool first_block = TRUE;
+
+	int block_num = 2; // just to keep track of the block
+	while (TRUE) {
+		if (0xFFFF - addr < remaining_bytes) {
+			remaining_bytes = 0xFFFF - addr;
+			if (remaining_bytes == 0) break;
+		}
+
+		if (first_block) {
+			int data_len = remaining_bytes - SNA_OFFSET_DATA;
+			read_buf_mem(addr, SNA_OFFSET_DATA, data_len, write_buf);
+			addr += data_len;
+			/*printf("FIRST BLOCK:\r\n");
+			for(int i = 0; i < remaining_bytes; i++) {
+				if (i % 16 == 0) printf("\r\n");
+				printf("0x%02x ", write_buf[i]);
+			}
+			printf("\r\n");
+			*/
+			printf("first block read...\r\n");
+			// write first block to file start
+			// should also keep a backup here to recover from the assembly routine injected later
+
+			first_block = FALSE;
+			continue;
+		}
+
+		read_buf_mem(addr, 0, remaining_bytes, write_buf);
+		addr += remaining_bytes;
+
+		// Just to check final blocks
+		if (block_num > 95) {
+			printf("NEXT BLOCK:\r\n");
+			for(int i = 0; i < remaining_bytes; i++) {
+				if (i % 16 == 0) printf("\r\n");
+				printf("0x%02x ", write_buf[i]);
+			}
+			printf("\r\n");
+		}
+		printf("block %d read...\r\n", block_num++);
+		// append this block to file
+	}
+
+
+	// write routine to extract reg values
+	enum file_type type = SNA;
+	int routine_size = get_SAVE_routine_size();
+	alt_u8 routine[routine_size];
+	generate_SAVE_routine(routine, type);
+
+	write_buf_mem(0x4000, routine, 0, routine_size);
+
+	DMA_stop_w_interrupt();
+
+	// NOW WAIT FOR A COMMAND...
+	enum per_if_type cmd_type = get_if_type();
+	if (cmd_type != STATE || is_write()) {
+		/////// delete file?
+		printf("Wrong command received...\r\n");
+		return -1;
+	}
+
+	ret = DMA_request(10);
+
+	if (ret != 0) {
+		printf("SECOND DMA in SAVE went wrong...\r\n");
+		DMA_print_err(ret);
+		return -1;
+	}
+	REGS regs = generate_regs_save_state();
+	// SAVE
+
+
+	/*
+	ret = DMA_request(10);
+
+	if (ret != 0) {
+		printf("SECOND DMA in SAVE went wrong...\r\n");
+		DMA_print_err(ret);
+		return -1;
+	}
+
+	///// WRITE LOAD REGISTER ROUTINE TO GUARANTEE THE SAME VALUES ARE KEPT
+
+	DMA_stop_w_interrupt();
+
+	//// FIX VISUALS AFTER PC > 0x5800...
+	*/
+
+	return 0;
+}
+
+/* *******************
+ * .z80 format
+ * *******************/
+int get_version_z80(alt_u8* data) {
+	if (data[Z80_OFFSET_PC] != 0 || data[Z80_OFFSET_PC+1] != 0) return 1;
+	if (data[Z80_OFFSET_FLAGS1] == 255) return 1; // because of compatibility, 255 -> v1
+	if (data[Z80_OFFSET_H2_LEN] == 23) return 2;
+	return 3;
+}
+
+bool is_48k(alt_u8* data, int version) {
+	if (version == 1) return TRUE;
+
+	alt_u8 hw_mode = data[Z80_OFFSET_HW];
+	if (hw_mode == HW_48K || hw_mode == HW_48K_IF1) return TRUE;
+
+	return FALSE;
+}
+
+bool is_compressed(alt_u8* data) {
+	alt_u8 flags1 = data[Z80_OFFSET_FLAGS1];
+	if (MASK_FLAGS1_COMPRESSED(flags1)) {
+		return TRUE;
+	}
+	return FALSE;
+}
+
+alt_u16 get_addr_from_page(alt_u8 page) {
+	switch(page) {
+		case 8:
+			return 0x4000;
+		case 4:
+			return 0x8000;
+		case 5:
+			return 0xC000;
+		default:
+			return -1;
+	}
+}
+
+
+alt_u8 get_data_offset(alt_u8* data, int version) {
+	if (version == 1) return Z80_OFFSET_DATA_H1;
+	if (version == 2) return Z80_OFFSET_DATA_H2_v2;
+	if (version == 3) {
+		int h2_len = data[Z80_OFFSET_H2_LEN];
+		if (h2_len == 54) {
+			return Z80_OFFSET_DATA_H2_v3;
+		}
+		if (h2_len == 55) {
+			return Z80_OFFSET_DATA_H2_v3 + 1;
+		}
+	}
+	return -1;
+}
+
+REGS generate_regs_z80(alt_u8* data, int version) {
+	alt_u16 pc;
+	if (version == 1) {
+		pc = conv_data_8_16(data, Z80_OFFSET_PC);
+	} else {
+		pc = conv_data_8_16(data, Z80_OFFSET_PC_H2);
+	}
+
+	alt_u8 flags1 = data[Z80_OFFSET_FLAGS1];
+	alt_u8 flags2 = data[Z80_OFFSET_FLAGS2];
+
+	REGS regs = {
+		.R = (data[Z80_OFFSET_R] & 0x7F) | ((alt_u8)(MASK_FLAGS1_R7(flags1)) << 7),
+		.I = data[Z80_OFFSET_I],
+
+		.Al = data[Z80_OFFSET_A_AUX],
+		.Fl = data[Z80_OFFSET_F_AUX],
+		.Hl = data[Z80_OFFSET_H_AUX],
+		.Ll = data[Z80_OFFSET_L_AUX],
+		.Dl = data[Z80_OFFSET_D_AUX],
+		.El = data[Z80_OFFSET_E_AUX],
+		.Bl = data[Z80_OFFSET_B_AUX],
+		.Cl = data[Z80_OFFSET_C_AUX],
+
+		.A = data[Z80_OFFSET_A],
+		.F = data[Z80_OFFSET_F],
+		.H = data[Z80_OFFSET_H],
+		.L = data[Z80_OFFSET_L],
+		.D = data[Z80_OFFSET_D],
+		.E = data[Z80_OFFSET_E],
+		.B = data[Z80_OFFSET_B],
+		.C = data[Z80_OFFSET_C],
+
+		//.IY = ((data[SNA_OFFSET_IY] << 8) & 0xFF00) | data[SNA_OFFSET_IY+1],
+		.IY = conv_data_8_16(data, Z80_OFFSET_IY),
+		.IX = conv_data_8_16(data, Z80_OFFSET_IX),
+
+		.SP = conv_data_8_16(data, Z80_OFFSET_SP),
+		.PC = pc,
+
+		.IM = MASK_FLAGS2_IM(flags2),
+		.IFF1 = data[Z80_OFFSET_INT_FF],
+		.IFF2 = data[Z80_OFFSET_IFF2],
+		.border = MASK_FLAGS1_BORDER(flags1) >> 1
+
+	};
+
+	return regs;
+}
+
+// For keeping track of run-length compression between blocks
+enum comp_state state = NONE;
+alt_u8 xx; // in case of state = XX, the state of this value needs to be saved
+bool zero_detected = FALSE; // for 0 before ED ED, in case it isn't the end tag
+
+alt_u16 load_compressed_data_block_z80(alt_u16 addr, alt_u8* buffer, int data_offset, int nReadSize) {
+	//printf("LOADING COMPRESSED DATA BLOCK\r\n");
+	alt_u16 addr_return = addr;
+
+	//printf("READ SIZE: %d\r\n", nReadSize);
+
+	// Four-byte code: ED ED xx yy: (byte yy repeats xx times)
+	for (int i = data_offset; i < data_offset + nReadSize; i++) {
+		//printf("\r\n\t|| current i = %d ||", i);
+		alt_u8 data_byte = buffer[i];
+		switch (state) {
+			case NONE:
+				//printf("state 0:");
+
+				// "ED" ED xx yy
+				if (data_byte == 0xED) {
+					state = ED1;
+
+				// For end marker detection ("00" ED ED 00)
+				// If this ends up not being part of the end marker
+				// the 0 must be written
+				} else if (data_byte == 0) {
+					zero_detected = TRUE;
+					state = ZERO;
+
+				// Normal data
+				} else {
+					//printf("(%x): 0x%x; ", addr_return - 0x5B00, data_byte);
+					write_mem(addr_return++, data_byte);
+				}
+				break;
+
+			case ZERO:
+				// Might be end tag
+				if (data_byte == 0xED) {
+					state = ED1;
+				} else {
+					// false alarm, that 0 was data
+					//printf("(%x): 0x%x; ", addr_return - 0x5B00, 0);
+					write_mem(addr_return++, 0);
+					//printf("(%x): 0x%x; ", addr_return - 0x5B00, data_byte);
+					write_mem(addr_return++, data_byte);
+					zero_detected = FALSE;
+					state = NONE;
+				}
+				break;
+			case ED1:
+				//printf("\r\nstate ED1\r\n");
+
+				// ED "ED" xx yy
+				if (data_byte == 0xED) {
+					state = ED2;
+
+				// Turns out it was just 1 0xED
+				} else {
+
+					// If a 0 was before the ED, it was just data
+					if (zero_detected) {
+						//printf("(%x): 0x%x; ", addr_return - 0x5B00, 0);
+						write_mem(addr_return++, 0);
+						zero_detected = FALSE;
+					}
+					// If only one ED happened after all, then write that ED and the current byte
+					//printf("(%x): 0x%x; ", addr_return - 0x5B00, 0xED);
+					write_mem(addr_return++, 0xED);
+					//printf("(%x): 0x%x; ", addr_return - 0x5B00, data_byte);
+					write_mem(addr_return++, data_byte);
+					state = NONE;
+				}
+				break;
+			case ED2:
+				//printf("\r\nstate ED2\r\n");
+
+				// ED ED "xx" yy
+				xx = data_byte;
+
+				// if xx = 0, then ED ED 00 => 00 ED ED 00
+				if (xx == 0) {
+					printf("\r\nEOF tag\r\n");
+					state = NONE; // Should it be this?
+					break;
+				}
+
+				// if 00 ED ED xx yy, then 00 should have been written
+				if (zero_detected) {
+					//printf("(%x): 0x%x; ", addr_return - 0x5B00, 0);
+					write_mem(addr_return++, 0);
+					zero_detected = FALSE;
+				}
+
+				state = XX;
+				break;
+			case XX:
+
+				// ED ED xx "yy"
+				// yy = data_byte
+				// so write data_byte xx amount of times
+				for (int j = 0; j < xx; j++) {
+					//printf("(%x): 0x%x; ", addr_return - 0x5B00, data_byte);
+					write_mem(addr_return++, data_byte);
+
+				}
+				state = NONE;
+				break;
+		}
+	}
+
+	return addr_return;
+}
+
+int load_z80(char* filename) {
+	alt_u16 err = init_file_read(filename);
+	if (err) {
+		printf("opening %s failed: 0x%04X\r\n", filename, err);
+		return -1;
+	}
+
+	int ret = DMA_request(10);
+
+	if (ret != 0) {
+		DMA_print_err(ret);
+		close_file();
+		return -1;
+	}
+
+	int routine_size = get_LOAD_routine_size();
+
+	// Next code based on DE2-115 SD Card reading test code:
+	alt_u8 szRead[256];
+	int nReadSize=0, nFileSize, nTotalReadSize=0;
+
+	nFileSize = file_size();
+
+	alt_u16 addr = 0x4000;
+	REGS regs;
+
+	//////////// for files with v2 or v3 ////////////
+	bool is_v1_data_format = TRUE;
+
+
+	// Array to keep block header, in case it spans more than one data block
+	// the data that was obtained from the previous block stays in this array
+	alt_u8 block_header[DATA_BLOCK_HEADER_SIZE] = {0};
+
+	// size of the array, to keep track of how much data has already been added to it
+	int block_header_obtained_size = 0;
+
+	// keeps track of data block size that is left to process
+	alt_u16 data_block_size = 0;
+
+	unsigned int bytes_read = 0;
+
+	////////////////////
+	bool bSuccess = TRUE;
+	bool first_block = TRUE;
+
+	// For data
+	int data_offset;
+	bool compressed;
+
+	if (nReadSize > sizeof(szRead))
+		nReadSize = sizeof(szRead);
+
+	int load_border_color = 0;
+	while(bSuccess && nTotalReadSize < nFileSize){
+		nReadSize = sizeof(szRead);
+		if (nReadSize > (nFileSize - nTotalReadSize))
+			nReadSize = (nFileSize - nTotalReadSize);
+
+		// Sets border color for loading
+		write_io(0xFFFE, (load_border_color++) & 0b111);
+		if (load_border_color > 7) load_border_color = 0;
+
+
+		err = file_read(szRead, nReadSize, &bytes_read);
+		if (!err && bytes_read > 0){
+			data_offset = 0;
+			if (first_block) {
+
+				// Getting version of the file
+				int version = get_version_z80(szRead);
+				is_v1_data_format = version == 1;
+
+				// Making sure it is for the 48k
+				if (!is_48k(szRead, version)) {
+					printf("%s is not for 48k\r\n", filename);
+					DMA_stop(10);
+					close_file();
+					return -1;
+				}
+
+				// Get start of data dependent on version
+				data_offset = get_data_offset(szRead, version);
+				if (data_offset == -1) {
+					printf("Problem getting data offset (new version of .z80 file?)\r\n");
+					DMA_stop(10);
+					close_file();
+					return -1;
+				}
+
+				// Save REG values
+				regs = generate_regs_z80(szRead, version);
+
+				// Check if data is compressed or not
+				compressed = is_compressed(szRead);
+
+				// saving header of data block for files with version 2 or 3
+				// Since this is the first SD card data block, it is guaranteed to have one of these (if v2 or v3)
+				if (!is_v1_data_format) {
+					printf("block header: ");
+					for (int i = 0; i < DATA_BLOCK_HEADER_SIZE; i++) {
+						block_header[i] = szRead[data_offset+i];
+						printf("%02x ", block_header[i]);
+					}
+					printf("\r\n");
+					data_offset += DATA_BLOCK_HEADER_SIZE; // adjust data offset based on header size
+					data_block_size = reverse_16(conv_data_8_16(block_header, 0));
+					block_header_obtained_size = DATA_BLOCK_HEADER_SIZE;
+
+					// setting address based on page
+					addr = get_addr_from_page(block_header[2]);
+					printf("ADDR (first): %04x\r\n", addr);
+					if (addr == -1) {
+						printf("There is an invalid page in the file...\r\n");
+						bSuccess = FALSE;
+						break;
+					}
+				}
+
+				first_block = FALSE;
+			}
+
+			if (!is_v1_data_format) {
+
+				// if the full block header wasn't obtained
+				if (block_header_obtained_size < DATA_BLOCK_HEADER_SIZE) {
+					for(int i = block_header_obtained_size; i < DATA_BLOCK_HEADER_SIZE; i++) {
+						block_header[i] = szRead[data_offset];
+						data_offset++;
+					}
+					block_header_obtained_size = DATA_BLOCK_HEADER_SIZE;
+					// Save the new data block's size
+					data_block_size = reverse_16(conv_data_8_16(block_header, 0));
+
+					// setting address based on page
+					addr = get_addr_from_page(block_header[2]);
+					printf("ADDR: %04x\r\n", addr);
+					if (addr == -1) {
+						printf("There is an invalid page in the file...\r\n");
+						bSuccess = FALSE;
+						break;
+					}
+				}
+
+			}
+
+			// amount of data to read in this SD card data block
+			int read_size = nReadSize - data_offset;
+			int remaining_block_size = read_size;
+
+			// If v2 or v3 file, check if data block occupies the whole SD card data block or not
+			// and updates read_size to only read up to the .z80 data block
+			if (!is_v1_data_format) {
+				if (data_block_size < read_size)
+					read_size = data_block_size;
+			}
+
+			// ONLY write to RAM if the block describes page 8, or if the file is v1 (no pages)
+			if (!compressed && is_v1_data_format) { // only v1 uses the "is compressed" bit
+				write_buf_mem(addr, szRead, data_offset, read_size);
+				addr += read_size;
+			} else {
+				addr = load_compressed_data_block_z80(addr, szRead, data_offset, read_size);
+			}
+
+			// Updating data offset in SD card data block
+			data_offset += read_size;
+
+			if (!is_v1_data_format) {
+				// Updating amount left to read for this current .z80 data block
+				data_block_size -= read_size;
+
+				// In case this .z80 data block has ended before the SD card data block
+				if (data_block_size == 0) {
+					block_header_obtained_size = 0; // New block header being obtained
+					remaining_block_size -= read_size; // obtaining remaining block size
+
+					// Calculating how much of the header I can obtain now
+					int header_to_obtain = DATA_BLOCK_HEADER_SIZE;
+					if (header_to_obtain > remaining_block_size) {
+						header_to_obtain = remaining_block_size;
+					}
+
+					// Adding new block header data
+					printf("new block header: ");
+					for(int i = 0; i < header_to_obtain; i++) {
+						block_header[i] = szRead[data_offset+i];
+						printf("%02x ", block_header[i]);
+					}
+					printf("\r\n");
+					block_header_obtained_size = header_to_obtain; // updating how much of the header has been obtained
+
+					// setting address based on page
+					addr = get_addr_from_page(block_header[2]);
+					printf("ADDR: %04x\r\n", addr);
+					if (addr == -1) {
+						printf("There is an invalid page in the file...\r\n");
+						bSuccess = FALSE;
+						break;
+					}
+
+					data_offset += header_to_obtain; // move data offset in case there is still more
+					read_size = nReadSize - data_offset; // updating read size in case there is more data
+
+					// If the whole new data block header was obtained
+					if (block_header_obtained_size == DATA_BLOCK_HEADER_SIZE) {
+						// Save the new data block's size
+						data_block_size = reverse_16(conv_data_8_16(block_header, 0));
+
+						// If there is still more data
+						if (read_size > 0) {
+							/*if (!compressed) {
+								write_buf_mem(addr, szRead, data_offset, read_size);
+								addr += read_size;
+							} else {*/
+							addr = load_compressed_data_block_z80(addr, szRead, data_offset, read_size);
+							//}
+							data_block_size -= read_size; // updating data block size (what is left)
+						}
+					}
+				}
+			}
+			nTotalReadSize += nReadSize;
+		} else {
+			bSuccess = FALSE;
+			printf("\nFailed to read the file\n");
+		}
+	} // while
+
+	printf("\r\nLeft the loop\r\n");
+	printf("ADDRESS: %x\r\n", addr);
+
+	// Now all the data is loaded, and the routine must be formed with REGS
+	enum file_type type = Z80;
+
+	//printf("REGS:\r\n");
+	//printf("|PC: %04x\t\tSP: %04x\r\n", regs.PC, regs.SP);
+	//printf("|AF: %04x\t\tAF': %04x\r\n", ((regs.F << 8) & 0xFF00) | regs.A, ((regs.Fl << 8) & 0xFF00) | regs.Al);
+	//printf("|BC: %04x\t\tBC': %04x\r\n", ((regs.C << 8) & 0xFF00) | regs.B, ((regs.Cl << 8) & 0xFF00) | regs.Bl);
+	//printf("|DE: %04x\t\tDE': %04x\r\n", ((regs.E << 8) & 0xFF00) | regs.D, ((regs.El << 8) & 0xFF00) | regs.Dl);
+	//printf("|HL: %04x\t\tHL': %04x\r\n", ((regs.L << 8) & 0xFF00) | regs.H, ((regs.Ll << 8) & 0xFF00) | regs.Hl);
+	//printf("|IX: %04x\t\tIY: %04x\r\n", regs.IX, regs.IY);
+	//printf("|I: %02x\t\tR: %02x\r\n", regs.I, regs.R);
+
+	// Save data that routine will overwrite
+	int data_bk_len = get_LOAD_routine_size();
+	alt_u8 data_bk[data_bk_len];
+	read_buf_mem(NMI_ROUTINE_ADDR, 0, data_bk_len, data_bk);
+
+	// Save data that the stack additions overwrite
+	alt_u8 bottom_data_bk[OLD_STACK_SIZE];
+	read_buf_mem(OLD_STACK_START_ADDR, 0, OLD_STACK_SIZE, bottom_data_bk);
+
+	alt_u8 routine[routine_size];
+	generate_LOAD_routine(routine, regs, type);
+
+	write_buf_mem(NMI_ROUTINE_ADDR, routine, 0, routine_size);
+
+	printf("\r\n------------\r\n");
+
+	STACK_ADD stack_addition = {0, 0, {0}};
+	generate_AF_stack_addition(&stack_addition, &regs, type, TRUE);
+	alt_u16 sp_value = reverse_16(stack_addition.SP); // making it big endian
+	write_buf_mem(sp_value, stack_addition.data, 0, stack_addition.size);
+	for(int i = 0; i < stack_addition.size; i++) {
+		printf("0x%02x ", stack_addition.data[i]);
+	}
+
+	// border addr
+	//addr = 0x5C48;
+
+	// Quick flash of colors to signify end of loading file
+	/*write_io(addr, 0b100);
+	usleep(100000);
+	write_io(addr, 0b010);
+	usleep(100000);
+	write_io(addr, 0b001);
+	usleep(100000);*/
+
+	// Sets actual border color
+	write_io(0xFFFE, regs.border & 0b111);
+
+	state = NONE; // redundant?
+	//free(stack_addition.data);
+	//free(routine);
+	close_file();
+
+	// stop DMA with NMI on
+	DMA_stop_w_interrupt();
+
+	// Restore data overwritten by routine as soon as the snapshot's PC is detected in z80 address bus
+	// This means the z80 is about to start executing the loaded code
+	//int wait_res = wait_for_pc(regs.PC, 10000);
+	int wait_res = wait_until_routine_ends(10000);
+	if (!wait_res) {
+		// PATCH OVER CORRECT DATA
+		DMA_request(10);
+
+		write_buf_mem(NMI_ROUTINE_ADDR, data_bk, 0, data_bk_len);
+		write_buf_mem(OLD_STACK_START_ADDR, bottom_data_bk, 0, OLD_STACK_SIZE);
+
+		DMA_stop(10);
+	}
+	//free(data_bk);
+
+	printf("\r\nLOADED\r\n");
+
+	return 0;
+
+}
+
+REGS generate_regs_save_state() {
+	alt_u16 addr = conv_data_8_16_sep(SP_ADDR_L, SP_ADDR_H);
+	alt_u8 sp[2];
+	read_buf_mem(addr, 0, 2, sp);
+
+	// AF', AF and PC in stack:
+	addr = conv_data_8_16(sp, 0);
+	alt_u8 afl[2];
+	read_buf_mem(addr, 0, 2, afl);
+
+	addr += 2;
+	alt_u8 af[2];
+	read_buf_mem(addr, 0, 2, af);
+
+	addr += 2;
+	alt_u8 pc[2];
+	read_buf_mem(addr, 0, 2, pc);
+
+	// IX and IY regs
+	addr = conv_data_8_16_sep(IX_ADDR_L, IX_ADDR_H);
+	alt_u8 ix[2];
+	read_buf_mem(addr, 0, 2, ix);
+
+	addr = conv_data_8_16_sep(IY_ADDR_L, IY_ADDR_H);
+	alt_u8 iy[2];
+	read_buf_mem(addr, 0, 2, iy);
+
+	REGS regs = {
+		.R = read_mem(conv_data_8_16_sep(R_ADDR_L, R_ADDR_H)),
+		.I = read_mem(conv_data_8_16_sep(I_ADDR_L, I_ADDR_H)),
+
+		.Al = afl[1],
+		.F1 = afl[0],
+		.Hl = read_mem(conv_data_8_16_sep(HL_AUX_ADDR_L + 1, HL_AUX_ADDR_H)),//hla[1], // read_buf_mem(addr, 0, 2, hla);
+		.Ll = read_mem(conv_data_8_16_sep(HL_AUX_ADDR_L, HL_AUX_ADDR_H)),
+		.Dl = read_mem(conv_data_8_16_sep(DE_AUX_ADDR_L + 1, DE_AUX_ADDR_H)),
+		.El = read_mem(conv_data_8_16_sep(DE_AUX_ADDR_L, DE_AUX_ADDR_H)),
+		.Bl = read_mem(conv_data_8_16_sep(BC_AUX_ADDR_L + 1, BC_AUX_ADDR_H)),
+		.Cl = read_mem(conv_data_8_16_sep(BC_AUX_ADDR_L, BC_AUX_ADDR_H)),
+
+		.A = af[1],
+		.F = af[0],
+		.Hl = read_mem(conv_data_8_16_sep(HL_ADDR_L + 1, HL_ADDR_H)),//hla[1], // read_buf_mem(addr, 0, 2, hla);
+		.Ll = read_mem(conv_data_8_16_sep(HL_ADDR_L, HL_ADDR_H)),
+		.Dl = read_mem(conv_data_8_16_sep(DE_ADDR_L + 1, DE_ADDR_H)),
+		.El = read_mem(conv_data_8_16_sep(DE_ADDR_L, DE_ADDR_H)),
+		.Bl = read_mem(conv_data_8_16_sep(BC_ADDR_L + 1, BC_DDR_H)),
+		.Cl = read_mem(conv_data_8_16_sep(BC_ADDR_L, BC_ADDR_H)),
+
+		.IY = conv_data_8_16(iy, 0),
+		.IX = conv_data_8_16(ix, 0),
+
+		.SP = conv_data_8_16(sp, 0),
+		.PC = conv_data_8_16(pc, 0), // PC is in the stack
+
+		.IM = 1,
+		.IFF1 = 1,
+		.IFF2 = 1,
+		.border = 0
+	};
+
+	return regs;
+	/*
+	alt_u16 addr = conv_data_8_16_sep(SP_ADDR_L, SP_ADDR_H);
+	alt_u8 sp[2];
+	read_buf_mem(addr, 0, 2, sp);
+
+	addr = conv_data_8_16_sep(HL_ADDR_L, HL_ADDR_H);
+	alt_u8 hl[2];
+	read_buf_mem(addr, 0, 2, hl);
+
+	addr = conv_data_8_16_sep(BC_ADDR_L, BC_ADDR_H);
+	alt_u8 bc[2];
+	read_buf_mem(addr, 0, 2, bc);
+
+	addr = conv_data_8_16_sep(DE_ADDR_L, DE_ADDR_H);
+	alt_u8 de[2];
+	read_buf_mem(addr, 0, 2, de);
+
+	addr = conv_data_8_16_sep(HL_AUX_ADDR_L, HL_AUX_ADDR_H);
+	alt_u8 hla[2];
+	read_buf_mem(addr, 0, 2, hla);
+
+	addr = conv_data_8_16_sep(BC_AUX_ADDR_L, BC_AUX_ADDR_H);
+	alt_u8 bca[2];
+	read_buf_mem(addr, 0, 2, bca);
+
+	addr = conv_data_8_16_sep(DE_AUX_ADDR_L, DE_AUX_ADDR_H);
+	alt_u8 dea[2];
+	read_buf_mem(addr, 0, 2, dea);
+
+	addr = conv_data_8_16_sep(IX_ADDR_L, IX_ADDR_H);
+	alt_u8 ix[2];
+	read_buf_mem(addr, 0, 2, ix);
+
+	addr = conv_data_8_16_sep(IY_ADDR_L, IY_ADDR_H);
+	alt_u8 iy[2];
+	read_buf_mem(addr, 0, 2, iy);
+
+	addr = conv_data_8_16_sep(I_ADDR_L, I_ADDR_H);
+	alt_u8 i = read_mem(addr);
+
+	addr = conv_data_8_16_sep(R_ADDR_L, R_ADDR_H);
+	alt_u8 r = read_mem(addr);
+	//...
+
+	REGS regs = {
+			.R = r,
+			.I = i,
+
+			.Al = ...,
+			.F1 = ...,
+			.Hl = hla[1],
+			.Ll = hla[0],
+			.Dl = dea[1],
+			.El = dea[0],
+			.Bl = bca[1],
+			.Cl = bca[0],
+
+			.A = ...,
+			.F = ...,
+			.H = hl[1],
+			.L = hl[0],
+			.D = de[1],
+			.E = de[0],
+			.B = bc[1],
+			.C = bc[0],
+
+			.IY = conv_data_8_16(iy, 0),
+			.IX = conv_data_8_16(ix, 0),
+
+			.SP = conv_data_8_16(sp, 0),
+			.PC = 0, // PC is in the stack
+
+			.IM = 1,
+			.IFF1 = 1,
+			.IFF2 = 1,
+			.border = 0
+	};
+	 */
+}

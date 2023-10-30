@@ -399,6 +399,8 @@ void generate_SAVE_routine(alt_u8* routine, const enum file_type type) {
 	// No way of obtaining current interrupt info, so using default values based on how ZX Spectrum works:
 	// Interrupt Mode: 1; IFF1: 0
 
+	/////////////////TODO;; CHANGE SP VALUE TO END OF VIDEO MEMORY
+
 	// Command to "notify" NIOS that the register values are there
 	routine[i++] = IN_A_N;
 	routine[i++] = STATE_IF;

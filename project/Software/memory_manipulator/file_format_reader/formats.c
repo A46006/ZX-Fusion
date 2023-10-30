@@ -4,6 +4,8 @@
 
 #include "..\spectrum_comm\Peripheral_Interfaces\per_hal.h"
 
+#define OPEN_ERR_STR "opening %s failed: 0x%04X\r\n"
+
 int load_file(char* filename, int name_len) {
 	char* extension = filename + (name_len-4);
 	//printf("EXTENSION %s\r\n", extension);
@@ -70,7 +72,7 @@ int load_SNA(char* filename) {
 	alt_u16 err = init_file_read(filename);
 
 	if (err) {
-		printf("opening %s failed: 0x%04X\r\n", filename, err);
+		printf(OPEN_ERR_STR, filename, err);
 		return -1;
 	}
 
@@ -235,7 +237,11 @@ int save_SNA(char* filename) {
 		return -1;
 	}
 
-	// do something with hFat, like create the file/add metadata
+	alt_u16 err = init_file_write(filename);
+	if (err) {
+		printf(OPEN_ERR_STR, filename, err);
+		return -1;
+	}
 	// .SNA files are always the same size: 49,179 bytes
 
 	// file write begin, 512 bytes at a time
@@ -274,14 +280,14 @@ int save_SNA(char* filename) {
 		addr += remaining_bytes;
 
 		// Just to check final blocks
-		/*if (block_num > 95) {
+		if (block_num > 95) {
 			printf("NEXT BLOCK:\r\n");
 			for(int i = 0; i < remaining_bytes; i++) {
 				if (i % 16 == 0) printf("\r\n");
 				printf("0x%02x ", write_buf[i]);
 			}
 			printf("\r\n");
-		}*/
+		}
 		printf("block %d read...\r\n", block_num++);
 		// append this block to file
 	}
@@ -295,19 +301,29 @@ int save_SNA(char* filename) {
 
 	write_buf_mem(0x4000, routine, 0, routine_size);
 
+	close_file();
+
 	DMA_stop_w_interrupt();
 
 	// NOW WAIT FOR A COMMAND...
-	/*enum per_if_type cmd_type = get_if_type();
-	if (type != STATE || is_write()) {
+	enum per_if_type cmd_type = get_if_type();
+	if (cmd_type != STATE || is_write()) {
 		/////// delete file?
 		printf("Wrong command received...\r\n");
 		return -1;
 	}
 
-	DMA_request(10);
-	generate_regs_save_state();
-	*/
+	ret = DMA_request(10);
+
+	if (ret != 0) {
+		printf("SECOND DMA in SAVE went wrong...\r\n");
+		DMA_print_err(ret);
+		return -1;
+	}
+	REGS regs = generate_regs_save_state();
+	// SAVE REG VALUES INTO FILE
+	// THIS MEANS YOU NEED TO OPEN THE FILE AGAIN
+	// WHAT FLAGS THO.... MUST TEST IF I CAN REPLACE ONLY THE FIRST BLOCK
 
 
 	/*
@@ -319,7 +335,6 @@ int save_SNA(char* filename) {
 		return -1;
 	}
 
-	///// EXTRACT VALUES OF REGISTERS...
 	///// WRITE LOAD REGISTER ROUTINE TO GUARANTEE THE SAME VALUES ARE KEPT
 
 	DMA_stop_w_interrupt();
@@ -867,8 +882,139 @@ REGS generate_regs_save_state() {
 	alt_u8 sp[2];
 	read_buf_mem(addr, 0, 2, sp);
 
+	// AF', AF and PC in stack:
+	addr = conv_data_8_16(sp, 0);
+	alt_u8 afl[2];
+	read_buf_mem(addr, 0, 2, afl);
+
+	addr += 2;
+	alt_u8 af[2];
+	read_buf_mem(addr, 0, 2, af);
+
+	addr += 2;
+	alt_u8 pc[2];
+	read_buf_mem(addr, 0, 2, pc);
+
+	// IX and IY regs
+	addr = conv_data_8_16_sep(IX_ADDR_L, IX_ADDR_H);
+	alt_u8 ix[2];
+	read_buf_mem(addr, 0, 2, ix);
+
+	addr = conv_data_8_16_sep(IY_ADDR_L, IY_ADDR_H);
+	alt_u8 iy[2];
+	read_buf_mem(addr, 0, 2, iy);
+
+	REGS regs = {
+		.R = read_mem(conv_data_8_16_sep(R_ADDR_L, R_ADDR_H)),
+		.I = read_mem(conv_data_8_16_sep(I_ADDR_L, I_ADDR_H)),
+
+		.Al = afl[1],
+		.F1 = afl[0],
+		.Hl = read_mem(conv_data_8_16_sep(HL_AUX_ADDR_L + 1, HL_AUX_ADDR_H)),//hla[1], // read_buf_mem(addr, 0, 2, hla);
+		.Ll = read_mem(conv_data_8_16_sep(HL_AUX_ADDR_L, HL_AUX_ADDR_H)),
+		.Dl = read_mem(conv_data_8_16_sep(DE_AUX_ADDR_L + 1, DE_AUX_ADDR_H)),
+		.El = read_mem(conv_data_8_16_sep(DE_AUX_ADDR_L, DE_AUX_ADDR_H)),
+		.Bl = read_mem(conv_data_8_16_sep(BC_AUX_ADDR_L + 1, BC_AUX_ADDR_H)),
+		.Cl = read_mem(conv_data_8_16_sep(BC_AUX_ADDR_L, BC_AUX_ADDR_H)),
+
+		.A = af[1],
+		.F = af[0],
+		.Hl = read_mem(conv_data_8_16_sep(HL_ADDR_L + 1, HL_ADDR_H)),//hla[1], // read_buf_mem(addr, 0, 2, hla);
+		.Ll = read_mem(conv_data_8_16_sep(HL_ADDR_L, HL_ADDR_H)),
+		.Dl = read_mem(conv_data_8_16_sep(DE_ADDR_L + 1, DE_ADDR_H)),
+		.El = read_mem(conv_data_8_16_sep(DE_ADDR_L, DE_ADDR_H)),
+		.Bl = read_mem(conv_data_8_16_sep(BC_ADDR_L + 1, BC_DDR_H)),
+		.Cl = read_mem(conv_data_8_16_sep(BC_ADDR_L, BC_ADDR_H)),
+
+		.IY = conv_data_8_16(iy, 0),
+		.IX = conv_data_8_16(ix, 0),
+
+		.SP = conv_data_8_16(sp, 0),
+		.PC = conv_data_8_16(pc, 0), // PC is in the stack
+
+		.IM = 1,
+		.IFF1 = 1,
+		.IFF2 = 1,
+		.border = 0
+	};
+
+	return regs;
+	/*
+	alt_u16 addr = conv_data_8_16_sep(SP_ADDR_L, SP_ADDR_H);
+	alt_u8 sp[2];
+	read_buf_mem(addr, 0, 2, sp);
+
 	addr = conv_data_8_16_sep(HL_ADDR_L, HL_ADDR_H);
 	alt_u8 hl[2];
 	read_buf_mem(addr, 0, 2, hl);
+
+	addr = conv_data_8_16_sep(BC_ADDR_L, BC_ADDR_H);
+	alt_u8 bc[2];
+	read_buf_mem(addr, 0, 2, bc);
+
+	addr = conv_data_8_16_sep(DE_ADDR_L, DE_ADDR_H);
+	alt_u8 de[2];
+	read_buf_mem(addr, 0, 2, de);
+
+	addr = conv_data_8_16_sep(HL_AUX_ADDR_L, HL_AUX_ADDR_H);
+	alt_u8 hla[2];
+	read_buf_mem(addr, 0, 2, hla);
+
+	addr = conv_data_8_16_sep(BC_AUX_ADDR_L, BC_AUX_ADDR_H);
+	alt_u8 bca[2];
+	read_buf_mem(addr, 0, 2, bca);
+
+	addr = conv_data_8_16_sep(DE_AUX_ADDR_L, DE_AUX_ADDR_H);
+	alt_u8 dea[2];
+	read_buf_mem(addr, 0, 2, dea);
+
+	addr = conv_data_8_16_sep(IX_ADDR_L, IX_ADDR_H);
+	alt_u8 ix[2];
+	read_buf_mem(addr, 0, 2, ix);
+
+	addr = conv_data_8_16_sep(IY_ADDR_L, IY_ADDR_H);
+	alt_u8 iy[2];
+	read_buf_mem(addr, 0, 2, iy);
+
+	addr = conv_data_8_16_sep(I_ADDR_L, I_ADDR_H);
+	alt_u8 i = read_mem(addr);
+
+	addr = conv_data_8_16_sep(R_ADDR_L, R_ADDR_H);
+	alt_u8 r = read_mem(addr);
 	//...
+
+	REGS regs = {
+			.R = r,
+			.I = i,
+
+			.Al = ...,
+			.F1 = ...,
+			.Hl = hla[1],
+			.Ll = hla[0],
+			.Dl = dea[1],
+			.El = dea[0],
+			.Bl = bca[1],
+			.Cl = bca[0],
+
+			.A = ...,
+			.F = ...,
+			.H = hl[1],
+			.L = hl[0],
+			.D = de[1],
+			.E = de[0],
+			.B = bc[1],
+			.C = bc[0],
+
+			.IY = conv_data_8_16(iy, 0),
+			.IX = conv_data_8_16(ix, 0),
+
+			.SP = conv_data_8_16(sp, 0),
+			.PC = 0, // PC is in the stack
+
+			.IM = 1,
+			.IFF1 = 1,
+			.IFF2 = 1,
+			.border = 0
+	};
+	 */
 }
