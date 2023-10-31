@@ -1,24 +1,5 @@
-/*long f;
-char buf[8];
-void* h = 0; // heap
-
-extern unsigned char __data_start;
-extern unsigned char __data_end;
-extern unsigned char __bss_start;
-extern unsigned char __bss_end;
-extern unsigned char __heap_start;
-
-
-int FreeRam() {
-  unsigned char top;
-  return &top - &__bss_end;
-  //return __brkval ? &top - __brkval : &top - &__bss_end;
-}
-*/
-
 #include <stdio.h>
 #include <math.h>
-//#include <time.h>
 //#include ".\SD\test_sd.c"
 #include ".\file_format_reader\formats.h"
 #include ".\file_format_reader\asm_opcodes.h"
@@ -35,7 +16,6 @@ int FreeRam() {
 
 #define MENU_CODE_LEN 1170
 
-//#define JAN_1_2023 1672531200
 
 const alt_u8 menu_code[MENU_CODE_LEN] = {
 	0xFB, 0xFD, 0xCB, 0x02, 0xEE, 0x21, 0x00, 0x00, 0x22, 0x00, 0x40, 0xCD,
@@ -138,34 +118,12 @@ const alt_u8 menu_code[MENU_CODE_LEN] = {
 	0x00, 0x00, 0x00, 0x04, 0x10, 0x14
 };
 
-//void volume_mounted_cb(char* volume_label);
-
-/*
-char a[50] = "01234567890123456789012";
-char b[50] = "01234567890123456789012";
-char c[50] = "01234567890123456789012";
-char d[50] = "01234567890123456789012";
-char e[50] = "01234567890123456789012";
-char f[50] = "01234567890123456789012";
-char g[50] = "01234567890123456789012";
-char h[50] = "01234567890123456789012";
-char i[50] = "01234567890123456789012";
-char j[50] = "01234567890123456789012";
-char k[50] = "01234567890123456789012";
-char l[50] = "01234567890123456789012";
-char m[50] = "01234567890123456789012";
-char n[50] = "01234567890123456789012";
-char o[50] = "01234567890123456789012";
-char p[50] = "01234567890123456789012";
-*/
-//char** files = {a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p};
-
-
-//char names[FILES_PER_PAGE * FILENAME_LEN];
 FILENAMES curr_page_file_list;// = {0, names};
 char curr_game_filename[FILENAME_LEN_SD];
 int curr_game_filename_len;
 int curr_game_idx;
+bool sd_empty = FALSE;
+bool no_sd = FALSE;
 
 int max_page; // holds the number of pages based on the number of supported files in the SD Card
 int curr_page;
@@ -204,39 +162,6 @@ int inject_menu() {
 	per_cmd_ack();
 	return 0;
 }
-
-/*int my_list_test() {
-	printf("Processing...\r\n");
-
-	FAT_HANDLE hFat = 0;
-
-	do {
-		hFat = init_SD();
-	} while (!hFat);
-
-	if (hFat){
-		printf("sdcard mount success!\n");
-		printf("Root Directory Item Count:%d\n", Fat_FileCount(hFat));
-		//Fat_Test(hFat, "text.txt");
-	}else{
-		//printf("Failed to mount the SDCARD!\r\nPlease insert the SDCARD into DE2-115 board and press KEY3.\r\n");
-		printf("Failed to mount the SDCARD!\r\nPlease insert the SDCARD into DE2-115 board and reset.\r\n");
-		return -1;
-	}
-
-
-	FILENAMES list = list_files(hFat);
-	if (list.size == 0 && list.filenames == NULL) {
-		printf("bad listing\r\n");
-		close_SD(hFat);
-		return -1;
-	}
-	print_filenames(list, 1);
-
-	close_SD(hFat);
-
-	return 0;
-}*/
 
 void save_state(FILENAMES* list) {
 	printf("SAVE STATE WAS REQUESTED\r\n");
@@ -308,27 +233,49 @@ void load_page(FILENAMES* list) {
 
 	DMA_request(10);
 
-	// obtaining the list of file names from the requested page
-	list_files_of_page(list, page_num);
+	if (no_sd) {
+		list->size = 0;
+	} else {
+		// obtaining the list of file names from the requested page
+		list_files_of_page(list, page_num);
+	}
 
 	int n_entries = list->size;
 	n_entries++; // to account for the title
 
 	// Writing the menu text table for file list menu
 	alt_u16 addr = PAGE_DATA_ADDR;
-	write_mem(addr++, n_entries); // DEFB $n_entries
+	write_mem(addr++, n_entries + (list->size <= 0)); // the number of entries (+1 if it was 0)
 	char* title = "SD LOADER";
 	write_buf_mem(addr, title, 0, strlen(title));
 	addr += strlen(title);
 	write_mem(addr++, 0xFF); // terminate char
 
-	printf("SIZE OF PAGE: %d\r\n", list->size);
+	//printf("SIZE OF PAGE: %d\r\n", list->size);
 
 	// writing the filenames to the menu's data region
-	for (int i = 0; i < list->size; i++) {
-		int idx = i * FILENAME_LEN;
-		int name_len = strlen((list->filenames + idx));
-		write_buf_mem(addr, list->filenames + idx, 0, name_len);
+	if (list->size > 0) {
+		sd_empty = FALSE;
+		for (int i = 0; i < list->size; i++) {
+			int idx = i * FILENAME_LEN;
+			int name_len = strlen((list->filenames + idx));
+			write_buf_mem(addr, list->filenames + idx, 0, name_len);
+			addr += name_len;
+		}
+	// if there is no list of files
+	} else {
+		//char* err_name = "NO FILES, RESET TO LEAVE..®";
+		char* err_name = "NO SUPPORTED FILES, RESET..®";
+		if (no_sd) {
+			err_name = "NO SD CARD, RESET TO LEAVE..®";
+		} else {
+			sd_empty = TRUE;
+			//char* err_name = "NO SUPPORTED FILES, RESET TO LEAVE..®";
+		}
+		int name_len = strlen(err_name);
+		//printf("0x%02X\r\n", err_name[name_len-1]);
+		//err_name[name_len] = '\0';
+		write_buf_mem(addr, err_name, 0, name_len);
 		addr += name_len;
 	}
 
@@ -410,68 +357,15 @@ void load_game(FILENAMES* list) {
 //unsigned int freeBytes;
 
 int main(int argc, char *argv[]) {
-	//h = malloc(1); // dynamic alloc 1byte to get heap position
-
-	//printf("START\r\n");
-
 	curr_page_file_list.size = 0;
-	//char* filenames[FILES_PER_PAGE] = {0};
-	//char n[32] = "01234567890123456789012";
-	/*for (int i = 0; i < FILES_PER_PAGE; i++) {
-		//memset(filenames[i], 0, 32);
-		char n[32] = "01234567890123456789012";
-		filenames[i] = n;
-		//memcpy(filenames[i], n, strlen(n));
-		//curr_page_file_list->filenames[i] = n;
-	}*/
-	//memset(curr_page_file_list.filenames, 0, FILES_PER_PAGE * sizeof(char**));
-	/*for (int i = 0; i < FILES_PER_PAGE; i++) {
-		char n[32];
-		memset(n, i, 32);
-		curr_page_file_list.filenames[i] = n;
-	}*/
-	/*
-	curr_page_file_list.filenames[0] = a;
-	curr_page_file_list.filenames[1] = b;
-	curr_page_file_list.filenames[2] = c;
-	curr_page_file_list.filenames[3] = d;
-	curr_page_file_list.filenames[4] = e;
-	curr_page_file_list.filenames[5] = f;
-	curr_page_file_list.filenames[6] = g;
-	curr_page_file_list.filenames[7] = h;
-	curr_page_file_list.filenames[8] = i;
-	curr_page_file_list.filenames[9] = j;
-	curr_page_file_list.filenames[10] = k;
-	curr_page_file_list.filenames[11] = l;
-	curr_page_file_list.filenames[12] = m;
-	curr_page_file_list.filenames[13] = n;
-	curr_page_file_list.filenames[14] = o;
-	curr_page_file_list.filenames[15] = p
-	*/
 
-	//curr_page_file_list.filenames = files;
-	//memcpy(curr_page_file_list.filenames, filenames, FILES_PER_PAGE);
-	//memcpy(names, 'f', FILES_PER_PAGE * FILENAME_LEN);
 	memcpy(curr_page_file_list.filenames, (int)'f', FILES_PER_PAGE * FILENAME_LEN);
-	//curr_page_file_list.filenames = names;
 
 	curr_game_idx = 0;
 	curr_game_filename_len = 0;
-	//curr_game_filename = malloc(50 * sizeof(char));
-	//test_sd();
 
 	//SD_Test("SENBAL.SNA");
-
-	//my_list_test();
-
-	//sna_file_test();
-
 	//return z80_file_test();
-
-	//return load_SNA("SENBAL.SNA");
-	//return load_SNA("DAAW.SNA");
-	//return load_SNA("DIABLO1.SNA");
-	//return load_SNA("CLOUD99.SNA");
 
 	DMA_init();
 	printf("4");
@@ -484,63 +378,26 @@ int main(int argc, char *argv[]) {
 	}
 
 	printf("Initializing SD...\r\n");
-//	int tries = 10;
-//	while (tries-- > 0) {
-//		sd_card = init_SD();
-//		if (sd_card.context.id) break;
-//		printf("retrying...");
-//	}
-	init_SD();
+	int err = init_SD();
+	if (err) {
+		// seems like mount returns OK anyway, and only mounts in later functions
+		// will still keep this here though
+		//printf("No SD card\r\n");
+		no_sd = TRUE;
+	}
 
-	//return load_z80(hFat, "BOMBJ.z80");
-	//return load_z80(hFat, "BUBBOB.z80");
-	//return load_z80(hFat, "BUBBUS.z80");
-
-	//return load_z80(hFat, "MANICM.z80"); // NORMAL
-	//return load_z80("MISSILGZ.z80"); // CONTROLLER REQUIRED?
-
-//	printf("\r\nRetrieving files");
-//	FILENAMES list = list_files(hFat);
-//	if (list.size == 0 && list.filenames == NULL) {
-//		printf("bad listing\r\n");
-//		close_SD(hFat);
-//		return -1;
-//	}
 
 	// Calculating maximum amount of pages
 	max_page = num_of_pages();
 	printf("NUM OF PAGES: %d\r\n", max_page);
+	if (max_page < 0) {
+		printf("no sd\r\n");
+		max_page = 0;
+		no_sd = TRUE;
+	}
 	curr_page = 0;
 
-//	void* sp = NULL;
-//	freeBytes = FreeRam();
-//	sprintf(buf, "%p", &sp);
-//	printf(buf);
-//	sprintf(buf, " %p", &h);
-//	printf(buf);
-//	sprintf(buf, " %d ", (unsigned int)&sp - (unsigned int)&h);
-//	printf(buf);
-//	printf(freeBytes);
-	//list_files_of_page(&curr_page_file_list, curr_page);
-
-
-//	freeBytes = FreeRam();
-//	sprintf(buf, "%p", &sp);
-//	printf(buf);
-//	sprintf(buf, " %p", &h);
-//	printf(buf);
-//	sprintf(buf, " %d ", (unsigned int)&sp - (unsigned int)&h);
-//	printf(buf);
-//	printf(freeBytes);
-//
-
-	//////////////////////////
-
-	//print_filenames(&curr_page_file_list, 0);
-
-	/////////////////////////
-
-
+	// Main execution loop
 	while (1) {
 		printf("\r\nListening...\r\n");
 		listen_for_en();
@@ -562,15 +419,16 @@ int main(int argc, char *argv[]) {
 				break;
 			case SD:
 				if (is_read()) {
-					// free old list first
-					//free_file_list(curr_page_file_list);
 					// get new list
 					load_page(&curr_page_file_list);
 				} else if (is_write()) {
-					load_game(&curr_page_file_list);
+					// load a game
+					if (!no_sd && !sd_empty) load_game(&curr_page_file_list);
 				}
 				break;
 			case INIT:
+				// Should only happen once at the beginning/after every reset.
+				// if this command happened during this loop, the spectrum crashed
 				printf("shouldn't be happening\r\n");
 				break;
 			default:

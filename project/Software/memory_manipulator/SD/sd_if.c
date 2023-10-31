@@ -7,17 +7,17 @@ FIL fil;
 const char* SUPPORTED_EXTENSIONS[] = {".z80", ".sna"};
 #define N_SUPPORTED_EXTENSIONS (sizeof SUPPORTED_EXTENSIONS / sizeof (const char *))
 
-void init_SD(void) {
+int init_SD(void) {
 	memset(&fs, 0, sizeof(FATFS));
 	//fs = malloc(sizeof (FATFS)); 	// Get work area for the volume
-	f_mount(&fs, "", 0);			// Mount the default drive
+	return f_mount(&fs, "", 0);			// Mount the default drive
 }
 
 /**
  * Checks input file's extension and compares it to supported ones
  */
 bool is_supported_file(char* filename, size_t len) {
-	if (len > FILENAME_LEN) return FALSE;
+	if (len >= FILENAME_LEN-1) return FALSE;
 	// Making extensions lower case for comparisons
 	char to_compare[len];
 	strncpy(to_compare, filename, len);

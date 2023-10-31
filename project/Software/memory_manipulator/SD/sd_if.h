@@ -3,8 +3,8 @@
 #include "..\terasic_lib\terasic_includes.h"
 
 #define FILENAME_NUM 50
-#define FILENAME_LEN_SD 32
-#define FILENAME_LEN 31
+#define FILENAME_LEN_SD 33
+#define FILENAME_LEN 33
 #define FILES_PER_PAGE 16
 
 typedef struct {
@@ -13,7 +13,7 @@ typedef struct {
 } FILENAMES;
 
 //SD_DRIVER init_SD(SM_VOLUME_MOUNTED_CALLBACK volume_mounted_callback);
-void init_SD(void);
+int init_SD(void);
 bool is_supported_file(char* filename, size_t len);
 
 int num_of_pages(void);

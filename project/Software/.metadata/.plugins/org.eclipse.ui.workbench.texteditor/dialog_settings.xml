@@ -2,12 +2,13 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="generate_regs_save_state" key="selection"/>
+		<item value="disk_initialize" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="disk_initialize"/>
 			<item value="generate_regs_save_state"/>
 			<item value="REGS regs"/>
 			<item value="malloc"/>
@@ -15,7 +16,6 @@
 			<item value="f_unlinkl"/>
 			<item value="ff_open"/>
 			<item value="ff_dele"/>
-			<item value="delete"/>
 		</list>
 		<list key="replacehistory">
 			<item value="50"/>
