@@ -99,7 +99,7 @@ void list_files_of_page(FILENAMES* filenames, int page_num) {
 						discarded_filename_num++;
 						// if the requested page's start index corresponds to the skipped files, leave
 						// so that the next file browse advancement is a wanted file
-						//if (page_start == discarded_filename_num) break;
+						if (page_start == discarded_filename_num) break;
 					}
 
 					// get next entry

@@ -1,14 +1,18 @@
-15:37:06 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+12:18:07 **** Incremental Build of configuration Nios II for project memory_manipulator ****
 make all 
 Info: Building ../memory_manipulator_bsp/
 C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
 [BSP build complete]
-Info: Compiling SD/sd_if.c to obj/default/SD/sd_if.o
-nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_INSTRUCTION_EMULATION -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/SD/sd_if.o SD/sd_if.c
-SD/sd_if.c: In function 'is_supported_file':
-SD/sd_if.c:25:23: warning: implicit declaration of function 'tolower' [-Wimplicit-function-declaration]
-   to_compare[len-i] = tolower(filename[len-i]);
-                       ^
+Info: Compiling SD/ff15/sdmmc.c to obj/default/SD/ff15/sdmmc.o
+nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_INSTRUCTION_EMULATION -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/SD/ff15/sdmmc.o SD/ff15/sdmmc.c
+SD/ff15/sdmmc.c: In function 'deselect':
+SD/ff15/sdmmc.c:174:7: warning: unused variable 'd' [-Wunused-variable]
+  BYTE d;
+       ^
+SD/ff15/sdmmc.c: In function 'select':
+SD/ff15/sdmmc.c:189:7: warning: unused variable 'd' [-Wunused-variable]
+  BYTE d;
+       ^
 Info: Linking memory_manip_attempt.elf
 nios2-elf-g++  -T'../memory_manipulator_bsp//linker.x' -msys-crt0='../memory_manipulator_bsp//obj/HAL/src/crt0.o' -msys-lib=hal_bsp -L../memory_manipulator_bsp/   -Wl,-Map=memory_manip_attempt.map   -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o memory_manip_attempt.elf obj/default/SD/ff15/diskio.o obj/default/SD/ff15/ff.o obj/default/SD/ff15/ffsystem.o obj/default/SD/ff15/ffunicode.o obj/default/SD/ff15/sdmmc.o obj/default/SD/sd_if.o obj/default/SD/test_sd.o obj/default/file_format_reader/file_format_aux.o obj/default/file_format_reader/formats.o obj/default/main.o obj/default/spectrum_comm/DMA/dma_hal.o obj/default/spectrum_comm/Peripheral_Interfaces/per_hal.o obj/default/terasic_lib/debug.o -lm -msys-lib=m
 nios2-elf-insert memory_manip_attempt.elf --thread_model hal --cpu_name cpu --qsys true --simulation_enabled false --stderr_dev jtag_uart --stdin_dev jtag_uart --stdout_dev jtag_uart --sopc_system_name nios_sd_loader --jdi H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../DE2_115_GOLDEN_TOP.jdi --sopcinfo H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../nios_sd_loader.sopcinfo
@@ -17,25 +21,42 @@ Info:                            44 KBytes free for stack + heap.
 Info: Creating memory_manip_attempt.objdump
 nios2-elf-objdump --disassemble --syms --all-header memory_manip_attempt.elf >memory_manip_attempt.objdump
 [memory_manip_attempt build complete]
-15:37:11 **** Build of configuration Nios II for project memory_manipulator ****
+12:18:13 **** Build of configuration Nios II for project memory_manipulator ****
 make all 
 Info: Building ../memory_manipulator_bsp/
 C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
 [BSP build complete]
 [memory_manip_attempt build complete]
-15:37:12 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+12:18:15 **** Incremental Build of configuration Nios II for project memory_manipulator ****
 make all 
 Info: Building ../memory_manipulator_bsp/
 C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
 [BSP build complete]
 [memory_manip_attempt build complete]
-15:39:15 **** Build of configuration Nios II for project memory_manipulator ****
+12:20:46 **** Build of configuration Nios II for project memory_manipulator ****
 make all 
 Info: Building ../memory_manipulator_bsp/
 C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
 [BSP build complete]
+Info: Compiling SD/ff15/sdmmc.c to obj/default/SD/ff15/sdmmc.o
+nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_INSTRUCTION_EMULATION -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/SD/ff15/sdmmc.o SD/ff15/sdmmc.c
+SD/ff15/sdmmc.c: In function 'deselect':
+SD/ff15/sdmmc.c:174:7: warning: unused variable 'd' [-Wunused-variable]
+  BYTE d;
+       ^
+SD/ff15/sdmmc.c: In function 'select':
+SD/ff15/sdmmc.c:189:7: warning: unused variable 'd' [-Wunused-variable]
+  BYTE d;
+       ^
+Info: Linking memory_manip_attempt.elf
+nios2-elf-g++  -T'../memory_manipulator_bsp//linker.x' -msys-crt0='../memory_manipulator_bsp//obj/HAL/src/crt0.o' -msys-lib=hal_bsp -L../memory_manipulator_bsp/   -Wl,-Map=memory_manip_attempt.map   -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o memory_manip_attempt.elf obj/default/SD/ff15/diskio.o obj/default/SD/ff15/ff.o obj/default/SD/ff15/ffsystem.o obj/default/SD/ff15/ffunicode.o obj/default/SD/ff15/sdmmc.o obj/default/SD/sd_if.o obj/default/SD/test_sd.o obj/default/file_format_reader/file_format_aux.o obj/default/file_format_reader/formats.o obj/default/main.o obj/default/spectrum_comm/DMA/dma_hal.o obj/default/spectrum_comm/Peripheral_Interfaces/per_hal.o obj/default/terasic_lib/debug.o -lm -msys-lib=m
+nios2-elf-insert memory_manip_attempt.elf --thread_model hal --cpu_name cpu --qsys true --simulation_enabled false --stderr_dev jtag_uart --stdin_dev jtag_uart --stdout_dev jtag_uart --sopc_system_name nios_sd_loader --jdi H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../DE2_115_GOLDEN_TOP.jdi --sopcinfo H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../nios_sd_loader.sopcinfo
+Info: (memory_manip_attempt.elf) 204 KBytes program size (code + initialized data).
+Info:                            44 KBytes free for stack + heap.
+Info: Creating memory_manip_attempt.objdump
+nios2-elf-objdump --disassemble --syms --all-header memory_manip_attempt.elf >memory_manip_attempt.objdump
 [memory_manip_attempt build complete]
-15:39:16 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+12:20:48 **** Incremental Build of configuration Nios II for project memory_manipulator ****
 make all 
 Info: Building ../memory_manipulator_bsp/
 C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
