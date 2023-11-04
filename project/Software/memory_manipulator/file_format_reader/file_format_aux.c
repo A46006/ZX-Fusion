@@ -19,7 +19,7 @@ int get_LOAD_routine_size() {
 }
 
 int get_SAVE_routine_size() {
-	return 51;
+	return 54;
 }
 
 //////////////////////////////////////

@@ -66,10 +66,6 @@ void read_buf_mem(alt_u16 addr, int start, int len, alt_u8* ret) {
 }
 
 void write_mem(alt_u16 addr, const alt_u8 data) {
-	//if (addr >= 0x4000 && addr < 0x4100) {
-	if (addr == 0x5800) {
-		printf("0x%02x (%c), ", data, data);
-	}
 	DATA_OUT;
 
 	ctrl_bus_state &= WRITE_SET;

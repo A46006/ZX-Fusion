@@ -30,7 +30,7 @@ obj/default/file_format_reader/formats.o: file_format_reader/formats.c \
  file_format_reader/..\SD\sd_if.h file_format_reader/..\SD\.\ff15\ff.h \
  file_format_reader/..\SD\.\ff15\ffconf.h \
  file_format_reader/..\SD\..\terasic_lib\terasic_includes.h \
- file_format_reader/asm_opcodes.h file_format_reader/mem_addrs.h \
+ file_format_reader/mem_addrs.h file_format_reader/asm_opcodes.h \
  file_format_reader/..\spectrum_comm\Peripheral_Interfaces\per_hal.h \
  file_format_reader/..\spectrum_comm\Peripheral_Interfaces\../Peripheral_Interfaces/per_hw.h \
  h:\mi13d\tfm\final-repo-actual-46006\zx-fusion\project\software\memory_manipulator\terasic_lib\terasic_includes.h
@@ -101,9 +101,9 @@ file_format_reader/..\SD\.\ff15\ffconf.h:
 
 file_format_reader/..\SD\..\terasic_lib\terasic_includes.h:
 
-file_format_reader/asm_opcodes.h:
-
 file_format_reader/mem_addrs.h:
+
+file_format_reader/asm_opcodes.h:
 
 file_format_reader/..\spectrum_comm\Peripheral_Interfaces\per_hal.h:
 

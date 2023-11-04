@@ -1,6 +1,6 @@
 #include "formats.h"
 #include "asm_opcodes.h"
-#include "mem_addrs.h"
+
 
 #include "..\spectrum_comm\Peripheral_Interfaces\per_hal.h"
 
@@ -171,25 +171,17 @@ int load_SNA(char* filename) {
 
 	write_buf_mem(NMI_ROUTINE_ADDR, routine, 0, routine_size);
 
-	for(int i = 0; i < routine_size; i++) {
-		printf("0x%02x ", routine[i]);
-	}
-
 	// Add data of regs with flags to stack
 	STACK_ADD stack_addition = {0, 0, {0}};
 	generate_AF_stack_addition(&stack_addition, &regs, type, FALSE);
 	alt_u16 sp_value = reverse_16(stack_addition.SP); // making it big endian
 	write_buf_mem(sp_value, stack_addition.data, 0, stack_addition.size);
-	for(int i = 0; i < stack_addition.size; i++) {
-		printf("0x%02x ", stack_addition.data[i]);
-	}
-
 
 	// Sets actual border color
 	write_io(0xFFFE, regs.border & 0b111);
 
 	// border addr
-	addr = 0x5C48;
+	addr = BORDER_COLOR_ADDR;
 
 	// Forming border number (bits 2-0 for ink, bits 5-3 for paper)
 	// Dark colors are detected by the green bit. If the color is dark, use white for ink
@@ -222,9 +214,46 @@ int load_SNA(char* filename) {
 	}
 	//free(data_bk);
 
-	printf("\r\nLOADED");
-
 	return 0;
+}
+
+void fill_sna_header(alt_u8* buffer, REGS* regs) {
+	buffer[SNA_OFFSET_I] = regs->I;
+	buffer[SNA_OFFSET_HL_AUX] = regs->Ll;
+	buffer[SNA_OFFSET_HL_AUX+1] = regs->Hl;
+	buffer[SNA_OFFSET_DE_AUX] = regs->El;
+	buffer[SNA_OFFSET_DE_AUX+1] = regs->Dl;
+	buffer[SNA_OFFSET_BC_AUX] = regs->Cl;
+	buffer[SNA_OFFSET_BC_AUX+1] = regs->Bl;
+
+	buffer[SNA_OFFSET_F_AUX] = regs->Fl;
+	buffer[SNA_OFFSET_A_AUX] = regs->Al;
+
+	buffer[SNA_OFFSET_HL] = regs->L;
+	buffer[SNA_OFFSET_HL+1] = regs->H;
+	buffer[SNA_OFFSET_DE] = regs->E;
+	buffer[SNA_OFFSET_DE+1] = regs->D;
+	buffer[SNA_OFFSET_BC] = regs->C;
+	buffer[SNA_OFFSET_BC+1] = regs->B;
+
+	buffer[SNA_OFFSET_IY] = regs->IY >> 8; // low byte
+	buffer[SNA_OFFSET_IY+1] = regs->IY & 0xFF; // high byte
+
+	buffer[SNA_OFFSET_IX] = regs->IX >> 8; // low byte
+	buffer[SNA_OFFSET_IX+1] = regs->IX & 0xFF; // high byte
+
+	buffer[SNA_OFFSET_IFF2] = regs->IFF1 << 2;
+	buffer[SNA_OFFSET_R] = regs->R;
+
+	buffer[SNA_OFFSET_F] = regs->F;
+	buffer[SNA_OFFSET_A] = regs->A;
+
+	buffer[SNA_OFFSET_SP] = regs->SP >> 8;
+	buffer[SNA_OFFSET_SP+1] = regs->SP & 0xFF;
+
+	buffer[SNA_OFFSET_INT_MODE] = regs->IM;
+	printf("IM: 0x%02X\r\n", regs->IM);
+	buffer[SNA_OFFSET_BORDER] = regs->border;
 }
 
 int save_SNA(char* filename) {
@@ -246,8 +275,10 @@ int save_SNA(char* filename) {
 	// file write begin, 512 bytes at a time
 	int remaining_bytes = 512;
 	alt_u8 write_buf[remaining_bytes];
+	alt_u8 first_block_buf[remaining_bytes];
 	alt_u16 addr = 0x4000;
 	bool first_block = TRUE;
+	unsigned int bytes_written;
 
 	int block_num = 2; // just to keep track of the block
 	while (TRUE) {
@@ -260,17 +291,14 @@ int save_SNA(char* filename) {
 			int data_len = remaining_bytes - SNA_OFFSET_DATA;
 			read_buf_mem(addr, SNA_OFFSET_DATA, data_len, write_buf);
 			addr += data_len;
-			/*printf("FIRST BLOCK:\r\n");
-			for(int i = 0; i < remaining_bytes; i++) {
-				if (i % 16 == 0) printf("\r\n");
-				printf("0x%02x ", write_buf[i]);
-			}
-			printf("\r\n");
-			*/
-			printf("first block read...\r\n");
-			// write first block to file start
-			// should also keep a backup here to recover from the assembly routine injected later
 
+			// saving the first block to write it with the register values later
+			memcpy(first_block_buf, write_buf, remaining_bytes);
+
+			// write first block to file start
+			file_write(write_buf, remaining_bytes, &bytes_written);
+
+			//printf("block 1: %d...\r\n", bytes_written);
 			first_block = FALSE;
 			continue;
 		}
@@ -278,66 +306,72 @@ int save_SNA(char* filename) {
 		read_buf_mem(addr, 0, remaining_bytes, write_buf);
 		addr += remaining_bytes;
 
-		// Just to check final blocks
-		if (block_num > 95) {
-			printf("NEXT BLOCK:\r\n");
-			for(int i = 0; i < remaining_bytes; i++) {
-				if (i % 16 == 0) printf("\r\n");
-				printf("0x%02x ", write_buf[i]);
-			}
-			printf("\r\n");
-		}
-		printf("block %d read...\r\n", block_num++);
-		// append this block to file
+		// write block to file
+		file_write(write_buf, remaining_bytes, &bytes_written);
+		//printf("block %d: %d...\r\n", block_num++, bytes_written);
 	}
 
+	close_file();
 
 	// write routine to extract reg values
 	enum file_type type = SNA;
 	int routine_size = get_SAVE_routine_size();
-	alt_u8 routine[routine_size];
-	generate_SAVE_routine(routine, type);
+	alt_u8 save_routine[routine_size];
+	generate_SAVE_routine(save_routine, type);
 
-	write_buf_mem(0x4000, routine, 0, routine_size);
-
-	close_file();
+	write_buf_mem(0x4000, save_routine, 0, routine_size);
 
 	DMA_stop_w_interrupt();
 
+
 	// NOW WAIT FOR A COMMAND...
+	printf("WAITING...\r\n");
+	listen_for_en();
 	enum per_if_type cmd_type = get_if_type();
-	if (cmd_type != STATE || is_write()) {
+	if (cmd_type != STATE) {
 		/////// delete file?
 		printf("Wrong command received...\r\n");
 		return -1;
 	}
+	printf("cmd rcvd\r\n");
 
+
+	// when the command is received, get DMA to retrieve register values
 	ret = DMA_request(10);
-
 	if (ret != 0) {
 		printf("SECOND DMA in SAVE went wrong...\r\n");
 		DMA_print_err(ret);
 		return -1;
 	}
+
+	// generate regs struct with the save state's registers
 	REGS regs = generate_regs_save_state();
-	// SAVE REG VALUES INTO FILE
-	// THIS MEANS YOU NEED TO OPEN THE FILE AGAIN
-	// WHAT FLAGS THO.... MUST TEST IF I CAN REPLACE ONLY THE FIRST BLOCK
 
+	// fill header of file with register values
+	fill_sna_header(first_block_buf, &regs);
 
-	/*
-	ret = DMA_request(10);
-
-	if (ret != 0) {
-		printf("SECOND DMA in SAVE went wrong...\r\n");
-		DMA_print_err(ret);
+	// Saving register values into file header
+	err = init_file_write_open(filename);
+	if (err) {
+		printf(OPEN_ERR_STR, filename, err);
 		return -1;
 	}
+	file_write(first_block_buf, 512, &bytes_written);
+	printf("reg values written: %d\r\n", bytes_written);
+	close_file();
 
-	///// WRITE LOAD REGISTER ROUTINE TO GUARANTEE THE SAME VALUES ARE KEPT
+
+	// using the register values to "load" the game again
+	// this is to resume the software appropriately after this save state pause
+	routine_size = get_LOAD_routine_size();
+	alt_u8 load_routine[routine_size];
+	generate_LOAD_routine(load_routine, regs, type);
+
+	write_buf_mem(NMI_ROUTINE_ADDR, load_routine, 0, routine_size);
 
 	DMA_stop_w_interrupt();
 
+	/*
 	//// FIX VISUALS AFTER PC > 0x5800...
 	*/
 
@@ -829,15 +863,12 @@ int load_z80(char* filename) {
 	generate_AF_stack_addition(&stack_addition, &regs, type, TRUE);
 	alt_u16 sp_value = reverse_16(stack_addition.SP); // making it big endian
 	write_buf_mem(sp_value, stack_addition.data, 0, stack_addition.size);
-	for(int i = 0; i < stack_addition.size; i++) {
-		printf("0x%02x ", stack_addition.data[i]);
-	}
 
 	// Sets actual border color
 	write_io(0xFFFE, regs.border & 0b111);
 
 	// border addr
-	addr = 0x5C48;
+	addr = BORDER_COLOR_ADDR;
 
 	// Forming border number (bits 2-0 for ink, bits 5-3 for paper)
 	// Dark colors are detected by the green bit. If the color is dark, use white for ink
@@ -929,10 +960,11 @@ REGS generate_regs_save_state() {
 		.SP = conv_data_8_16(sp, 0),
 		.PC = conv_data_8_16(pc, 0), // PC is in the stack
 
+		// cannot obtain next 3 values, so
 		.IM = 1,
 		.IFF1 = 1,
 		.IFF2 = 1,
-		.border = 0
+		.border = read_mem(BORDER_COLOR_ADDR) >> 3
 	};
 
 	return regs;

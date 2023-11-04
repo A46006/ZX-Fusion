@@ -4019,7 +4019,7 @@ FRESULT f_write (
 	UINT* bw			/* Number of bytes written */
 )
 {
-	printf("file write bytes: %d\r\n", btw);
+	//printf("file write bytes: %d\r\n", btw);
 	FRESULT res;
 	FATFS *fs;
 	DWORD clst;

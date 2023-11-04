@@ -189,14 +189,20 @@ void save_state(FILENAMES* list) {
 
 	}
 
-	// obtaining the last save number
-	for (int i = curr_game_idx+1; i < list->size; i++) { // maybe use 0 at beginning?
-		int idx = i * FILENAME_LEN;
-		if (strncmp(curr_game_filename, list->filenames + idx, curr_game_filename_len) == 0 && (list->filenames[idx + curr_game_filename_len]) == '_') {
-			printf("STRING: %s\r\n", list->filenames + idx);
+	// TODO: adjust this function to work with the lazy loading
+	// search multiple pages for all the files, one by one
+	// when there is a number missing, use that one
+	// if it goes up to 99, use 00
+	// user shouldn't have that many saves
 
+	// obtaining the last save number
+	for (int i = 0; i < list->size; i++) { // maybe use 0 at beginning?
+		int idx = i * FILENAME_LEN;
+		if (
+				strncmp(curr_game_filename, list->filenames + idx, curr_game_filename_len) == 0 &&
+				(list->filenames[idx + curr_game_filename_len]) == '_'
+		) {
 			int next_num = string_to_num(list->filenames + idx, curr_game_filename_len+3, 2);
-			printf("FOUND ANOTHER: %d\r\n", next_num);
 			if (next_num > curr_save_num) curr_save_num = next_num;
 		}
 	}
@@ -215,13 +221,13 @@ void save_state(FILENAMES* list) {
 	strncat(filename, save_num, 2);
 	strncat(filename, ".sna", 4);
 	printf("FINAL FILENAME:%s\r\n", filename);
-	printf("FILENAME OOF: %02x", filename[4]); // there is a random 1 value in names with 4 letters
+	//printf("FILENAME OOF: %02x", filename[4]); // there is a random 1 value in names with 4 letters
 
-	/*int ret = save_SNA(filename);
+	int ret = save_SNA(filename);
 	if (ret) {
 		printf("Save file went wrong\r\n");
 	}
-	*/
+
 	//	 */char filename[curr_game_filename_len+6];
 	//strncpy(filename, curr_game_filename, curr_game_filename_len);
 }
@@ -337,11 +343,9 @@ void load_game(FILENAMES* list) {
 
 	// saving filename globally, without extension
 	curr_game_filename_len = name_len - 4;
-	strncpy(curr_game_filename, list_to_use->filenames + idx, curr_game_filename_len);
+	strncpy(curr_game_filename, filename, curr_game_filename_len);
 	curr_game_filename[curr_game_filename_len] = '\0';
 
-
-	printf("GAME SELECTED before: %s\r\n", filename);
 	filename[name_len-1] = filename[name_len-1] - 0x80;
 
 	printf("GAME SELECTED: %s\r\n", filename);
@@ -430,6 +434,12 @@ int main(int argc, char *argv[]) {
 				// Should only happen once at the beginning/after every reset.
 				// if this command happened during this loop, the spectrum crashed
 				printf("shouldn't be happening\r\n");
+				printf("Injecting menu...\r\n");
+				int res = inject_menu();
+				if (res == -1) {
+					printf("inject menu went wrong\r\n");
+					return res;
+				}
 				break;
 			default:
 				printf("default\r\n");

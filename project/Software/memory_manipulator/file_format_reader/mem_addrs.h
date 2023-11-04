@@ -1,5 +1,6 @@
 #define BORDER_COLOR_ADDR_H 0x5C
 #define BORDER_COLOR_ADDR_L 0x48
+#define BORDER_COLOR_ADDR 0x5C48
 
 
 

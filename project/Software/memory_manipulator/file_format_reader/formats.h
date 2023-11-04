@@ -2,6 +2,7 @@
 #include "file_format_aux.h"
 #include "..\spectrum_comm\DMA\dma_hal.h"
 #include "..\SD\sd_if.h"
+#include "mem_addrs.h"
 
 /* *******************
  * .SNA format
@@ -130,6 +131,7 @@ int load_file(char* filename, int name_len);
 /* SNA */
 REGS generate_regs_SNA(alt_u8* data);
 int load_SNA(char* filename);
+void fill_sna_header(alt_u8* buffer, REGS* regs);
 int save_SNA(char* filename);
 
 /* Z80 */
