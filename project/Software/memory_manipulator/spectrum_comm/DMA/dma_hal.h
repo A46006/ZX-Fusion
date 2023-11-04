@@ -3,7 +3,7 @@
 #define TIMEOUT -1
 #define ALREADY_DONE -2
 
-#define END_OF_SCREEN 0x57FF
+#define END_OF_SCREEN 0x5800
 
 void DMA_init();
 

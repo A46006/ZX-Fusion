@@ -399,7 +399,10 @@ void generate_SAVE_routine(alt_u8* routine, const enum file_type type) {
 	// No way of obtaining current interrupt info, so using default values based on how ZX Spectrum works:
 	// Interrupt Mode: 1; IFF1: 0
 
-	/////////////////TODO;; CHANGE SP VALUE TO END OF VIDEO MEMORY
+	alt_u16 sp = 0x5800;
+	routine[i++] = LD_SP_NN;
+	routine[i++] = sp >> 8;//(sp >> 8) - 4;//(regs.SP >> 8) - 4; // setting sp so the subsequent PC push doesn't overwrite anything
+	routine[i++] = sp & 0xFF;
 
 	// Command to "notify" NIOS that the register values are there
 	routine[i++] = IN_A_N;
@@ -407,6 +410,6 @@ void generate_SAVE_routine(alt_u8* routine, const enum file_type type) {
 	
 	routine[i++] = HALT_ASM;
 
-	// LENGTH OF CODE UNTIL NOW: 51
+	// LENGTH OF CODE UNTIL NOW: 54
 }
 

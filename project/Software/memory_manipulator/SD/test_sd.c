@@ -24,7 +24,7 @@ int test_sd () {
 	*/
 	FRESULT err;
 
-	err = init_file_write("test.txt");
+	err = init_file_write_create("test.txt");
 	if (err) {
 		printf("open to write test.txt FAILED: %d\r\n", err);
 		close_sd();

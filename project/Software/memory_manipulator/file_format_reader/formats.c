@@ -109,12 +109,14 @@ int load_SNA(char* filename) {
 	if (nReadSize > sizeof(szRead))
 		nReadSize = sizeof(szRead);
 
-	int load_border_color = 0;
+	int load_border_color = 4;
 	while(bSuccess && nTotalReadSize < nFileSize){
 
 		// Sets border color for loading
-		write_io(0xFFFE, (load_border_color++) & 0b111);
-		if (load_border_color > 7) load_border_color = 0;
+		write_io(0xFFFE, load_border_color & 0b111);
+		load_border_color = ~load_border_color;
+		//if (load_border_color == 2) load_border_color = 5;
+		//else load_border_color = 2;
 
 		nReadSize = sizeof(szRead);
 		if (nReadSize > (nFileSize - nTotalReadSize))
@@ -182,21 +184,18 @@ int load_SNA(char* filename) {
 		printf("0x%02x ", stack_addition.data[i]);
 	}
 
-	// border addr
-	//addr = 0x5C48;
-
-	// Quick flash of colors to signify end of loading file
-	/*write_io(addr, 0b100);
-	usleep(100000);
-	write_io(addr, 0b010);
-	usleep(100000);
-	write_io(addr, 0b001);
-	usleep(100000);*/
 
 	// Sets actual border color
-	//write_mem(addr, regs.border & 0b111);
-	printf("\r\nBORDER: %x\r\n", regs.border);
 	write_io(0xFFFE, regs.border & 0b111);
+
+	// border addr
+	addr = 0x5C48;
+
+	// Forming border number (bits 2-0 for ink, bits 5-3 for paper)
+	// Dark colors are detected by the green bit. If the color is dark, use white for ink
+	int border_num = ((regs.border & 0b111) << 3) | ((regs.border & 0b100) ? 0 : 0b111);
+	write_mem(addr, border_num);
+
 
 	//free(stack_addition.data);
 	//free(routine);
@@ -237,7 +236,7 @@ int save_SNA(char* filename) {
 		return -1;
 	}
 
-	alt_u16 err = init_file_write(filename);
+	alt_u16 err = init_file_write_create(filename);
 	if (err) {
 		printf(OPEN_ERR_STR, filename, err);
 		return -1;
@@ -619,15 +618,15 @@ int load_z80(char* filename) {
 	if (nReadSize > sizeof(szRead))
 		nReadSize = sizeof(szRead);
 
-	int load_border_color = 0;
+	int load_border_color = 4;
 	while(bSuccess && nTotalReadSize < nFileSize){
 		nReadSize = sizeof(szRead);
 		if (nReadSize > (nFileSize - nTotalReadSize))
 			nReadSize = (nFileSize - nTotalReadSize);
 
 		// Sets border color for loading
-		write_io(0xFFFE, (load_border_color++) & 0b111);
-		if (load_border_color > 7) load_border_color = 0;
+		write_io(0xFFFE, load_border_color & 0b111);
+		load_border_color = ~load_border_color;
 
 
 		err = file_read(szRead, nReadSize, &bytes_read);
@@ -834,19 +833,17 @@ int load_z80(char* filename) {
 		printf("0x%02x ", stack_addition.data[i]);
 	}
 
-	// border addr
-	//addr = 0x5C48;
-
-	// Quick flash of colors to signify end of loading file
-	/*write_io(addr, 0b100);
-	usleep(100000);
-	write_io(addr, 0b010);
-	usleep(100000);
-	write_io(addr, 0b001);
-	usleep(100000);*/
-
 	// Sets actual border color
 	write_io(0xFFFE, regs.border & 0b111);
+
+	// border addr
+	addr = 0x5C48;
+
+	// Forming border number (bits 2-0 for ink, bits 5-3 for paper)
+	// Dark colors are detected by the green bit. If the color is dark, use white for ink
+	int border_num = ((regs.border & 0b111) << 3) | ((regs.border & 0b100) ? 0 : 0b111);
+	write_mem(addr, border_num);
+
 
 	state = NONE; // redundant?
 	//free(stack_addition.data);

@@ -244,8 +244,12 @@ FRESULT init_file_read(char* filename) {
 	return f_open(&fil, filename, FA_READ);
 }
 
-FRESULT init_file_write(char* filename) {
+FRESULT init_file_write_create(char* filename) {
 	return f_open(&fil, filename, FA_WRITE | FA_CREATE_ALWAYS);
+}
+
+FRESULT init_file_write_open(char* filename) {
+	return f_open(&fil, filename, FA_WRITE | FA_OPEN_ALWAYS);
 }
 
 FRESULT file_read(alt_u8* buffer, int len, int* bytes_read) {
@@ -268,6 +272,122 @@ int file_size(void) {
 	return f_size(&fil);
 }
 
+int create_file(char* filename) {
+	/////////////// TEST.TXT CREATION AND POPULATION ////////////////////////
+	FRESULT err;
+	int len = 512;
+	alt_u8 buffer[len];
+
+	err = init_file_write_create(filename);
+	if (err) {
+		printf("open to write test.txt FAILED: %d\r\n", err);
+		close_sd();
+		return -1;
+	}
+	int bytes_read;
+
+	printf("test.txt opened/created\r\n");
+
+	for (int i = 0; i < len; i++) {
+		buffer[i] = 0xAA;
+	}
+
+	int bytes_written;
+	err = file_write(buffer, len, &bytes_written);
+	if (err) {
+		printf("err write1: %d\r\n", err);
+	}
+	printf("bytes written 1: %d\r\n", bytes_written);
+
+	for (int i = 0; i < len; i++) {
+		buffer[i] = 0x55;
+	}
+
+	err = file_write(buffer, len, &bytes_written);
+	if (err) {
+		printf("err write2: %d\r\n", err);
+	}
+	printf("bytes written 2: %d\r\n", bytes_written);
+
+	close_file();
+	printf("write done\r\n");
+	return 0;
+}
+
+int read_file(char* filename) {
+	////////////////////// TEST.TXT READ BACK ///////////////////////
+	FRESULT err;
+	int len = 512;
+	alt_u8 buffer[len];
+	int bytes_read;
+
+	err = init_file_read(filename);
+	if (err) {
+		printf("open to read test.txt FAILED: %d\r\n", err);
+		close_sd();
+		return -1;
+	}
+	printf("test.txt opened to read\r\n");
+
+	int size = file_size();
+	printf("text.txt size: %d bytes\r\n");
+
+	int bytes_to_read = len;
+	while(1) {
+		if (bytes_to_read > size) {
+			bytes_to_read = size;
+		}
+
+		err = file_read(buffer, bytes_to_read, &bytes_read);
+		if (err) {
+			printf("err: %d\r\n", err);
+			break;
+		}
+		printf("\r\n bytes_read: %d\r\n", bytes_read);
+		if (bytes_read == 0) break;
+		for (int i = 0; i < len; i++) {
+			if (i % 16 == 0) printf("\r\n");
+			printf("%02X ", buffer[i]);
+		}
+		size -= len;
+		//printf("%s\r\n", buffer);
+		//printf("\r\n");
+	}
+	close_file();
+	return 0;
+}
+
+int replace_file_first_sec(char* filename) {
+	/////////////// TEST.TXT CREATION AND POPULATION ////////////////////////
+	FRESULT err;
+	int len = 512;
+	alt_u8 buffer[len];
+
+	err = init_file_write_open(filename);
+	if (err) {
+		printf("open to write test.txt FAILED: %d\r\n", err);
+		close_sd();
+		return -1;
+	}
+	int bytes_read;
+
+	printf("test.txt opened/created\r\n");
+
+	for (int i = 0; i < len; i++) {
+		buffer[i] = 0xDE;
+	}
+
+	int bytes_written;
+	err = file_write(buffer, len, &bytes_written);
+	if (err) {
+		printf("err write1: %d\r\n", err);
+	}
+
+	close_file();
+	printf("write done\r\n");
+	return 0;
+}
+
 int main () {
 	init_SD();
 	printf("MOUNTED\r\n");
@@ -288,55 +408,24 @@ int main () {
 
 	names = list_files_of_page(2);
 	print_filenames(names, TRUE);
-	FRESULT err;
 
-	err = init_file_write("test.txt");
-	if (err) {
-		printf("open to write test.txt FAILED: %d\r\n", err);
-		close_sd();
-		return -1;
-	}
-	int bytes_read;
-	char* buffer = "Hello World!";
+	char* filename = "test.txt";
 
-	printf("test.txt opened/created\r\n");
+	int e = create_file(filename);
+	if (e) return e;
+	printf("created and written\r\n");
 
-	int bytes_written;
-	err = file_write(buffer, strlen(buffer), &bytes_written);
-	if (err) {
-		printf("err write1: %d\r\n", err);
-	}
+	e = read_file(filename);
+	if (e) return e;
+	printf("\r\nread\r\n");
 
-	close_file();
-	printf("write done\r\n");
+	e = replace_file_first_sec(filename);
+	if (e) return e;
+	printf("replace first sec done\r\n");
 
-
-	memset(buffer, 0, strlen(buffer));
-
-	err = init_file_read("test.txt");
-	if (err) {
-		printf("open to read test.txt FAILED: %d\r\n", err);
-		close_sd();
-		return -1;
-	}
-	printf("test.txt opened to read\r\n");
-
-	int size = file_size();
-	printf("text.txt size: %d bytes\r\n");
-
-	while(1) {
-		err = file_read(buffer, size, &bytes_read);
-		if (err) {
-			printf("err: %d\r\n", err);
-			break;
-		}
-		printf("\r\n bytes_read: %d\r\n", bytes_read);
-		if (bytes_read == 0) break;
-		printf("%s\r\n", buffer);
-		printf("\r\n");
-	}
-	close_file();
-
+	e = read_file(filename);
+	if (e) return e;
+	printf("\r\nread\r\n");
 
 	// a.txt has "Sup world!!!!"
 	/*

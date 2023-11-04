@@ -24,7 +24,8 @@ void free_file_list(FILENAMES* filenames);
 void print_filenames(FILENAMES* files, bool free_en);
 
 FRESULT init_file_read(char* filename);
-FRESULT init_file_write(char* filename);
+FRESULT init_file_write_create(char* filename);
+FRESULT init_file_write_open(char* filename);
 FRESULT file_read(alt_u8* buffer, unsigned int len, unsigned int* bytes_read);
 FRESULT file_write(alt_u8* buffer, unsigned int len, unsigned int* bytes_written);
 int file_size(void);

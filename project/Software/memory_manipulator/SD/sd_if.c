@@ -194,8 +194,12 @@ FRESULT init_file_read(char* filename) {
 	return f_open(&fil, filename, FA_READ);
 }
 
-FRESULT init_file_write(char* filename) {
+FRESULT init_file_write_create(char* filename) {
 	return f_open(&fil, filename, FA_WRITE | FA_CREATE_ALWAYS);
+}
+
+FRESULT init_file_write_open(char* filename) {
+	return f_open(&fil, filename, FA_WRITE | FA_OPEN_ALWAYS);
 }
 
 FRESULT file_read(alt_u8* buffer, unsigned int len, unsigned int* bytes_read) {
