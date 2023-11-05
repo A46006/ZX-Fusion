@@ -226,8 +226,8 @@ architecture Behavior of top is
 			
 			nINT			: out	std_logic; -- Interrupt
 			CPU_CLK		: out	std_logic; -- 3.5MHz
-			FLASH_CLK	: out std_logic; -- 1.56 Hz
-			IOREQGTW3_n	: out std_logic
+			FLASH_CLK	: out std_logic -- 1.56 Hz
+			--IOREQGTW3_n	: out std_logic
 		);
 	end component;
 	
@@ -447,7 +447,7 @@ architecture Behavior of top is
 	signal flash_clk : std_logic;
 	signal ula_a : std_logic_vector(1 downto 0);
 	signal ula_in_iorq_n : std_logic := '1';
-	signal delayed_iorq_n : std_logic := '1'; -- IOREQTW3
+	--signal delayed_iorq_n : std_logic := '1'; -- IOREQTW3
 	
 	-- Audio --
 	signal audio_stream_clk : std_logic := '0';
@@ -758,8 +758,8 @@ begin
 			
 			nINT			=> cpu_int_n,
 			CPU_CLK		=> cpu_clock,
-			FLASH_CLK	=> flash_clk,
-			IOREQGTW3_n => delayed_iorq_n
+			FLASH_CLK	=> flash_clk
+			--IOREQGTW3_n => delayed_iorq_n
 	);
 	
 	ula_in_iorq_n <= iorq_n OR address(0); -- for proper i/o contention handling (spider modification)

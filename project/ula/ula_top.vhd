@@ -31,8 +31,8 @@ port (
 	
 	nINT			: out	std_logic; -- Interrupt
 	CPU_CLK		: out	std_logic; -- 3.5MHz
-	FLASH_CLK	: out std_logic; -- 1.56 Hz
-	IOREQGTW3_n	: out std_logic
+	FLASH_CLK	: out std_logic -- 1.56 Hz
+	--IOREQGTW3_n	: out std_logic
 );
 	
 end ula_top;
@@ -72,8 +72,8 @@ architecture Behavior of ula_top is
 			
 			nINT			: out	std_logic; -- Interrupt
 			CPU_CLK		: out	std_logic; -- 3.5MHz
-			FLASH_CLK	: out std_logic; -- 1.56 Hz
-			IOREQGTW3_n	: out std_logic
+			FLASH_CLK	: out std_logic -- 1.56 Hz
+			--IOREQGTW3_n	: out std_logic
 --			C_out : out std_logic_vector(8 downto 0)
 			);
 		end component;
@@ -108,8 +108,8 @@ begin
 			
 			nINT			=> nINT,
 			CPU_CLK		=> CPU_CLK,
-			FLASH_CLK	=> FLASH_CLK,
-			IOREQGTW3_n => IOREQGTW3_n
+			FLASH_CLK	=> FLASH_CLK
+--			IOREQGTW3_n => IOREQGTW3_n
 --			C_out			=> LEDR(8 downto 0)
 		);
 

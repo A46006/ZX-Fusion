@@ -16,8 +16,8 @@ port (
 	
 	nINT			: out	std_logic; -- Interrupt
 	CPU_CLK		: out	std_logic; -- 3.5MHz
-	FLASH_CLK	: out std_logic; -- 1.56 Hz
-	IOREQGTW3_n	: out std_logic
+	FLASH_CLK	: out std_logic -- 1.56 Hz
+	--IOREQGTW3_n	: out std_logic
 --	C_out : out std_logic_vector(8 downto 0)
 	);
 end ula_count;
@@ -153,7 +153,7 @@ begin
 	--------------------------------------
 	
 	CPU_CLK <= not n_cpu_clk;
-	IOREQGTW3_n <= not ioreq_gtw3;
+	--IOREQGTW3_n <= not ioreq_gtw3;
 	
 	clkhc6 <= not (nTCLKA OR nC(5)); -- should this actually be nC6?
 	
