@@ -692,9 +692,9 @@ begin
 			address	=> ram_address,
 			clken		=> ram_en,				-- ENABLE
 			clock		=> CLOCK_50,			-- SHOULD THIS BE THE CLOCK?
-			data		=> data_out,		-- Data in
-			rden		=> read_en,				-- CPU read
-			wren		=> write_en,			-- CPU write (Always 0?)
+			data		=> data_out,			-- Data in
+			rden		=> read_en,				-- read
+			wren		=> write_en,			-- write
 			q			=> ram_data_out		-- Data out
 		);
 		
@@ -908,11 +908,11 @@ begin
 					'0';
 	
 	-- Technically all even number IO work for the ULA, but only FE is really used
-	ula_en <= '1' when iorq_n = '0' and cpu_mreq_n = '1' and address(7 downto 0) = X"FE" else 
+	ula_en <= '1' when iorq_n = '0' and mreq_n = '1' and address(7 downto 0) = X"FE" else 
 					'0';
 
 	-- Kempston interface at address 0x1F
-	kemp_en <= '1' when iorq_n = '0' and cpu_mreq_n = '1' and address(7 downto 0) = x"1F" else
+	kemp_en <= '1' when iorq_n = '0' and mreq_n = '1' and address(7 downto 0) = x"1F" else
 					'0';
 	
 	-- MEMORY --
@@ -994,39 +994,41 @@ begin
 	-- global signals (NIOS vs T80) --
 	cpu_data_in <= data_in;
 	nios_data_in <= data_in;
-	process(cpu_busak_n, 
-				cpu_rd_n, cpu_wr_n, cpu_mreq_n, cpu_iorq_n, cpu_data_out, cpu_address,
-				nios_rd_n, nios_wr_n, nios_mreq_n, nios_iorq_n, nios_data_out, nios_address
-				)
-	begin
-		if (cpu_busak_n = '1') then
-			-- CPU --
-			read_en <= not cpu_rd_n;
-			write_en <= not cpu_wr_n;
-			mreq_n <= cpu_mreq_n;
-			iorq_n <= cpu_iorq_n;
-			
---			cpu_data_in <= data_in;
---			nios_data_in <= "ZZZZZZZZ";
-			
---			data <= cpu_data;
-			data_out <= cpu_data_out;
-			address <= cpu_address;
-		else
-			-- NIOS --
-			read_en <= not nios_rd_n;
-			write_en <= not nios_wr_n;
-			mreq_n <= nios_mreq_n;
-			iorq_n <= nios_iorq_n;
-			
---			cpu_data_in <= (others => 'Z');
---			nios_data_in <= data_in;
-			
---			data <= nios_data;
-			data_out <= nios_data_out;
-			address <= nios_address;
-		end if;
-	end process;
+	
+	-- HERE --
+	read_en <= (not cpu_rd_n) WHEN cpu_busak_n = '1' else (not nios_rd_n);
+	write_en <= (not cpu_wr_n) WHEN cpu_busak_n = '1' else (not nios_wr_n);
+	mreq_n <= cpu_mreq_n WHEN cpu_busak_n = '1' else nios_mreq_n;
+	iorq_n <= cpu_iorq_n WHEN cpu_busak_n = '1' else nios_iorq_n;
+	data_out <= cpu_data_out WHEN cpu_busak_n = '1' else nios_data_out;
+	address <= cpu_address WHEN cpu_busak_n = '1' else nios_address;
+
+--					
+--	process(cpu_busak_n, 
+--				cpu_rd_n, cpu_wr_n, cpu_mreq_n, cpu_iorq_n, cpu_data_out, cpu_address,
+--				nios_rd_n, nios_wr_n, nios_mreq_n, nios_iorq_n, nios_data_out, nios_address
+--				)
+--	begin
+--		if (cpu_busak_n = '1') then
+--			-- CPU --
+--			read_en <= not cpu_rd_n;
+--			write_en <= not cpu_wr_n;
+--			mreq_n <= cpu_mreq_n;
+--			iorq_n <= cpu_iorq_n;
+--			
+--			data_out <= cpu_data_out;
+--			address <= cpu_address;
+--		else
+--			-- NIOS --
+--			read_en <= not nios_rd_n;
+--			write_en <= not nios_wr_n;
+--			mreq_n <= nios_mreq_n;
+--			iorq_n <= nios_iorq_n;
+--			
+--			data_out <= nios_data_out;
+--			address <= nios_address;
+--		end if;
+--	end process;
 	
 	-- TEST signals --
 	ula_tclka_n <= not (iorq_n or mreq_n or cpu_rd_n or not cpu_wr_n);
