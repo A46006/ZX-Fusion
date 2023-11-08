@@ -71,7 +71,7 @@ BEGIN
 		intended_device_family => "Cyclone IV E",
 		lpm_hint => "ENABLE_RUNTIME_MOD=YES, INSTANCE_NAME=SRAM",
 		lpm_type => "altsyncram",
-		numwords_a => 42239,
+		numwords_a => 42240,
 		operation_mode => "SINGLE_PORT",
 		outdata_aclr_a => "NONE",
 		outdata_reg_a => "CLOCK0",
