@@ -1,5 +1,7 @@
 eclipse.preferences.version=1
 newApplicationWizardPage.defaultLocation=H\:\\MI13D\\TFM\\FINAL-REPO-actual-46006\\ZX-Fusion\\project\\Software\\memory_manip_attempt
+newBspWizardPage.defaultLocation=C\:\\Users\\pepsu\\Documents\\MI13D\\TFM\\FINAL_REPO\\ZX-Fusion\\project\\software\\memory_manipulator_bsp
+newBspWizardPage.sopcinfoFile=C\:\\Users\\pepsu\\Documents\\MI13D\\TFM\\FINAL_REPO\\ZX-Fusion\\project\\nios_sd_loader.sopcinfo
 newSoftwareExampleWizardPage.defaultLocation=H\:\\MI13D\\TFM\\FINAL-REPO-actual-46006\\ZX-Fusion\\project\\software\\memory_manipulator
 newSoftwareExampleWizardPage.sopcinfoFile=H\:\\MI13D\\TFM\\FINAL-REPO-actual-46006\\ZX-Fusion\\project\\nios_sd_loader.sopcinfo
 newSoftwareExampleWizardPage2.newBspLocation=H\:\\MI13D\\TFM\\FINAL-REPO-actual-46006\\ZX-Fusion\\project\\software\\memory_manipulator_bsp

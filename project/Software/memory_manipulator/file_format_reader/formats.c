@@ -202,9 +202,9 @@ int load_SNA(char* filename) {
 	// Restore data overwritten by routine as soon as the snapshot's PC is detected in z80 address bus
 	// This means the z80 is about to start executing the loaded code
 	//int wait_res = wait_for_pc(regs.PC, 10000);
-	int wait_res = wait_until_routine_ends(10000);
+	int wait_res = wait_until_routine_ends(100);
 	printf("wait res: %d\r\n", wait_res);
-	if (!wait_res) {
+	if (wait_res != 0) {
 		DMA_request(10);
 
 		write_buf_mem(NMI_ROUTINE_ADDR, data_bk, 0, data_bk_len);
@@ -212,8 +212,6 @@ int load_SNA(char* filename) {
 
 		DMA_stop(10);
 	}
-	//free(data_bk);
-
 	return 0;
 }
 
@@ -260,67 +258,42 @@ int save_SNA(char* filename) {
 	printf("save dma req...\r\n");
 	int ret = DMA_request(10);
 
-	if (ret != 0) {
+	if (ret != 0 && ret != ALREADY_DONE) {
 		DMA_print_err(ret);
 		return -1;
 	}
 
-	alt_u16 err = init_file_write_create(filename);
-	if (err) {
-		printf(OPEN_ERR_STR, filename, err);
-		return -1;
-	}
-	// .SNA files are always the same size: 49,179 bytes
-
 	// file write begin, 512 bytes at a time
 	int remaining_bytes = 512;
-	alt_u8 write_buf[remaining_bytes];
 	alt_u8 first_block_buf[remaining_bytes];
 	alt_u16 addr = 0x4000;
-	bool first_block = TRUE;
 	unsigned int bytes_written;
 
-	int block_num = 2; // just to keep track of the block
-	while (TRUE) {
-		if (0xFFFF - addr < remaining_bytes) {
-			remaining_bytes = 0xFFFF - addr;
-			if (remaining_bytes == 0) break;
-		}
+	printf("FFFE state A: %02X\r\n", read_mem(0xFFFE));
 
-		if (first_block) {
-			int data_len = remaining_bytes - SNA_OFFSET_DATA;
-			read_buf_mem(addr, SNA_OFFSET_DATA, data_len, write_buf);
-			addr += data_len;
+	// Saving the first block of the file to write it with register values later
+	// Also to make sure the save state doesn't include the register data on screen
+	int data_len = remaining_bytes - SNA_OFFSET_DATA;
+	read_buf_mem(addr, SNA_OFFSET_DATA, data_len, first_block_buf);
+	addr += data_len;
+	//memcpy(first_block_buf, write_buf, remaining_bytes);
 
-			// saving the first block to write it with the register values later
-			memcpy(first_block_buf, write_buf, remaining_bytes);
+	printf("FFFE state B: %02X\r\n", read_mem(0xFFFE));
 
-			// write first block to file start
-			file_write(write_buf, remaining_bytes, &bytes_written);
 
-			//printf("block 1: %d...\r\n", bytes_written);
-			first_block = FALSE;
-			continue;
-		}
-
-		read_buf_mem(addr, 0, remaining_bytes, write_buf);
-		addr += remaining_bytes;
-
-		// write block to file
-		file_write(write_buf, remaining_bytes, &bytes_written);
-		//printf("block %d: %d...\r\n", block_num++, bytes_written);
-	}
-
-	close_file();
-
-	// write routine to extract reg values
+	// write routine to extract register values
 	enum file_type type = SNA;
 	int routine_size = get_SAVE_routine_size();
 	alt_u8 save_routine[routine_size];
 	generate_SAVE_routine(save_routine, type);
 
+	printf("FFFE state C: %02X\r\n", read_mem(0xFFFE));
+
 	write_buf_mem(0x4000, save_routine, 0, routine_size);
 
+	printf("FFFE state D: %02X\r\n", read_mem(0xFFFE));
+
+	// execute routine
 	DMA_stop_w_interrupt();
 
 
@@ -329,12 +302,10 @@ int save_SNA(char* filename) {
 	listen_for_en();
 	enum per_if_type cmd_type = get_if_type();
 	if (cmd_type != STATE) {
-		/////// delete file?
 		printf("Wrong command received...\r\n");
 		return -1;
 	}
 	printf("cmd rcvd\r\n");
-
 
 	// when the command is received, get DMA to retrieve register values
 	ret = DMA_request(10);
@@ -350,15 +321,61 @@ int save_SNA(char* filename) {
 	// fill header of file with register values
 	fill_sna_header(first_block_buf, &regs);
 
+
+	// Now with all the data required, time to write it to a file
+	alt_u8 write_buf[remaining_bytes];
+	alt_u16 err = init_file_write_create(filename);
+	if (err) {
+		printf(OPEN_ERR_STR, filename, err);
+		return -1;
+	}
+	// .SNA files are always the same size: 49,179 bytes
+
+	// write first block
+	file_write(first_block_buf, remaining_bytes, &bytes_written);
+
+	int end = 0xFFFF;
+	while (end-addr >= remaining_bytes) {//(addr < end) {
+		// update remaining bytes if there are less than normal left
+		/*if (end - addr < remaining_bytes) {
+			remaining_bytes = ((end+1) - addr);
+			if (remaining_bytes <= 0) break;
+		}*/
+
+		// read the data from memory and update the address for next read
+		printf("remaining: %d\r\n", remaining_bytes);
+		printf("addr: 0x%02X\r\n", addr);
+		read_buf_mem(addr, 0, remaining_bytes, write_buf);
+		addr += remaining_bytes;
+
+		// write block to file
+		file_write(write_buf, remaining_bytes, &bytes_written);
+		//printf("block %d: %d...\r\n", block_num++, bytes_written);
+	}
+
+	// last one
+	remaining_bytes = (end - addr) + 1; // 27
+	read_buf_mem(addr, 0, remaining_bytes, write_buf);
+	for(int i = 0; i < remaining_bytes; i++) {
+		if (i%16 == 0) printf("\r\n");
+		printf("%02X ", write_buf[i]);
+	}
+
+	file_write(write_buf, remaining_bytes, &bytes_written);
+	close_file();
+
+
+
+
 	// Saving register values into file header
-	err = init_file_write_open(filename);
+	/*err = init_file_write_open(filename);
 	if (err) {
 		printf(OPEN_ERR_STR, filename, err);
 		return -1;
 	}
 	file_write(first_block_buf, 512, &bytes_written);
 	printf("reg values written: %d\r\n", bytes_written);
-	close_file();
+	close_file();*/
 
 
 	// using the register values to "load" the game again
@@ -911,7 +928,8 @@ REGS generate_regs_save_state() {
 	read_buf_mem(addr, 0, 2, sp);
 
 	// AF', AF and PC in stack:
-	addr = conv_data_8_16(sp, 0);
+	// SP was saved BEFORE pushing AF' and AF to stack;
+	addr = reverse_16(conv_data_8_16(sp, 0)) - 4;
 	alt_u8 afl[2];
 	read_buf_mem(addr, 0, 2, afl);
 

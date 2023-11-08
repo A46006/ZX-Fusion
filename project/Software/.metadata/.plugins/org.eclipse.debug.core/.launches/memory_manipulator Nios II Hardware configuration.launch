@@ -7,7 +7,7 @@
 <stringAttribute key="byteStreamDeviceInstanceID" value="0"/>
 <stringAttribute key="com.altera.sbtgui.launch.REMOTE_PORT" value="49262"/>
 <booleanAttribute key="downloadProgram" value="true"/>
-<stringAttribute key="elfFile" value="H:\MI13D\TFM\FINAL-REPO-actual-46006\ZX-Fusion\project\Software\memory_manipulator\memory_manip_attempt.elf"/>
+<stringAttribute key="elfFile" value="C:\Users\pepsu\Documents\MI13D\TFM\FINAL_REPO\ZX-Fusion\project\Software\memory_manipulator\memory_manip_attempt.elf"/>
 <stringAttribute key="org.eclipse.cdt.debug.mi.core.GDB_INIT" value=""/>
 <stringAttribute key="org.eclipse.cdt.debug.mi.core.commandFactory" value="com.altera.debug.cdi.gdb.plugin.Nios2GDBServerCommandFactory"/>
 <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_ID" value="com.altera.debug.cdi.gdb.plugin.Nios2GdbCdiDebugger"/>

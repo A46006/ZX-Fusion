@@ -15,7 +15,7 @@ alt_u16 conv_data_8_16_sep(alt_u8 data_l, alt_u8 data_h) {
 }
 
 int get_LOAD_routine_size() {
-	return 52;
+	return 49;
 }
 
 int get_SAVE_routine_size() {
@@ -303,8 +303,16 @@ void generate_LOAD_routine(alt_u8* routine, REGS regs, const enum file_type type
 	} else {
 		routine[i++] = DI;
 	}
-	routine[i++] = RETN1;
-	routine[i++] = RETN2;
+
+	// TODO replace these with RETN
+	//sp = 0x5800;
+	//routine[i++] = LD_SP_NN;
+	//routine[i++] = sp & 0xFF;
+	//routine[i++] = sp >> 8;
+
+	routine[i++] = HALT_ASM;
+	//routine[i++] = RETN1;
+	//routine[i++] = RETN2;
 }
 
 void generate_SAVE_routine(alt_u8* routine, const enum file_type type) {
@@ -401,8 +409,8 @@ void generate_SAVE_routine(alt_u8* routine, const enum file_type type) {
 
 	alt_u16 sp = 0x5800;
 	routine[i++] = LD_SP_NN;
-	routine[i++] = sp >> 8;//(sp >> 8) - 4;//(regs.SP >> 8) - 4; // setting sp so the subsequent PC push doesn't overwrite anything
 	routine[i++] = sp & 0xFF;
+	routine[i++] = sp >> 8;
 
 	// Command to "notify" NIOS that the register values are there
 	routine[i++] = IN_A_N;

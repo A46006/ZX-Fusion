@@ -48,7 +48,7 @@ alt_u8 read_mem(alt_u16 addr) {
 	CTRL_BUS_SET(ctrl_bus_state);
 
 	ADDR_SET(addr);
-	usleep(100);
+	usleep(1);
 	data = DATA_GET;
 	IOWR_ALTERA_AVALON_PIO_DATA(LEDG_PIO_BASE, data);
 
@@ -62,6 +62,11 @@ alt_u8 read_mem(alt_u16 addr) {
 void read_buf_mem(alt_u16 addr, int start, int len, alt_u8* ret) {
 	for(int i = start; i < start+len; i++) {
 		ret[i] = read_mem(addr++);
+		// TODO remove later
+		if (addr > 0xFFF8) {
+			printf("addr: 0x%04X\r\n", addr-1);
+			printf("data: 0x%02X\r\n", ret[i]);
+		}
 	}
 }
 
@@ -76,7 +81,7 @@ void write_mem(alt_u16 addr, const alt_u8 data) {
 	ADDR_SET(addr);
 	DATA_SET(data);
 	IOWR_ALTERA_AVALON_PIO_DATA(LEDG_PIO_BASE, data);
-	usleep(100);
+	usleep(1);
 
 	ctrl_bus_state |= MEM_REQ_CLR;
 	ctrl_bus_state |= WRITE_CLR;
@@ -87,7 +92,18 @@ void write_mem(alt_u16 addr, const alt_u8 data) {
 
 void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len) {
 	for (int i = start; i < start+len; i++) {
+		// TODO remove
+		if (addr > 0xFFF0) {
+			printf("[%04X]: %02X\r\n", addr, data[i]);
+		}
+		if (addr == 0xFFFE) {
+			printf("WRITE DETECTED: %02X\r\n", data[i]);
+		}
 		write_mem(addr++, data[i]);
+	}
+	if (addr == 0) {
+		printf("FFFE: %d\r\n", read_mem(0xFFFE));
+		printf("FFFF: %d\r\n", read_mem(0xFFFF));
 	}
 }
 
@@ -150,12 +166,11 @@ int wait_for_pc(alt_u16 pc, int tries) {
 int wait_until_routine_ends(int tries) {
 	alt_u16 addr;
 
-	while(1) {
-		if (tries-- < 0) return TIMEOUT;
-		// TODO make sure endianness is good for this comparison
+	do {
 		if (addr > END_OF_SCREEN) break;
 		addr = CPU_ADDR_GET;
-	}
+	} while(tries-- > 0);
+	if (tries == 0) return TIMEOUT;
 	return 0;
 }
 

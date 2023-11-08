@@ -157,7 +157,7 @@ int inject_menu() {
 		write_mem(addr++, RETN1);
 		write_mem(addr++, RETN2);
 
-		DMA_stop_w_interrupt(10);
+		DMA_stop_w_interrupt();
 	}
 	per_cmd_ack();
 	return 0;
@@ -270,13 +270,13 @@ void load_page(FILENAMES* list) {
 		}
 	// if there is no list of files
 	} else {
-		//char* err_name = "NO FILES, RESET TO LEAVE..®";
-		char* err_name = "NO SUPPORTED FILES, RESET..®";
+		//char* err_name = "NO FILES, RESET TO LEAVE..ï¿½";
+		char* err_name = "NO SUPPORTED FILES, RESET..ï¿½";
 		if (no_sd) {
-			err_name = "NO SD CARD, RESET TO LEAVE..®";
+			err_name = "NO SD CARD, RESET TO LEAVE..ï¿½";
 		} else {
 			sd_empty = TRUE;
-			//char* err_name = "NO SUPPORTED FILES, RESET TO LEAVE..®";
+			//char* err_name = "NO SUPPORTED FILES, RESET TO LEAVE..ï¿½";
 		}
 		int name_len = strlen(err_name);
 		//printf("0x%02X\r\n", err_name[name_len-1]);
@@ -372,7 +372,6 @@ int main(int argc, char *argv[]) {
 	//return z80_file_test();
 
 	DMA_init();
-	printf("4");
 
 	printf("Injecting menu...\r\n");
 	int res = inject_menu();
@@ -428,16 +427,21 @@ int main(int argc, char *argv[]) {
 				} else if (is_write()) {
 					// load a game
 					if (!no_sd && !sd_empty) load_game(&curr_page_file_list);
+					// TO TEST RESULT TODO remove later
+					printf("SLEEEEEEEP\r\n");
+					usleep(5000000);
+					save_state(&curr_page_file_list);
 				}
 				break;
 			case INIT:
 				// Should only happen once at the beginning/after every reset.
 				// if this command happened during this loop, the spectrum crashed
+
 				printf("shouldn't be happening\r\n");
-				printf("Injecting menu...\r\n");
+				printf("writing menu...\r\n");
 				int res = inject_menu();
 				if (res == -1) {
-					printf("inject menu went wrong\r\n");
+					printf("write menu went wrong\r\n");
 					return res;
 				}
 				break;
