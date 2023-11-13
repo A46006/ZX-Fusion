@@ -53,29 +53,52 @@ begin
 	
 	-- Important location data MUX for address calculating for different modes
 	-- Because bit selection expressions must be constant
-	process(MODE, x_trans, y_trans)
-	begin
-		case (MODE) is
-			when "11" =>	group_num <= 		std_logic_vector(y_trans(7 downto 6));
-								att_row_num <=		std_logic_vector(y_trans(5 downto 3));
-								pix_row_num <=		std_logic_vector(y_trans(2 downto 0));
-								att_col_num <=		std_logic_vector(x_trans(7 downto 3));
-								pix_col_num <=		std_logic_vector(x_trans(2 downto 0));
-								
-			when "10" =>	group_num <= 		std_logic_vector(y_trans(8 downto 7));
-								att_row_num <=		std_logic_vector(y_trans(6 downto 4));
-								pix_row_num <=		std_logic_vector(y_trans(3 downto 1));
-								att_col_num <=		std_logic_vector(x_trans(8 downto 4));
-								pix_col_num <=		std_logic_vector(x_trans(3 downto 1));
-			
-			when others =>	group_num <= 		std_logic_vector(y_trans(9 downto 8));
-								att_row_num <=		std_logic_vector(y_trans(7 downto 5));
-								pix_row_num <=		std_logic_vector(y_trans(4 downto 2));
-								att_col_num <=		std_logic_vector(x_trans(9 downto 5));
-								pix_col_num <=		std_logic_vector(x_trans(4 downto 2));
-								
-		end case;
-	end process;
+	
+	-- HERE TEST IF WORKS --
+	-- TODO
+	group_num <= std_logic_vector(y_trans(7 downto 6)) when MODE = "11" else
+						std_logic_vector(y_trans(8 downto 7)) when MODE = "10" else
+						std_logic_vector(y_trans(9 downto 8));
+	
+	att_row_num <= std_logic_vector(y_trans(5 downto 3)) when MODE = "11" else
+						std_logic_vector(y_trans(6 downto 4)) when MODE = "10" else
+						std_logic_vector(y_trans(7 downto 5));
+	
+	pix_row_num <= std_logic_vector(y_trans(2 downto 0)) when MODE = "11" else
+						std_logic_vector(y_trans(3 downto 1)) when MODE = "10" else
+						std_logic_vector(y_trans(4 downto 2));
+	
+	att_col_num <= std_logic_vector(x_trans(7 downto 3)) when MODE = "11" else
+						std_logic_vector(x_trans(8 downto 4)) when MODE = "10" else
+						std_logic_vector(x_trans(9 downto 5));
+	
+	pix_col_num <= std_logic_vector(x_trans(2 downto 0)) when MODE = "11" else
+						std_logic_vector(x_trans(3 downto 1)) when MODE = "10" else
+						std_logic_vector(x_trans(4 downto 2));
+	
+--	process(MODE, x_trans, y_trans)
+--	begin
+--		case (MODE) is
+--			when "11" =>	group_num <= 		std_logic_vector(y_trans(7 downto 6));
+--								att_row_num <=		std_logic_vector(y_trans(5 downto 3));
+--								pix_row_num <=		std_logic_vector(y_trans(2 downto 0));
+--								att_col_num <=		std_logic_vector(x_trans(7 downto 3));
+--								pix_col_num <=		std_logic_vector(x_trans(2 downto 0));
+--								
+--			when "10" =>	group_num <= 		std_logic_vector(y_trans(8 downto 7));
+--								att_row_num <=		std_logic_vector(y_trans(6 downto 4));
+--								pix_row_num <=		std_logic_vector(y_trans(3 downto 1));
+--								att_col_num <=		std_logic_vector(x_trans(8 downto 4));
+--								pix_col_num <=		std_logic_vector(x_trans(3 downto 1));
+--			
+--			when others =>	group_num <= 		std_logic_vector(y_trans(9 downto 8));
+--								att_row_num <=		std_logic_vector(y_trans(7 downto 5));
+--								pix_row_num <=		std_logic_vector(y_trans(4 downto 2));
+--								att_col_num <=		std_logic_vector(x_trans(9 downto 5));
+--								pix_col_num <=		std_logic_vector(x_trans(4 downto 2));
+--								
+--		end case;
+--	end process;
 
 
 	-- calculates address to read data from RAM for the next pixel being rendered
@@ -91,6 +114,7 @@ begin
 	BRIGHT <= color_info(6);
 	READ_E <= read_enable or read_next;
 	
+	-- TODO change after testing others
 	-- Read enable operation
 	process (pix_col_num, RESET)
 	begin

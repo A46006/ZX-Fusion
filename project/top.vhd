@@ -870,16 +870,22 @@ begin
 	-- Joystick Interface MUX --
 	----------------------------
 	keyb_joy2 <= joy_state_2;
-	process(kemp_n_sin, joy_state_1)
-	begin
-		if (kemp_n_sin = '0') then
-			keyb_joy1 <= joy_state_1;
-			kemp_joy_1 <= (others => '0');
-		else
-			kemp_joy_1 <= joy_state_1;
-			keyb_joy1 <= (others => '0');
-		end if;
-	end process;
+	
+	-- HERE TEST IF WORKS --
+	-- TODO
+	keyb_joy1 <= joy_state_1 when kemp_n_sin = '0' else (others => '0');
+	kemp_joy_1 <= (others => '0') when kemp_n_sin = '0' else joy_state_1;
+	
+--	process(kemp_n_sin, joy_state_1)
+--	begin
+--		if (kemp_n_sin = '0') then
+--			keyb_joy1 <= joy_state_1;
+--			kemp_joy_1 <= (others => '0');
+--		else
+--			kemp_joy_1 <= joy_state_1;
+--			keyb_joy1 <= (others => '0');
+--		end if;
+--	end process;
 
 	
 	
@@ -995,7 +1001,7 @@ begin
 	cpu_data_in <= data_in;
 	nios_data_in <= data_in;
 	
-	-- HERE --
+	-- DMA mux --
 	read_en <= (not cpu_rd_n) WHEN cpu_busak_n = '1' else (not nios_rd_n);
 	write_en <= (not cpu_wr_n) WHEN cpu_busak_n = '1' else (not nios_wr_n);
 	mreq_n <= cpu_mreq_n WHEN cpu_busak_n = '1' else nios_mreq_n;
@@ -1003,32 +1009,6 @@ begin
 	data_out <= cpu_data_out WHEN cpu_busak_n = '1' else nios_data_out;
 	address <= cpu_address WHEN cpu_busak_n = '1' else nios_address;
 
---					
---	process(cpu_busak_n, 
---				cpu_rd_n, cpu_wr_n, cpu_mreq_n, cpu_iorq_n, cpu_data_out, cpu_address,
---				nios_rd_n, nios_wr_n, nios_mreq_n, nios_iorq_n, nios_data_out, nios_address
---				)
---	begin
---		if (cpu_busak_n = '1') then
---			-- CPU --
---			read_en <= not cpu_rd_n;
---			write_en <= not cpu_wr_n;
---			mreq_n <= cpu_mreq_n;
---			iorq_n <= cpu_iorq_n;
---			
---			data_out <= cpu_data_out;
---			address <= cpu_address;
---		else
---			-- NIOS --
---			read_en <= not nios_rd_n;
---			write_en <= not nios_wr_n;
---			mreq_n <= nios_mreq_n;
---			iorq_n <= nios_iorq_n;
---			
---			data_out <= nios_data_out;
---			address <= nios_address;
---		end if;
---	end process;
 	
 	-- TEST signals --
 	ula_tclka_n <= not (iorq_n or mreq_n or cpu_rd_n or not cpu_wr_n);

@@ -106,25 +106,45 @@ begin
 						B => b);
 		
 	-- MODE MUX --
-	process(MODE)
-	begin
-		case (MODE) is
-			when "11" =>	x_init <= 	x_native_init;
-								x_end <= 	x_native_end;
-								y_init <=	y_native_init;
-								y_end <=		y_native_end;
-								
-			when "10" =>	x_init <= 	x_2x_init;
-								x_end <= 	x_2x_end;
-								y_init <=	y_2x_init;
-								y_end <=		y_2x_end;	
-			
-			when others =>	x_init <= 	x_4x_init;
-								x_end <= 	x_4x_end;
-								y_init <=	y_4x_init;
-								y_end <=		y_4x_end; 
-		end case;
-	end process;
+	
+	-- HERE TEST IF WORKS --
+	-- TODO
+	
+	x_init <= 	x_native_init when MODE = "11" else
+					x_2x_init when MODE = "10" else
+					x_4x_init;
+					
+	x_end <= 	x_native_end when MODE = "11" else
+					x_2x_end when MODE = "10" else
+					x_4x_end;
+					
+	y_init <=	y_native_init when MODE = "11" else
+					y_2x_init when MODE = "10" else
+					y_4x_init;
+					
+	y_end <=		y_native_end when MODE = "11" else
+					y_2x_end when MODE = "10" else
+					y_4x_end;
+
+--	process(MODE)
+--	begin
+--		case (MODE) is
+--			when "11" =>	x_init <= 	x_native_init;
+--								x_end <= 	x_native_end;
+--								y_init <=	y_native_init;
+--								y_end <=		y_native_end;
+--								
+--			when "10" =>	x_init <= 	x_2x_init;
+--								x_end <= 	x_2x_end;
+--								y_init <=	y_2x_init;
+--								y_end <=		y_2x_end;	
+--			
+--			when others =>	x_init <= 	x_4x_init;
+--								x_end <= 	x_4x_end;
+--								y_init <=	y_4x_init;
+--								y_end <=		y_4x_end; 
+--		end case;
+--	end process;
 	
 --	border_drawing <= '1' when (x=0 or y=0 or x=1023 or y=767) else '0';
 
