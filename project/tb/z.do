@@ -4,42 +4,42 @@ vdel -all -lib work
 
 vlib work
 
-vcom -work work "H:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/constants.vhd"
+vcom -work work "../constants.vhd"
 
-vcom -work work "H:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/nios_sd_loader/simulation/nios_sd_loader.vhd"
+vcom -work work "../nios_sd_loader/simulation/nios_sd_loader.vhd"
 
-vcom -work work "H:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/nios_per_reg.vhd"
+vcom -work work "../nios_per_reg.vhd"
 
-vcom -work work "H:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/keyboard/input_receiver.vhd"
-vcom -work work "H:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/keyboard/keyboard_top.vhd"
-vlog -work work "H:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/keyboard/PS2_Controller/PS2_Controller.v"
-vlog -work work "H:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/keyboard/PS2_Controller/Altera_UP_PS2_Data_In.v"
-vlog -work work "H:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/keyboard/PS2_Controller/Altera_UP_PS2_Command_Out.v"
+vcom -work work "../keyboard/input_receiver.vhd"
+vcom -work work "../keyboard/keyboard_top.vhd"
+vlog -work work "../keyboard/PS2_Controller/PS2_Controller.v"
+vlog -work work "../keyboard/PS2_Controller/Altera_UP_PS2_Data_In.v"
+vlog -work work "../keyboard/PS2_Controller/Altera_UP_PS2_Command_Out.v"
 
-vcom -work work "H:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/pll/pll.vhd"
+vcom -work work "../pll/pll.vhd"
 
-vcom -work work "H:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/ram/color_video_ram.vhd"
-vcom -work work "H:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/ram/pixel_video_ram.vhd"
-vcom -work work "H:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/ram/remaining_ram.vhd"
-vcom -work work "H:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/rom/rom.vhd"
+vcom -work work "../ram/color_video_ram.vhd"
+vcom -work work "../ram/pixel_video_ram.vhd"
+vcom -work work "../ram/remaining_ram.vhd"
+vcom -work work "../rom/rom.vhd"
 
-vcom -work work "H:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/t80/T80.vhd"
-vcom -work work "H:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/t80/T80_ALU.vhd"
-vcom -work work "H:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/t80/T80_MCode.vhd"
-vcom -work work "H:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/t80/T80_Pack.vhd"
-vcom -work work "H:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/t80/T80_Reg.vhd"
-vcom -work work "H:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/t80/T80a.vhd"
+vcom -work work "../t80/T80.vhd"
+vcom -work work "../t80/T80_ALU.vhd"
+vcom -work work "../t80/T80_MCode.vhd"
+vcom -work work "../t80/T80_Pack.vhd"
+vcom -work work "../t80/T80_Reg.vhd"
+vcom -work work "../t80/T80a.vhd"
 
-vcom -work work "H:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/ula/ula_count.vhd"
-vcom -work work "H:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/ula/ula_port.vhd"
+vcom -work work "../ula/ula_count.vhd"
+vcom -work work "../ula/ula_port.vhd"
 
-vcom -work work "H:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/video/video.vhd"
-vcom -work work "H:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/video/data_interpreter.vhd"
-vcom -work work "H:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/video/vga_controller.vhd"
+vcom -work work "../video/video.vhd"
+vcom -work work "../video/data_interpreter.vhd"
+vcom -work work "../video/vga_controller.vhd"
 
-vcom -work work "H:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/reset_counter.vhd"
-vcom -work work "H:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/top.vhd"
-vcom -work work "H:/MI13D/TFM/TFM-SPEC/04-SD_impl/project/tb.vhd"
+vcom -work work "../reset_counter.vhd"
+vcom -work work "../top.vhd"
+vcom -work work "../tb.vhd"
 
 vsim -t ps -novopt  work.tb
 
