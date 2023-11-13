@@ -75,7 +75,8 @@ BEGIN
 		read_during_write_mode_port_a => "NEW_DATA_NO_NBE_READ",
 		widthad_a => 16,
 		width_a => 8,
-		width_byteena_a => 1
+		width_byteena_a => 1,
+		init_file => "./file/code.hex"
 	)
 	PORT MAP (
 		address_a => address,

@@ -1,0 +1,114 @@
+              	; --------------------------------------
+              	; zasm: assemble "code.asm"
+              	; date: 2023-11-13 19:31:08
+              	; --------------------------------------
+
+
+              	#target rom
+              	
+              	
+0000:         	#code EPROM, 0x0000, 0x10000
+              	
+0000: 31A0C0  		LD SP, $C0A0
+0003: 2155AA  		LD HL, $AA55
+0006: 22FEFF  		LD ($FFFE), HL
+              		;LD ($FFF0), HL
+0009:         	START:
+0009: 2AFEFF  		LD HL, ($FFFE)
+              		;LD HL, ($FFF0)
+000C: 22FEFF  		LD ($FFFE), HL
+              		;LD ($FFF0), HL
+000F: 76      		HALT
+0010: C30900  		JP START
+0013: 00      		nop
+0014: 00      		nop
+0015: 00      		nop
+              	;	nop
+              	;	nop
+              	;	nop
+0016: 00      		nop
+0017: 00      		nop
+0018: 00      		nop
+0019: 00      		nop
+001A: 00      		nop
+001B: 00      		nop
+001C: 00      		nop
+001D: 00      		nop
+001E: 00      		nop
+001F: 00      		nop
+0020: 00      		nop
+0021: 00      		nop
+0022: 00      		nop
+0023: 00      		nop
+0024: 00      		nop
+0025: 00      		nop
+0026: 00      		nop
+0027: 00      		nop
+0028: 00      		nop
+0029: 00      		nop
+002A: 00      		nop
+002B: 00      		nop
+002C: 00      		nop
+002D: 00      		nop
+002E: 00      		nop
+002F: 00      		nop
+0030: 00      		nop
+0031: 00      		nop
+0032: 00      		nop
+0033: 00      		nop
+0034: 00      		nop
+0035: 00      		nop
+0036: 00      		nop
+0037: 00      		nop
+0038: 00      		nop
+0039: 00      		nop
+003A: 00      		nop
+003B: 00      		nop
+003C: 00      		nop
+003D: 00      		nop
+003E: 00      		nop
+003F: 00      		nop
+0040: 00      		nop
+0041: 00      		nop
+0042: 00      		nop
+0043: 00      		nop
+0044: 00      		nop
+0045: 00      		nop
+0046: 00      		nop
+0047: 00      		nop
+0048: 00      		nop
+0049: 00      		nop
+004A: 00      		nop
+004B: 00      		nop
+004C: 00      		nop
+004D: 00      		nop
+004E: 00      		nop
+004F: 00      		nop
+0050: 00      		nop
+0051: 00      		nop
+0052: 00      		nop
+0053: 00      		nop
+0054: 00      		nop
+0055: 00      		nop
+0056: 00      		nop
+0057: 00      		nop
+0058: 00      		nop
+0059: 00      		nop
+005A: 00      		nop
+005B: 00      		nop
+005C: 00      		nop
+005D: 00      		nop
+005E: 00      		nop
+005F: 00      		nop
+0060: 00      		nop
+0061: 00      		nop
+0062: 00      		nop
+0063: 00      		nop
+0064: 00      		nop
+0065: 00      		nop
+0066: ED45    		RETN
+              		
+
+
+total time: 0.0522 sec.
+no errors

@@ -54,19 +54,24 @@ architecture Behavior of top is
 	END component;
 	
 	-- COUNTER RELATED
-	signal count : std_logic_vector(2 downto 0); -- minimum of 3 clocks for reset
+	signal count : std_logic_vector(2 downto 0) := "000"; -- minimum of 3 clocks for reset
 	signal reset_ctr_start : std_logic := '1';
 	signal reset_ctr_manual : std_logic;
 	
 	-- DIRECTLY CPU RELATED
 	signal reset_n, clock_n, bus_rq_n : std_logic := '1';
 	signal m1_n, mem_req_n, read_n, write_n, mem_refresh_n, halt_n, busak_n: std_logic;
-	signal cpu_address, address, in_address : std_logic_vector(15 downto 0);
-	signal cpu_data, cpu_data_i, cpu_data_o : std_logic_vector(7 downto 0);
+	signal cpu_address, address, in_address : std_logic_vector(15 downto 0) := x"0000";
+	signal cpu_data, cpu_data_i, cpu_data_o, input_data_out, input_data_in, data_in, data_out : std_logic_vector(7 downto 0) := x"00";
 	
 	signal io_req_n : std_logic; -- unnecessary for now but here anyway
 	
 	signal data_view : std_logic_vector(7 downto 0);
+	
+	signal nmi_n : std_logic := '1';
+	signal int_n : std_logic := '1';
+	
+	signal ram_en, ram_rd, ram_wr : std_logic := '0';
 	
 begin
 	address_low : conv_7seg port map (address(7 downto 0), HEX1, HEX0);
@@ -76,7 +81,7 @@ begin
 	HEX4 <= "1111110";
 
 	z80 : T80a port map (
-			RESET_n => reset_n, CLK_n => clock_n, WAIT_n => '1', INT_n => '1', NMI_n => '1', BUSRQ_n => bus_rq_n,
+			RESET_n => reset_n, CLK_n => clock_n, WAIT_n => '1', INT_n => int_n, NMI_n => nmi_n, BUSRQ_n => bus_rq_n,
 			M1_n => m1_n, MREQ_n => mem_req_n, IORQ_n => io_req_n, RD_n => read_n, WR_n => write_n, RFSH_n => mem_refresh_n,
 			HALT_n => halt_n, BUSAK_n => busak_n,
 			A => cpu_address, D => cpu_data);
@@ -89,24 +94,39 @@ begin
 	reset_ctr_manual <= not KEY(1);
 	
 	data_view <= cpu_data when read_n = '0' and write_n = '1' else cpu_data_o;
-	LEDG <= data_view;
+	--LEDG <= data_view;
 	
+	ram_en <= not mem_req_n;
+	ram_rd <= not read_n;
+	ram_wr <= not write_n;
 	mem: ram port map (
 			address	=> address,
-			clken		=> not mem_req_n,
+			clken		=> ram_en,
 			clock		=> CLOCK_50,
-			data		=> cpu_data_o,
-			rden		=> not read_n,
-			wren		=> not write_n,
-			q			=> cpu_data_i
+			data		=> data_out,
+			rden		=> ram_rd,
+			wren		=> ram_wr,
+			q			=> data_in
 		);
 	
 	bus_rq_n <= not SW(17);
+	nmi_n <= not SW(16);
+	--int_n <= not SW(15);
+	
 	in_address(7 downto 0) <= SW(7 downto 0);
+	input_data_out <= SW(15 downto 8);
+	
 	address <= in_address when busak_n = '0' else cpu_address;
+	data_out <= input_data_out when busak_n = '0' else cpu_data_o;
+	
+	input_data_in <= data_in;
+	cpu_data_i <= data_in;
+	
 	LEDR(15 downto 0) <= address;
 	
 	LEDG(0) <= not busak_n;
+	LEDG(1) <= not halt_n;
+
 	LEDR(17) <= not read_n;
 	LEDR(16) <= not write_n;
 

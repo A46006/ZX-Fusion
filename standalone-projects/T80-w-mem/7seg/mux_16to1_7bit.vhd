@@ -29,6 +29,7 @@ BEGIN
 			WHEN x"D" => D <= a13;
 			WHEN x"E" => D <= a14;
 			WHEN x"F" => D <= a15;
+			when others => null;
 		END CASE;
 	END PROCESS;
 		
