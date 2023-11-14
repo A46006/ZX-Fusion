@@ -166,54 +166,10 @@ int inject_menu() {
 void save_state(FILENAMES* list) {
 	printf("SAVE STATE WAS REQUESTED\r\n");
 
-	// false if no game was selected (length = 0)
-	if (curr_game_filename_len) {
-		printf("NAME: %s\r\n", curr_game_filename);
-		printf("NAME LEN: %d\r\n", curr_game_filename_len);
-	} else {
-		//curr_game_filename = "save";
-		curr_game_filename[0] = 's';
-		curr_game_filename[1] = 'a';
-		curr_game_filename[2] = 'v';
-		curr_game_filename[3] = 'e';
-		curr_game_filename[4] = '\0';
-		curr_game_filename_len = 4;
-	}
+	// gets the save number for the new save state
+	int curr_save_num = get_save_num(curr_game_filename, &curr_game_filename_len);
+	printf("curr save num: %d\r\n", curr_save_num);
 
-	int curr_save_num = -1;
-	// checking for save state tag
-	if (curr_game_filename_len > 3 && curr_game_filename[curr_game_filename_len-3] == '_') {
-		curr_save_num = string_to_num(curr_game_filename, curr_game_filename_len, 2);
-		curr_game_filename_len -= 3; // updating length for the save state tag not to appear
-		printf("CURR_SAVE_NUM: %02d\r\n", curr_save_num);
-
-	}
-
-	// TODO: adjust this function to work with the lazy loading
-	// search multiple pages for all the files, one by one
-	// when there is a number missing, use that one
-	// if it goes up to 99, use 00
-	// user shouldn't have that many saves
-
-	printf("MAX PAGE: %d\r\n", max_page);
-	for (int p = 0; p <= max_page; p++) {
-		list_files_of_page(list, p);
-		// obtaining the last save number
-		for (int i = 0; i < list->size; i++) { // maybe use 0 at beginning?
-			int idx = i * FILENAME_LEN;
-			if (
-					strncmp(curr_game_filename, list->filenames + idx, curr_game_filename_len) == 0 &&
-					(list->filenames[idx + curr_game_filename_len]) == '_'
-			) {
-				int next_num = string_to_num(list->filenames + idx, curr_game_filename_len+3, 2);
-				if (next_num > curr_save_num) curr_save_num = next_num;
-			}
-		}
-	}
-
-
-
-	curr_save_num ++;
 	char save_num[3];
 	snprintf(save_num, 3, "%02d", curr_save_num);
 
@@ -434,6 +390,10 @@ int main(int argc, char *argv[]) {
 				} else if (is_write()) {
 					// load a game
 					if (!no_sd && !sd_empty) load_game(&curr_page_file_list);
+					// TO TEST RESULT TODO remove later
+					/*printf("SLEEEEEEEP\r\n");
+					usleep(5000000);
+					save_state(&curr_page_file_list);*/
 				}
 				break;
 			case INIT:

@@ -1,89 +1,8 @@
-15:21:09 **** Build of configuration Nios II for project memory_manipulator ****
+20:17:52 **** Incremental Build of configuration Nios II for project memory_manipulator ****
 make all 
 Info: Building ../memory_manipulator_bsp/
 C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
 [BSP build complete]
-Info: Compiling SD/ff15/diskio.c to obj/default/SD/ff15/diskio.o
-nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_INSTRUCTION_EMULATION -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/SD/ff15/diskio.o SD/ff15/diskio.c
-SD/ff15/diskio.c: In function 'disk_status':
-SD/ff15/diskio.c:34:10: warning: implicit declaration of function 'MMC_disk_status' [-Wimplicit-function-declaration]
-   return MMC_disk_status();;
-          ^
-SD/ff15/diskio.c: In function 'disk_initialize':
-SD/ff15/diskio.c:62:11: warning: implicit declaration of function 'MMC_disk_initialize' [-Wimplicit-function-declaration]
-  result = MMC_disk_initialize();
-           ^
-SD/ff15/diskio.c: In function 'disk_read':
-SD/ff15/diskio.c:112:8: warning: implicit declaration of function 'MMC_disk_read' [-Wimplicit-function-declaration]
-  res = MMC_disk_read(buff, sector, count);
-        ^
-SD/ff15/diskio.c: In function 'disk_write':
-SD/ff15/diskio.c:167:9: warning: implicit declaration of function 'MMC_disk_write' [-Wimplicit-function-declaration]
-  return MMC_disk_write(buff, sector, count);
-         ^
-SD/ff15/diskio.c: In function 'disk_ioctl':
-SD/ff15/diskio.c:217:9: warning: implicit declaration of function 'MMC_disk_ioctl' [-Wimplicit-function-declaration]
-  return MMC_disk_ioctl(cmd, buff);
-         ^
-Info: Compiling SD/ff15/ff.c to obj/default/SD/ff15/ff.o
-nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_INSTRUCTION_EMULATION -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/SD/ff15/ff.o SD/ff15/ff.c
-Info: Compiling SD/ff15/ffsystem.c to obj/default/SD/ff15/ffsystem.o
-nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_INSTRUCTION_EMULATION -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/SD/ff15/ffsystem.o SD/ff15/ffsystem.c
-Info: Compiling SD/ff15/ffunicode.c to obj/default/SD/ff15/ffunicode.o
-nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_INSTRUCTION_EMULATION -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/SD/ff15/ffunicode.o SD/ff15/ffunicode.c
-Info: Compiling SD/ff15/sdmmc.c to obj/default/SD/ff15/sdmmc.o
-nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_INSTRUCTION_EMULATION -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/SD/ff15/sdmmc.o SD/ff15/sdmmc.c
-SD/ff15/sdmmc.c: In function 'deselect':
-SD/ff15/sdmmc.c:174:7: warning: unused variable 'd' [-Wunused-variable]
-  BYTE d;
-       ^
-SD/ff15/sdmmc.c: In function 'select':
-SD/ff15/sdmmc.c:189:7: warning: unused variable 'd' [-Wunused-variable]
-  BYTE d;
-       ^
-Info: Compiling SD/sd_if.c to obj/default/SD/sd_if.o
-nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_INSTRUCTION_EMULATION -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/SD/sd_if.o SD/sd_if.c
-SD/sd_if.c: In function 'is_supported_file':
-SD/sd_if.c:25:23: warning: implicit declaration of function 'tolower' [-Wimplicit-function-declaration]
-   to_compare[len-i] = tolower(filename[len-i]);
-                       ^
-Info: Compiling SD/test_sd.c to obj/default/SD/test_sd.o
-nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_INSTRUCTION_EMULATION -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/SD/test_sd.o SD/test_sd.c
-SD/test_sd.c: In function 'test_sd':
-SD/test_sd.c:39:19: warning: pointer targets in passing argument 1 of 'file_write' differ in signedness [-Wpointer-sign]
-  err = file_write(buffer, strlen(buffer), &bytes_written);
-                   ^
-In file included from SD/test_sd.c:1:0:
-SD/.\sd_if.h:30:9: note: expected 'alt_u8 * {aka unsigned char *}' but argument is of type 'char *'
- FRESULT file_write(alt_u8* buffer, unsigned int len, unsigned int* bytes_written);
-         ^
-SD/test_sd.c:39:43: warning: pointer targets in passing argument 3 of 'file_write' differ in signedness [-Wpointer-sign]
-  err = file_write(buffer, strlen(buffer), &bytes_written);
-                                           ^
-In file included from SD/test_sd.c:1:0:
-SD/.\sd_if.h:30:9: note: expected 'unsigned int *' but argument is of type 'int *'
- FRESULT file_write(alt_u8* buffer, unsigned int len, unsigned int* bytes_written);
-         ^
-SD/test_sd.c:59:9: warning: format '%d' expects a matching 'int' argument [-Wformat=]
-  printf("text.txt size: %d bytes\r\n");
-         ^
-SD/test_sd.c:59:9: warning: format '%d' expects a matching 'int' argument [-Wformat=]
-SD/test_sd.c:62:19: warning: pointer targets in passing argument 1 of 'file_read' differ in signedness [-Wpointer-sign]
-   err = file_read(buffer, size, &bytes_read);
-                   ^
-In file included from SD/test_sd.c:1:0:
-SD/.\sd_if.h:29:9: note: expected 'alt_u8 * {aka unsigned char *}' but argument is of type 'char *'
- FRESULT file_read(alt_u8* buffer, unsigned int len, unsigned int* bytes_read);
-         ^
-SD/test_sd.c:62:33: warning: pointer targets in passing argument 3 of 'file_read' differ in signedness [-Wpointer-sign]
-   err = file_read(buffer, size, &bytes_read);
-                                 ^
-In file included from SD/test_sd.c:1:0:
-SD/.\sd_if.h:29:9: note: expected 'unsigned int *' but argument is of type 'int *'
- FRESULT file_read(alt_u8* buffer, unsigned int len, unsigned int* bytes_read);
-         ^
-Info: Compiling file_format_reader/file_format_aux.c to obj/default/file_format_reader/file_format_aux.o
-nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_INSTRUCTION_EMULATION -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/file_format_reader/file_format_aux.o file_format_reader/file_format_aux.c
 Info: Compiling file_format_reader/formats.c to obj/default/file_format_reader/formats.o
 nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_INSTRUCTION_EMULATION -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/file_format_reader/formats.o file_format_reader/formats.c
 file_format_reader/formats.c: In function 'load_file':
@@ -96,11 +15,11 @@ file_format_reader/formats.c:125:38: warning: passing argument 3 of 'file_read' 
                                       ^
 In file included from file_format_reader/formats.h:4:0,
                  from file_format_reader/formats.c:1:
-file_format_reader/..\SD\sd_if.h:29:9: note: expected 'unsigned int *' but argument is of type 'uint32_t * {aka long unsigned int *}'
+file_format_reader/..\SD\sd_if.h:30:9: note: expected 'unsigned int *' but argument is of type 'uint32_t * {aka long unsigned int *}'
  FRESULT file_read(alt_u8* buffer, unsigned int len, unsigned int* bytes_read);
          ^
 file_format_reader/formats.c: In function 'save_SNA':
-file_format_reader/formats.c:323:48: warning: passing argument 1 of 'conv_data_8_16' from incompatible pointer type [-Wincompatible-pointer-types]
+file_format_reader/formats.c:321:48: warning: passing argument 1 of 'conv_data_8_16' from incompatible pointer type [-Wincompatible-pointer-types]
   printf("trans SP: 0x%04X\r\n", conv_data_8_16(&regs.SP, 0) - 0x4000 + 0x1b);
                                                 ^
 In file included from file_format_reader/formats.h:2:0,
@@ -109,78 +28,9 @@ file_format_reader/file_format_aux.h:52:9: note: expected 'alt_u8 * {aka unsigne
  alt_u16 conv_data_8_16(alt_u8* data, int offset);
          ^
 file_format_reader/formats.c: In function 'generate_regs_save_state':
-file_format_reader/formats.c:929:17: warning: implicit declaration of function 'conv_data_8_16_sep' [-Wimplicit-function-declaration]
+file_format_reader/formats.c:938:17: warning: implicit declaration of function 'conv_data_8_16_sep' [-Wimplicit-function-declaration]
   alt_u16 addr = conv_data_8_16_sep(SP_ADDR_L, SP_ADDR_H);
                  ^
-Info: Compiling main.c to obj/default/main.o
-nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_INSTRUCTION_EMULATION -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/main.o main.c
-main.c: In function 'load_page':
-main.c:256:22: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
-  write_buf_mem(addr, title, 0, strlen(title));
-                      ^
-In file included from .\file_format_reader\formats.h:3:0,
-                 from main.c:4:
-.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
- void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
-      ^
-main.c:268:24: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
-    write_buf_mem(addr, list->filenames + idx, 0, name_len);
-                        ^
-In file included from .\file_format_reader\formats.h:3:0,
-                 from main.c:4:
-.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
- void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
-      ^
-main.c:284:23: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
-   write_buf_mem(addr, err_name, 0, name_len);
-                       ^
-In file included from .\file_format_reader\formats.h:3:0,
-                 from main.c:4:
-.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
- void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
-      ^
-main.c:297:25: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
-     write_buf_mem(addr, pages_str, 0, str_len); // writes the page string to memory
-                         ^
-In file included from .\file_format_reader\formats.h:3:0,
-                 from main.c:4:
-.\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
- void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
-      ^
-main.c: In function 'main':
-main.c:366:40: warning: passing argument 2 of 'memcpy' makes pointer from integer without a cast [-Wint-conversion]
-  memcpy(curr_page_file_list.filenames, (int)'f', FILES_PER_PAGE * FILENAME_LEN);
-                                        ^
-In file included from c:\intelfpga_lite\18.1\nios2eds\bin\gnu\h-x86_64-mingw32\nios2-elf\include\stdio.h:29:0,
-                 from main.c:1:
-c:\intelfpga_lite\18.1\nios2eds\bin\gnu\h-x86_64-mingw32\nios2-elf\include\string.h:23:8: note: expected 'const void * restrict' but argument is of type 'int'
- _PTR   _EXFUN(memcpy,(_PTR __restrict, const _PTR __restrict, size_t));
-        ^
-Info: Compiling spectrum_comm/DMA/dma_hal.c to obj/default/spectrum_comm/DMA/dma_hal.o
-nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_INSTRUCTION_EMULATION -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/spectrum_comm/DMA/dma_hal.o spectrum_comm/DMA/dma_hal.c
-Info: Compiling spectrum_comm/Peripheral_Interfaces/per_hal.c to obj/default/spectrum_comm/Peripheral_Interfaces/per_hal.o
-nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_INSTRUCTION_EMULATION -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/spectrum_comm/Peripheral_Interfaces/per_hal.o spectrum_comm/Peripheral_Interfaces/per_hal.c
-Info: Compiling terasic_lib/debug.c to obj/default/terasic_lib/debug.o
-nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_INSTRUCTION_EMULATION -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/terasic_lib/debug.o terasic_lib/debug.c
-terasic_lib/debug.c: In function 'myprintf_hexarray':
-terasic_lib/debug.c:85:17: warning: pointer targets in passing argument 1 of 'sprintf' differ in signedness [-Wpointer-sign]
-         sprintf(szText, "[%02X]", *(pHex+i));
-                 ^
-In file included from c:\intelfpga_lite\18.1\nios2eds\bin\gnu\h-x86_64-mingw32\nios2-elf\include\stdio.h:29:0,
-                 from terasic_lib/debug.c:35:
-c:\intelfpga_lite\18.1\nios2eds\bin\gnu\h-x86_64-mingw32\nios2-elf\include\stdio.h:258:5: note: expected 'char * restrict' but argument is of type 'unsigned char *'
- int _EXFUN(sprintf, (char *__restrict, const char *__restrict, ...)
-     ^
-In file included from terasic_lib/debug.c:33:0:
-terasic_lib/debug.c:86:16: warning: pointer targets in passing argument 1 of 'myprintf' differ in signedness [-Wpointer-sign]
-         DEBUG((szText));
-                ^
-terasic_lib/debug.h:72:46: note: in definition of macro 'DEBUG'
-     #define DEBUG(x)               {myprintf x;}  // standard in/out, specifed in project (it could be uart, jtag, or lcd)
-                                              ^
-terasic_lib/debug.c:66:5: note: expected 'char *' but argument is of type 'unsigned char *'
- int myprintf(char *format, ...){
-     ^
 Info: Linking memory_manip_attempt.elf
 nios2-elf-g++  -T'../memory_manipulator_bsp//linker.x' -msys-crt0='../memory_manipulator_bsp//obj/HAL/src/crt0.o' -msys-lib=hal_bsp -L../memory_manipulator_bsp/   -Wl,-Map=memory_manip_attempt.map   -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o memory_manip_attempt.elf obj/default/SD/ff15/diskio.o obj/default/SD/ff15/ff.o obj/default/SD/ff15/ffsystem.o obj/default/SD/ff15/ffunicode.o obj/default/SD/ff15/sdmmc.o obj/default/SD/sd_if.o obj/default/SD/test_sd.o obj/default/file_format_reader/file_format_aux.o obj/default/file_format_reader/formats.o obj/default/main.o obj/default/spectrum_comm/DMA/dma_hal.o obj/default/spectrum_comm/Peripheral_Interfaces/per_hal.o obj/default/terasic_lib/debug.o -lm -msys-lib=m
 nios2-elf-insert memory_manip_attempt.elf --thread_model hal --cpu_name cpu --qsys true --simulation_enabled false --stderr_dev jtag_uart --stdin_dev jtag_uart --stdout_dev jtag_uart --sopc_system_name nios_sd_loader --jdi H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../DE2_115_GOLDEN_TOP.jdi --sopcinfo H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../nios_sd_loader.sopcinfo
@@ -189,19 +39,31 @@ Info:                            43 KBytes free for stack + heap.
 Info: Creating memory_manip_attempt.objdump
 nios2-elf-objdump --disassemble --syms --all-header memory_manip_attempt.elf >memory_manip_attempt.objdump
 [memory_manip_attempt build complete]
-15:23:43 **** Build of configuration Nios II for project memory_manipulator ****
+20:19:21 **** Build of configuration Nios II for project memory_manipulator ****
 make all 
 Info: Building ../memory_manipulator_bsp/
 C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
 [BSP build complete]
 [memory_manip_attempt build complete]
-15:23:45 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+20:19:23 **** Incremental Build of configuration Nios II for project memory_manipulator ****
 make all 
 Info: Building ../memory_manipulator_bsp/
 C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
 [BSP build complete]
 [memory_manip_attempt build complete]
-15:42:55 **** Build of configuration Nios II for project memory_manipulator ****
+20:32:03 **** Build of configuration Nios II for project memory_manipulator ****
+make all 
+Info: Building ../memory_manipulator_bsp/
+C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
+[BSP build complete]
+[memory_manip_attempt build complete]
+20:32:04 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+make all 
+Info: Building ../memory_manipulator_bsp/
+C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
+[BSP build complete]
+[memory_manip_attempt build complete]
+20:39:38 **** Build of configuration Nios II for project memory_manipulator ****
 make all 
 Info: Building ../memory_manipulator_bsp/
 C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
@@ -220,11 +82,11 @@ file_format_reader/formats.c:125:38: warning: passing argument 3 of 'file_read' 
                                       ^
 In file included from file_format_reader/formats.h:4:0,
                  from file_format_reader/formats.c:1:
-file_format_reader/..\SD\sd_if.h:29:9: note: expected 'unsigned int *' but argument is of type 'uint32_t * {aka long unsigned int *}'
+file_format_reader/..\SD\sd_if.h:30:9: note: expected 'unsigned int *' but argument is of type 'uint32_t * {aka long unsigned int *}'
  FRESULT file_read(alt_u8* buffer, unsigned int len, unsigned int* bytes_read);
          ^
 file_format_reader/formats.c: In function 'save_SNA':
-file_format_reader/formats.c:321:48: warning: passing argument 1 of 'conv_data_8_16' from incompatible pointer type [-Wincompatible-pointer-types]
+file_format_reader/formats.c:322:48: warning: passing argument 1 of 'conv_data_8_16' from incompatible pointer type [-Wincompatible-pointer-types]
   printf("trans SP: 0x%04X\r\n", conv_data_8_16(&regs.SP, 0) - 0x4000 + 0x1b);
                                                 ^
 In file included from file_format_reader/formats.h:2:0,
@@ -233,13 +95,13 @@ file_format_reader/file_format_aux.h:52:9: note: expected 'alt_u8 * {aka unsigne
  alt_u16 conv_data_8_16(alt_u8* data, int offset);
          ^
 file_format_reader/formats.c: In function 'generate_regs_save_state':
-file_format_reader/formats.c:927:17: warning: implicit declaration of function 'conv_data_8_16_sep' [-Wimplicit-function-declaration]
+file_format_reader/formats.c:939:17: warning: implicit declaration of function 'conv_data_8_16_sep' [-Wimplicit-function-declaration]
   alt_u16 addr = conv_data_8_16_sep(SP_ADDR_L, SP_ADDR_H);
                  ^
 Info: Compiling main.c to obj/default/main.o
 nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_INSTRUCTION_EMULATION -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/main.o main.c
 main.c: In function 'load_page':
-main.c:256:22: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+main.c:219:22: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
   write_buf_mem(addr, title, 0, strlen(title));
                       ^
 In file included from .\file_format_reader\formats.h:3:0,
@@ -247,7 +109,7 @@ In file included from .\file_format_reader\formats.h:3:0,
 .\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
  void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
       ^
-main.c:268:24: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+main.c:231:24: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
     write_buf_mem(addr, list->filenames + idx, 0, name_len);
                         ^
 In file included from .\file_format_reader\formats.h:3:0,
@@ -255,7 +117,7 @@ In file included from .\file_format_reader\formats.h:3:0,
 .\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
  void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
       ^
-main.c:284:23: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+main.c:247:23: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
    write_buf_mem(addr, err_name, 0, name_len);
                        ^
 In file included from .\file_format_reader\formats.h:3:0,
@@ -263,7 +125,7 @@ In file included from .\file_format_reader\formats.h:3:0,
 .\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
  void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
       ^
-main.c:297:25: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+main.c:260:25: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
      write_buf_mem(addr, pages_str, 0, str_len); // writes the page string to memory
                          ^
 In file included from .\file_format_reader\formats.h:3:0,
@@ -272,7 +134,7 @@ In file included from .\file_format_reader\formats.h:3:0,
  void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
       ^
 main.c: In function 'main':
-main.c:366:40: warning: passing argument 2 of 'memcpy' makes pointer from integer without a cast [-Wint-conversion]
+main.c:329:40: warning: passing argument 2 of 'memcpy' makes pointer from integer without a cast [-Wint-conversion]
   memcpy(curr_page_file_list.filenames, (int)'f', FILES_PER_PAGE * FILENAME_LEN);
                                         ^
 In file included from c:\intelfpga_lite\18.1\nios2eds\bin\gnu\h-x86_64-mingw32\nios2-elf\include\stdio.h:29:0,
@@ -288,68 +150,23 @@ Info:                            43 KBytes free for stack + heap.
 Info: Creating memory_manip_attempt.objdump
 nios2-elf-objdump --disassemble --syms --all-header memory_manip_attempt.elf >memory_manip_attempt.objdump
 [memory_manip_attempt build complete]
-15:42:57 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+20:39:41 **** Incremental Build of configuration Nios II for project memory_manipulator ****
 make all 
 Info: Building ../memory_manipulator_bsp/
 C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
 [BSP build complete]
 [memory_manip_attempt build complete]
-17:03:44 **** Build of configuration Nios II for project memory_manipulator ****
+20:55:26 **** Build of configuration Nios II for project memory_manipulator ****
 make all 
 Info: Building ../memory_manipulator_bsp/
 C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
 [BSP build complete]
-Info: Compiling file_format_reader/formats.c to obj/default/file_format_reader/formats.o
-nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_INSTRUCTION_EMULATION -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/file_format_reader/formats.o file_format_reader/formats.c
-file_format_reader/formats.c: In function 'load_file':
-file_format_reader/formats.c:13:18: warning: implicit declaration of function 'tolower' [-Wimplicit-function-declaration]
-   extension[i] = tolower(extension[i]);
-                  ^
-file_format_reader/formats.c: In function 'load_SNA':
-file_format_reader/formats.c:125:38: warning: passing argument 3 of 'file_read' from incompatible pointer type [-Wincompatible-pointer-types]
-   err = file_read(szRead, nReadSize, &bytes_read);
-                                      ^
-In file included from file_format_reader/formats.h:4:0,
-                 from file_format_reader/formats.c:1:
-file_format_reader/..\SD\sd_if.h:29:9: note: expected 'unsigned int *' but argument is of type 'uint32_t * {aka long unsigned int *}'
- FRESULT file_read(alt_u8* buffer, unsigned int len, unsigned int* bytes_read);
-         ^
-file_format_reader/formats.c: In function 'save_SNA':
-file_format_reader/formats.c:321:48: warning: passing argument 1 of 'conv_data_8_16' from incompatible pointer type [-Wincompatible-pointer-types]
-  printf("trans SP: 0x%04X\r\n", conv_data_8_16(&regs.SP, 0) - 0x4000 + 0x1b);
-                                                ^
-In file included from file_format_reader/formats.h:2:0,
-                 from file_format_reader/formats.c:1:
-file_format_reader/file_format_aux.h:52:9: note: expected 'alt_u8 * {aka unsigned char *}' but argument is of type 'alt_u16 * {aka short unsigned int *}'
- alt_u16 conv_data_8_16(alt_u8* data, int offset);
-         ^
-file_format_reader/formats.c: In function 'generate_regs_save_state':
-file_format_reader/formats.c:927:17: warning: implicit declaration of function 'conv_data_8_16_sep' [-Wimplicit-function-declaration]
-  alt_u16 addr = conv_data_8_16_sep(SP_ADDR_L, SP_ADDR_H);
-                 ^
-Info: Linking memory_manip_attempt.elf
-nios2-elf-g++  -T'../memory_manipulator_bsp//linker.x' -msys-crt0='../memory_manipulator_bsp//obj/HAL/src/crt0.o' -msys-lib=hal_bsp -L../memory_manipulator_bsp/   -Wl,-Map=memory_manip_attempt.map   -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o memory_manip_attempt.elf obj/default/SD/ff15/diskio.o obj/default/SD/ff15/ff.o obj/default/SD/ff15/ffsystem.o obj/default/SD/ff15/ffunicode.o obj/default/SD/ff15/sdmmc.o obj/default/SD/sd_if.o obj/default/SD/test_sd.o obj/default/file_format_reader/file_format_aux.o obj/default/file_format_reader/formats.o obj/default/main.o obj/default/spectrum_comm/DMA/dma_hal.o obj/default/spectrum_comm/Peripheral_Interfaces/per_hal.o obj/default/terasic_lib/debug.o -lm -msys-lib=m
-nios2-elf-insert memory_manip_attempt.elf --thread_model hal --cpu_name cpu --qsys true --simulation_enabled false --stderr_dev jtag_uart --stdin_dev jtag_uart --stdout_dev jtag_uart --sopc_system_name nios_sd_loader --jdi H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../DE2_115_GOLDEN_TOP.jdi --sopcinfo H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../nios_sd_loader.sopcinfo
-Info: (memory_manip_attempt.elf) 205 KBytes program size (code + initialized data).
-Info:                            43 KBytes free for stack + heap.
-Info: Creating memory_manip_attempt.objdump
-nios2-elf-objdump --disassemble --syms --all-header memory_manip_attempt.elf >memory_manip_attempt.objdump
-[memory_manip_attempt build complete]
-17:03:47 **** Incremental Build of configuration Nios II for project memory_manipulator ****
-make all 
-Info: Building ../memory_manipulator_bsp/
-C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
-[BSP build complete]
-[memory_manip_attempt build complete]
-17:27:32 **** Build of configuration Nios II for project memory_manipulator ****
-make all 
-Info: Building ../memory_manipulator_bsp/
-C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
-[BSP build complete]
+Info: Compiling file_format_reader/file_format_aux.c to obj/default/file_format_reader/file_format_aux.o
+nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_INSTRUCTION_EMULATION -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/file_format_reader/file_format_aux.o file_format_reader/file_format_aux.c
 Info: Compiling main.c to obj/default/main.o
 nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_INSTRUCTION_EMULATION -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/main.o main.c
 main.c: In function 'load_page':
-main.c:263:22: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+main.c:219:22: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
   write_buf_mem(addr, title, 0, strlen(title));
                       ^
 In file included from .\file_format_reader\formats.h:3:0,
@@ -357,7 +174,7 @@ In file included from .\file_format_reader\formats.h:3:0,
 .\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
  void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
       ^
-main.c:275:24: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+main.c:231:24: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
     write_buf_mem(addr, list->filenames + idx, 0, name_len);
                         ^
 In file included from .\file_format_reader\formats.h:3:0,
@@ -365,7 +182,7 @@ In file included from .\file_format_reader\formats.h:3:0,
 .\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
  void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
       ^
-main.c:291:23: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+main.c:247:23: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
    write_buf_mem(addr, err_name, 0, name_len);
                        ^
 In file included from .\file_format_reader\formats.h:3:0,
@@ -373,7 +190,7 @@ In file included from .\file_format_reader\formats.h:3:0,
 .\file_format_reader\..\spectrum_comm\DMA\dma_hal.h:16:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
  void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
       ^
-main.c:304:25: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+main.c:260:25: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
      write_buf_mem(addr, pages_str, 0, str_len); // writes the page string to memory
                          ^
 In file included from .\file_format_reader\formats.h:3:0,
@@ -382,7 +199,7 @@ In file included from .\file_format_reader\formats.h:3:0,
  void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
       ^
 main.c: In function 'main':
-main.c:373:40: warning: passing argument 2 of 'memcpy' makes pointer from integer without a cast [-Wint-conversion]
+main.c:329:40: warning: passing argument 2 of 'memcpy' makes pointer from integer without a cast [-Wint-conversion]
   memcpy(curr_page_file_list.filenames, (int)'f', FILES_PER_PAGE * FILENAME_LEN);
                                         ^
 In file included from c:\intelfpga_lite\18.1\nios2eds\bin\gnu\h-x86_64-mingw32\nios2-elf\include\stdio.h:29:0,
@@ -398,7 +215,7 @@ Info:                            43 KBytes free for stack + heap.
 Info: Creating memory_manip_attempt.objdump
 nios2-elf-objdump --disassemble --syms --all-header memory_manip_attempt.elf >memory_manip_attempt.objdump
 [memory_manip_attempt build complete]
-17:27:34 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+20:55:29 **** Incremental Build of configuration Nios II for project memory_manipulator ****
 make all 
 Info: Building ../memory_manipulator_bsp/
 C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/

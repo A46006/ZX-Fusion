@@ -201,16 +201,17 @@ int load_SNA(char* filename) {
 
 	// Restore data overwritten by routine as soon as the snapshot's PC is detected in z80 address bus
 	// This means the z80 is about to start executing the loaded code
-	int wait_res = wait_until_routine_ends(1000);
-	printf("wait res: %d\r\n", wait_res);
-	if (!wait_res) {
-		DMA_request(10);
-
-		write_buf_mem(NMI_ROUTINE_ADDR, data_bk, 0, data_bk_len);
-		write_buf_mem(OLD_STACK_START_ADDR, bottom_data_bk, 0, OLD_STACK_SIZE);
-
-		DMA_stop(10);
-	}
+	// TODO uncomment
+//	int wait_res = wait_until_routine_ends(1000);
+//	printf("wait res: %d\r\n", wait_res);
+//	if (!wait_res) {
+//		DMA_request(10);
+//
+//		write_buf_mem(NMI_ROUTINE_ADDR, data_bk, 0, data_bk_len);
+//		write_buf_mem(OLD_STACK_START_ADDR, bottom_data_bk, 0, OLD_STACK_SIZE);
+//
+//		DMA_stop(10);
+//	}
 	return 0;
 }
 
@@ -337,22 +338,18 @@ int save_SNA(char* filename) {
 	file_write(first_block_buf, remaining_bytes, &bytes_written);
 
 	int end = 0xFFFF;
-	while (end-addr >= remaining_bytes) {//(addr < end) {
-		// update remaining bytes if there are less than normal left
-		/*if (end - addr < remaining_bytes) {
-			remaining_bytes = ((end+1) - addr);
-			if (remaining_bytes <= 0) break;
-		}*/
+	alt_u8 load_border_color = 1;
+	while (end-addr >= remaining_bytes) {
+		// Sets border color for saving (flashing through all colors)
+		write_io(0xFFFE, load_border_color++ & 0b111);
+		if (load_border_color >= 6) load_border_color = 1;
 
 		// read the data from memory and update the address for next read
-		printf("remaining: %d\r\n", remaining_bytes);
-		printf("addr: 0x%02X\r\n", addr);
 		read_buf_mem(addr, 0, remaining_bytes, write_buf);
 		addr += remaining_bytes;
 
 		// write block to file
 		file_write(write_buf, remaining_bytes, &bytes_written);
-		//printf("block %d: %d...\r\n", block_num++, bytes_written);
 	}
 
 	// last one
@@ -388,11 +385,26 @@ int save_SNA(char* filename) {
 
 	write_buf_mem(NMI_ROUTINE_ADDR, load_routine, 0, routine_size);
 
+	// Sets actual border color
+	write_io(0xFFFE, regs.border & 0b111);
+
 	DMA_stop_w_interrupt();
 
-	/*
-	//// FIX VISUALS AFTER PC > 0x5800...
-	*/
+	alt_u8* data_bk = first_block_buf + SNA_OFFSET_DATA;
+	int data_bk_len = data_len;
+
+	// Restore data overwritten by routine as soon as the snapshot's PC is detected in z80 address bus
+	// This means the z80 is about to start executing the loaded code
+	//int wait_res = wait_for_pc(regs.PC, 10000);
+	int wait_res = wait_until_routine_ends(1000);
+	if (!wait_res) {
+		DMA_request(10);
+
+		write_buf_mem(NMI_ROUTINE_ADDR, data_bk, 0, data_bk_len);
+		//write_buf_mem(OLD_STACK_START_ADDR, bottom_data_bk, 0, OLD_STACK_SIZE);
+
+		DMA_stop(10);
+	}
 
 	return 0;
 }

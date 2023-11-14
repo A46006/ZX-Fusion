@@ -170,6 +170,77 @@ void list_files_of_page(FILENAMES* filenames, int page_num) {
 	return;
 }
 
+/**
+ * Checks all the supported file's names and keeps track of the last save state
+ * Receives the filename of the selected file and its length up to the name.
+ */
+int get_save_num(char* filename, int* len) {
+	// false if no game was selected (length = 0)
+	if (*len) {
+		printf("NAME: %s\r\n", filename);
+		printf("NAME LEN: %d\r\n", *len);
+	} else {
+		//curr_game_filename = "save";
+		filename[0] = 's';
+		filename[1] = 'a';
+		filename[2] = 'v';
+		filename[3] = 'e';
+		filename[4] = '\0';
+		*len = 4;
+	}
+
+	int curr_save_num = -1;
+	// checking for save state tag to ajust the length
+	if (*len > 3 && filename[(*len)-3] == '_') {
+		curr_save_num = string_to_num(filename, *len, 2);
+		*len -= 3; // updating length for the save state tag not to appear
+		printf("CURR_SAVE_NUM: %02d\r\n", curr_save_num);
+	}
+
+	FRESULT err;
+	DIR dir;
+	FILINFO fno;
+
+	TCHAR* pattern = "*";
+	err = f_findfirst(&dir, &fno, "/", pattern);
+	if (!err) {
+		if (*fno.fname) {
+			do {
+				// For every supported file
+				if (is_supported_file(fno.fname, strlen(fno.fname))) {
+					// if the filename is the same (without counting the _xx or extension) and the _ is present
+					if (
+						strncmp(filename, fno.fname, *len) == 0 &&
+						(fno.fname[*len]) == '_'
+					) {
+						// obtain the number of that save state and save it if it is higher
+						int next_num = string_to_num(fno.fname, (*len)+3, 2);
+						if (next_num > curr_save_num) curr_save_num = next_num;
+					}
+				}
+				err = f_findnext(&dir, &fno);
+			} while (*fno.fname && !err);
+
+			if (err) {
+				printf("Error when finding another entry: 0x%02X\r\n", err);
+				return -1;
+			}
+
+			// return the highest save state number +1 for the current number
+			curr_save_num++;
+			// if it reaches 100 or more, use 0
+			if (curr_save_num > 99) curr_save_num = 0;
+			return curr_save_num;
+		}
+
+	}
+
+	//curr_save_num ++;
+	//return curr_save_num;
+	printf("find first bad 0x%02X\r\n", err);
+	return -1;
+}
+
 void print_filenames(FILENAMES* files, bool free_en) {
 	int filename;
 	size_t entries_left = files->size;

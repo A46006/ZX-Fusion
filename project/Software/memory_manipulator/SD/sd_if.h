@@ -18,6 +18,7 @@ bool is_supported_file(char* filename, size_t len);
 
 int num_of_pages(void);
 void list_files_of_page(FILENAMES* filenames, int page_num);
+int get_save_num(char* filename, int* len);
 void free_file_list(FILENAMES* filenames);
 
 
