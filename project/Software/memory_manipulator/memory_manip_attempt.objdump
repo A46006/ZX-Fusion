@@ -11680,7 +11680,7 @@ Disassembly of section .text:
    4a7f0:	0004a804 	movi	zero,4768
    4a7f4:	0004a85c 	xori	zero,zero,4769
    4a7f8:	0004a8bc 	xorhi	zero,zero,4770
-   4a7fc:	0004a940 	call	4a94 <__alt_mem_onchip_memory-0x3b56c>
+   4a7fc:	0004a940 	call	4a94 <__reset-0x3b56c>
    4a800:	0004a99c 	xori	zero,zero,4774
    4a804:	e0bffb03 	ldbu	r2,-20(fp)
    4a808:	10803b58 	cmpnei	r2,r2,237
@@ -15984,15 +15984,15 @@ Disassembly of section .text:
    4e9c0:	30800017 	ldw	r2,0(r6)
    4e9c4:	1000683a 	jmp	r2
    4e9c8:	0004ec08 	cmpgei	zero,zero,5040
-   4e9cc:	0004ea40 	call	4ea4 <__alt_mem_onchip_memory-0x3b15c>
+   4e9cc:	0004ea40 	call	4ea4 <__reset-0x3b15c>
    4e9d0:	0004ebf8 	rdprs	zero,zero,5039
    4e9d4:	0004ea34 	movhi	zero,5032
    4e9d8:	0004ebf8 	rdprs	zero,zero,5039
    4e9dc:	0004ebcc 	andi	zero,zero,5039
    4e9e0:	0004ebf8 	rdprs	zero,zero,5039
    4e9e4:	0004ea34 	movhi	zero,5032
-   4e9e8:	0004ea40 	call	4ea4 <__alt_mem_onchip_memory-0x3b15c>
-   4e9ec:	0004ea40 	call	4ea4 <__alt_mem_onchip_memory-0x3b15c>
+   4e9e8:	0004ea40 	call	4ea4 <__reset-0x3b15c>
+   4e9ec:	0004ea40 	call	4ea4 <__reset-0x3b15c>
    4e9f0:	0004ebcc 	andi	zero,zero,5039
    4e9f4:	0004ea34 	movhi	zero,5032
    4e9f8:	0004ea24 	muli	zero,zero,5032
@@ -21118,7 +21118,7 @@ Disassembly of section .text:
    53918:	000543e8 	cmpgeui	zero,zero,5391
    5391c:	00054498 	cmpnei	zero,zero,5394
    53920:	000543fc 	xorhi	zero,zero,5391
-   53924:	00054280 	call	5428 <__alt_mem_onchip_memory-0x3abd8>
+   53924:	00054280 	call	5428 <__reset-0x3abd8>
    53928:	00053968 	cmpgeui	zero,zero,5349
    5392c:	000542b8 	rdprs	zero,zero,5386
    53930:	00054498 	cmpnei	zero,zero,5394
@@ -28842,7 +28842,7 @@ Disassembly of section .text:
    5af98:	0005b658 	cmpnei	zero,zero,5849
    5af9c:	0005b658 	cmpnei	zero,zero,5849
    5afa0:	0005b658 	cmpnei	zero,zero,5849
-   5afa4:	0005b480 	call	5b48 <__alt_mem_onchip_memory-0x3a4b8>
+   5afa4:	0005b480 	call	5b48 <__reset-0x3a4b8>
    5afa8:	0005b48c 	andi	zero,zero,5842
    5afac:	0005b658 	cmpnei	zero,zero,5849
    5afb0:	0005b658 	cmpnei	zero,zero,5849
@@ -28853,7 +28853,7 @@ Disassembly of section .text:
    5afc4:	0005b01c 	xori	zero,zero,5824
    5afc8:	0005b594 	movui	zero,5846
    5afcc:	0005b658 	cmpnei	zero,zero,5849
-   5afd0:	0005b540 	call	5b54 <__alt_mem_onchip_memory-0x3a4ac>
+   5afd0:	0005b540 	call	5b54 <__reset-0x3a4ac>
    5afd4:	0005b658 	cmpnei	zero,zero,5849
    5afd8:	0005b15c 	xori	zero,zero,5829
    5afdc:	0005b658 	cmpnei	zero,zero,5849
@@ -30118,22 +30118,22 @@ Disassembly of section .text:
    5c370:	1105883a 	add	r2,r2,r4
    5c374:	10800017 	ldw	r2,0(r2)
    5c378:	1000683a 	jmp	r2
-   5c37c:	0005ca40 	call	5ca4 <__alt_mem_onchip_memory-0x3a35c>
-   5c380:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c384:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
+   5c37c:	0005ca40 	call	5ca4 <__reset-0x3a35c>
+   5c380:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c384:	0005cd40 	call	5cd4 <__reset-0x3a32c>
    5c388:	0005ca5c 	xori	zero,zero,5929
-   5c38c:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c390:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c394:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c398:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c39c:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c3a0:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
+   5c38c:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c390:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c394:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c398:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c39c:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c3a0:	0005cd40 	call	5cd4 <__reset-0x3a32c>
    5c3a4:	0005cc64 	muli	zero,zero,5937
    5c3a8:	0005cc88 	cmpgei	zero,zero,5938
-   5c3ac:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c3b0:	0005c580 	call	5c58 <__alt_mem_onchip_memory-0x3a3a8>
+   5c3ac:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c3b0:	0005c580 	call	5c58 <__reset-0x3a3a8>
    5c3b4:	0005cc9c 	xori	zero,zero,5938
-   5c3b8:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
+   5c3b8:	0005cd40 	call	5cd4 <__reset-0x3a32c>
    5c3bc:	0005ca68 	cmpgeui	zero,zero,5929
    5c3c0:	0005ca74 	movhi	zero,5929
    5c3c4:	0005ca74 	movhi	zero,5929
@@ -30144,68 +30144,68 @@ Disassembly of section .text:
    5c3d8:	0005ca74 	movhi	zero,5929
    5c3dc:	0005ca74 	movhi	zero,5929
    5c3e0:	0005ca74 	movhi	zero,5929
-   5c3e4:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c3e8:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c3ec:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c3f0:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c3f4:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c3f8:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c3fc:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c400:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c404:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c408:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
+   5c3e4:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c3e8:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c3ec:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c3f0:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c3f4:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c3f8:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c3fc:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c400:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c404:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c408:	0005cd40 	call	5cd4 <__reset-0x3a32c>
    5c40c:	0005cab4 	movhi	zero,5930
-   5c410:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c414:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c418:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c41c:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c420:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c424:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c428:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c42c:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c430:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c434:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
+   5c410:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c414:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c418:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c41c:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c420:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c424:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c428:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c42c:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c430:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c434:	0005cd40 	call	5cd4 <__reset-0x3a32c>
    5c438:	0005caf0 	cmpltui	zero,zero,5931
-   5c43c:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c440:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c444:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c448:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c44c:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
+   5c43c:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c440:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c444:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c448:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c44c:	0005cd40 	call	5cd4 <__reset-0x3a32c>
    5c450:	0005cb4c 	andi	zero,zero,5933
-   5c454:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c458:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c45c:	0005cbc0 	call	5cbc <__alt_mem_onchip_memory-0x3a344>
-   5c460:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c464:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c468:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c46c:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c470:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c474:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c478:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c47c:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c480:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c484:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
+   5c454:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c458:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c45c:	0005cbc0 	call	5cbc <__reset-0x3a344>
+   5c460:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c464:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c468:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c46c:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c470:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c474:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c478:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c47c:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c480:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c484:	0005cd40 	call	5cd4 <__reset-0x3a32c>
    5c488:	0005c968 	cmpgeui	zero,zero,5925
    5c48c:	0005c998 	cmpnei	zero,zero,5926
-   5c490:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c494:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c498:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
+   5c490:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c494:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c498:	0005cd40 	call	5cd4 <__reset-0x3a32c>
    5c49c:	0005cce8 	cmpgeui	zero,zero,5939
    5c4a0:	0005c998 	cmpnei	zero,zero,5926
-   5c4a4:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c4a8:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c4ac:	0005c840 	call	5c84 <__alt_mem_onchip_memory-0x3a37c>
-   5c4b0:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
+   5c4a4:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c4a8:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c4ac:	0005c840 	call	5c84 <__reset-0x3a37c>
+   5c4b0:	0005cd40 	call	5cd4 <__reset-0x3a32c>
    5c4b4:	0005c854 	movui	zero,5921
    5c4b8:	0005c88c 	andi	zero,zero,5922
    5c4bc:	0005c58c 	andi	zero,zero,5910
    5c4c0:	0005c834 	movhi	zero,5920
-   5c4c4:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c4c8:	0005cc00 	call	5cc0 <__alt_mem_onchip_memory-0x3a340>
-   5c4cc:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
+   5c4c4:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c4c8:	0005cc00 	call	5cc0 <__reset-0x3a340>
+   5c4cc:	0005cd40 	call	5cd4 <__reset-0x3a32c>
    5c4d0:	0005cc4c 	andi	zero,zero,5937
-   5c4d4:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
-   5c4d8:	0005cd40 	call	5cd4 <__alt_mem_onchip_memory-0x3a32c>
+   5c4d4:	0005cd40 	call	5cd4 <__reset-0x3a32c>
+   5c4d8:	0005cd40 	call	5cd4 <__reset-0x3a32c>
    5c4dc:	0005c910 	cmplti	zero,zero,5924
    5c4e0:	42000204 	addi	r8,r8,8
    5c4e4:	d8c02417 	ldw	r3,144(sp)
@@ -35440,7 +35440,7 @@ Disassembly of section .text:
    613d8:	d9400015 	stw	r5,0(sp)
    613dc:	d9800115 	stw	r6,4(sp)
    613e0:	d9c00215 	stw	r7,8(sp)
-   613e4:	00000000 	call	0 <__alt_mem_onchip_memory-0x40000>
+   613e4:	00000000 	call	0 <__reset-0x40000>
    613e8:	d9400017 	ldw	r5,0(sp)
    613ec:	d9800117 	ldw	r6,4(sp)
    613f0:	d9c00217 	ldw	r7,8(sp)
@@ -35524,7 +35524,7 @@ Disassembly of section .text:
    61520:	10003226 	beq	r2,zero,615ec <__call_exitprocs+0x178>
    61524:	a009883a 	mov	r4,r20
    61528:	98800015 	stw	r2,0(r19)
-   6152c:	00000000 	call	0 <__alt_mem_onchip_memory-0x40000>
+   6152c:	00000000 	call	0 <__reset-0x40000>
    61530:	9d000017 	ldw	r20,0(r19)
    61534:	a03fe41e 	bne	r20,zero,614c8 <__alt_data_end+0xfffe14c8>
    61538:	dfc00a17 	ldw	ra,40(sp)

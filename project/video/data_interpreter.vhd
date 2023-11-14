@@ -114,20 +114,24 @@ begin
 	BRIGHT <= color_info(6);
 	READ_E <= read_enable or read_next;
 	
-	-- TODO change after testing others
+	-- TODO 
 	-- Read enable operation
-	process (pix_col_num, RESET)
-	begin
-		if (RESET = '1') then
-			read_enable <= '0';
-		else
-			if (pix_col_num = "000") then
-				read_enable <= '1';
-			else
-				read_enable <= '0';
-			end if;
-		end if;
-	end process;
+	read_enable <= '0' when RESET = '1' else
+						'1' when pix_col_num = "000" else
+						'0';
+	
+--	process (pix_col_num, RESET)
+--	begin
+--		if (RESET = '1') then
+--			read_enable <= '0';
+--		else
+--			if (pix_col_num = "000") then
+--				read_enable <= '1';
+--			else
+--				read_enable <= '0';
+--			end if;
+--		end if;
+--	end process;
 	
 	-- Read enable in advance, when display is disabled (syncing)
 	process(PIXEL_CLK, DISPLAY_E, RESET)
