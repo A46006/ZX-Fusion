@@ -195,17 +195,24 @@ void save_state(FILENAMES* list) {
 	// if it goes up to 99, use 00
 	// user shouldn't have that many saves
 
-	// obtaining the last save number
-	for (int i = 0; i < list->size; i++) { // maybe use 0 at beginning?
-		int idx = i * FILENAME_LEN;
-		if (
-				strncmp(curr_game_filename, list->filenames + idx, curr_game_filename_len) == 0 &&
-				(list->filenames[idx + curr_game_filename_len]) == '_'
-		) {
-			int next_num = string_to_num(list->filenames + idx, curr_game_filename_len+3, 2);
-			if (next_num > curr_save_num) curr_save_num = next_num;
+	printf("MAX PAGE: %d\r\n", max_page);
+	for (int p = 0; p <= max_page; p++) {
+		list_files_of_page(list, p);
+		// obtaining the last save number
+		for (int i = 0; i < list->size; i++) { // maybe use 0 at beginning?
+			int idx = i * FILENAME_LEN;
+			if (
+					strncmp(curr_game_filename, list->filenames + idx, curr_game_filename_len) == 0 &&
+					(list->filenames[idx + curr_game_filename_len]) == '_'
+			) {
+				int next_num = string_to_num(list->filenames + idx, curr_game_filename_len+3, 2);
+				if (next_num > curr_save_num) curr_save_num = next_num;
+			}
 		}
 	}
+
+
+
 	curr_save_num ++;
 	char save_num[3];
 	snprintf(save_num, 3, "%02d", curr_save_num);
@@ -271,9 +278,9 @@ void load_page(FILENAMES* list) {
 	// if there is no list of files
 	} else {
 		//char* err_name = "NO FILES, RESET TO LEAVE..ï¿½";
-		char* err_name = "NO SUPPORTED FILES, RESET..ï¿½";
+		char* err_name = "NO SUPPORTED FILES, RESET..®"; // copyright R symbol = . + 0x80
 		if (no_sd) {
-			err_name = "NO SD CARD, RESET TO LEAVE..ï¿½";
+			err_name = "NO SD CARD, RESET TO LEAVE..®";
 		} else {
 			sd_empty = TRUE;
 			//char* err_name = "NO SUPPORTED FILES, RESET TO LEAVE..ï¿½";
@@ -427,10 +434,6 @@ int main(int argc, char *argv[]) {
 				} else if (is_write()) {
 					// load a game
 					if (!no_sd && !sd_empty) load_game(&curr_page_file_list);
-					// TO TEST RESULT TODO remove later
-					printf("SLEEEEEEEP\r\n");
-					usleep(5000000);
-					save_state(&curr_page_file_list);
 				}
 				break;
 			case INIT:

@@ -201,10 +201,9 @@ int load_SNA(char* filename) {
 
 	// Restore data overwritten by routine as soon as the snapshot's PC is detected in z80 address bus
 	// This means the z80 is about to start executing the loaded code
-	//int wait_res = wait_for_pc(regs.PC, 10000);
-	int wait_res = wait_until_routine_ends(100);
+	int wait_res = wait_until_routine_ends(1000);
 	printf("wait res: %d\r\n", wait_res);
-	if (wait_res != 0) {
+	if (!wait_res) {
 		DMA_request(10);
 
 		write_buf_mem(NMI_ROUTINE_ADDR, data_bk, 0, data_bk_len);
@@ -317,6 +316,9 @@ int save_SNA(char* filename) {
 
 	// generate regs struct with the save state's registers
 	REGS regs = generate_regs_save_state();
+
+	printf("SP: 0x%04X\r\n", regs.SP);
+	printf("trans SP: 0x%04X\r\n", conv_data_8_16(&regs.SP, 0) - 0x4000 + 0x1b);
 
 	// fill header of file with register values
 	fill_sna_header(first_block_buf, &regs);
@@ -904,9 +906,8 @@ int load_z80(char* filename) {
 	// Restore data overwritten by routine as soon as the snapshot's PC is detected in z80 address bus
 	// This means the z80 is about to start executing the loaded code
 	//int wait_res = wait_for_pc(regs.PC, 10000);
-	int wait_res = wait_until_routine_ends(10000);
+	int wait_res = wait_until_routine_ends(1000);
 	if (!wait_res) {
-		// PATCH OVER CORRECT DATA
 		DMA_request(10);
 
 		write_buf_mem(NMI_ROUTINE_ADDR, data_bk, 0, data_bk_len);
@@ -930,12 +931,15 @@ REGS generate_regs_save_state() {
 	// AF', AF and PC in stack:
 	// SP was saved BEFORE pushing AF' and AF to stack;
 	addr = reverse_16(conv_data_8_16(sp, 0)) - 4;
+	//printf("SP: 0x%04X\r\n", addr + 4);
 	alt_u8 afl[2];
 	read_buf_mem(addr, 0, 2, afl);
+	//printf("AF': 0x%02X\r\n", afl[1] | (afl[0] << 8));
 
 	addr += 2;
 	alt_u8 af[2];
 	read_buf_mem(addr, 0, 2, af);
+	//printf("AF: 0x%02X\r\n", af[1] | (af[0] << 8));
 
 	addr += 2;
 	alt_u8 pc[2];

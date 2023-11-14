@@ -1,6 +1,6 @@
-16:57:53 **** Clean-only build of configuration Nios II for project dma_test ****
+11:27:33 **** Clean-only build of configuration Nios II for project dma_test ****
 make clean 
 [dma_test clean complete]
 
-16:57:53 Build Finished (took 412ms)
+11:27:33 Build Finished (took 202ms)
 

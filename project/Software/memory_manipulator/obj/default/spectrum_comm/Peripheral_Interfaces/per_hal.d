@@ -2,7 +2,7 @@ obj/default/spectrum_comm/Peripheral_Interfaces/per_hal.o: \
  spectrum_comm/Peripheral_Interfaces/per_hal.c \
  spectrum_comm/Peripheral_Interfaces/../Peripheral_Interfaces/per_hal.h \
  spectrum_comm/Peripheral_Interfaces/../Peripheral_Interfaces/../Peripheral_Interfaces/per_hw.h \
- spectrum_comm/Peripheral_Interfaces/../Peripheral_Interfaces/../Peripheral_Interfaces/../../terasic_lib/terasic_includes.h \
+ h:\mi13d\tfm\final-repo-actual-46006\zx-fusion\project\software\memory_manipulator\terasic_lib\terasic_includes.h \
  ../memory_manipulator_bsp//HAL/inc/sys/alt_flash.h \
  ../memory_manipulator_bsp//HAL/inc/alt_types.h \
  ../memory_manipulator_bsp//HAL/inc/sys/alt_flash_types.h \
@@ -25,13 +25,13 @@ obj/default/spectrum_comm/Peripheral_Interfaces/per_hal.o: \
  ../memory_manipulator_bsp//HAL/inc/sys/alt_dev.h \
  ../memory_manipulator_bsp//HAL/inc/sys/alt_warning.h \
  ../memory_manipulator_bsp//HAL/inc/sys/alt_stdio.h \
- spectrum_comm/Peripheral_Interfaces/../Peripheral_Interfaces/../Peripheral_Interfaces/../../terasic_lib/debug.h
+ h:\mi13d\tfm\final-repo-actual-46006\zx-fusion\project\software\memory_manipulator\terasic_lib\debug.h
 
 spectrum_comm/Peripheral_Interfaces/../Peripheral_Interfaces/per_hal.h:
 
 spectrum_comm/Peripheral_Interfaces/../Peripheral_Interfaces/../Peripheral_Interfaces/per_hw.h:
 
-spectrum_comm/Peripheral_Interfaces/../Peripheral_Interfaces/../Peripheral_Interfaces/../../terasic_lib/terasic_includes.h:
+h:\mi13d\tfm\final-repo-actual-46006\zx-fusion\project\software\memory_manipulator\terasic_lib\terasic_includes.h:
 
 ../memory_manipulator_bsp//HAL/inc/sys/alt_flash.h:
 
@@ -79,4 +79,4 @@ spectrum_comm/Peripheral_Interfaces/../Peripheral_Interfaces/../Peripheral_Inter
 
 ../memory_manipulator_bsp//HAL/inc/sys/alt_stdio.h:
 
-spectrum_comm/Peripheral_Interfaces/../Peripheral_Interfaces/../Peripheral_Interfaces/../../terasic_lib/debug.h:
+h:\mi13d\tfm\final-repo-actual-46006\zx-fusion\project\software\memory_manipulator\terasic_lib\debug.h:

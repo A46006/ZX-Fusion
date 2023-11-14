@@ -126,7 +126,6 @@ void write_io(alt_u16 addr, alt_u8 data) {
 
 /**
  * Stop DMA, attempting "tries" number of times
- * TODO: Is having multiple tries necessary? just in case?
  */
 int DMA_stop(int tries) {
 	int i;

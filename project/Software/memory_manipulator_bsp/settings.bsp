@@ -2,10 +2,10 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>08-Nov-2023 17:02:34</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1699462954092</BspGeneratedUnixTimeStamp>
-        <BspGeneratedLocation>C:\Users\pepsu\Documents\MI13D\TFM\FINAL_REPO\ZX-Fusion\project\software\memory_manipulator_bsp</BspGeneratedLocation>
-        <BspSettingsFile>.\settings.bsp</BspSettingsFile>
+        <BspGeneratedTimeStamp>14/nov/2023 11:27:48</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1699961268307</BspGeneratedUnixTimeStamp>
+        <BspGeneratedLocation>H:\MI13D\TFM\FINAL-REPO-actual-46006\ZX-Fusion\project\Software\memory_manipulator_bsp</BspGeneratedLocation>
+        <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>..\..\nios_sd_loader.sopcinfo</SopcDesignFile>
         <JdiFile>default</JdiFile>
         <Cpu>cpu</Cpu>

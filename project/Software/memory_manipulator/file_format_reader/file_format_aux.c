@@ -15,7 +15,7 @@ alt_u16 conv_data_8_16_sep(alt_u8 data_l, alt_u8 data_h) {
 }
 
 int get_LOAD_routine_size() {
-	return 49;
+	return 52;
 }
 
 int get_SAVE_routine_size() {
@@ -304,15 +304,10 @@ void generate_LOAD_routine(alt_u8* routine, REGS regs, const enum file_type type
 		routine[i++] = DI;
 	}
 
-	// TODO replace these with RETN
-	//sp = 0x5800;
-	//routine[i++] = LD_SP_NN;
-	//routine[i++] = sp & 0xFF;
-	//routine[i++] = sp >> 8;
-
-	routine[i++] = HALT_ASM;
-	//routine[i++] = RETN1;
-	//routine[i++] = RETN2;
+	//routine[i++] = DI;
+	//routine[i++] = HALT_ASM;
+	routine[i++] = RETN1;
+	routine[i++] = RETN2;
 }
 
 void generate_SAVE_routine(alt_u8* routine, const enum file_type type) {

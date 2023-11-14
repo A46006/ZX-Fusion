@@ -62,11 +62,6 @@ alt_u8 read_mem(alt_u16 addr) {
 void read_buf_mem(alt_u16 addr, int start, int len, alt_u8* ret) {
 	for(int i = start; i < start+len; i++) {
 		ret[i] = read_mem(addr++);
-		// TODO remove later
-		if (addr > 0xFFF8) {
-			printf("addr: 0x%04X\r\n", addr-1);
-			printf("data: 0x%02X\r\n", ret[i]);
-		}
 	}
 }
 
@@ -92,18 +87,7 @@ void write_mem(alt_u16 addr, const alt_u8 data) {
 
 void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len) {
 	for (int i = start; i < start+len; i++) {
-		// TODO remove
-		if (addr > 0xFFF0) {
-			printf("[%04X]: %02X\r\n", addr, data[i]);
-		}
-		if (addr == 0xFFFE) {
-			printf("WRITE DETECTED: %02X\r\n", data[i]);
-		}
 		write_mem(addr++, data[i]);
-	}
-	if (addr == 0) {
-		printf("FFFE: %d\r\n", read_mem(0xFFFE));
-		printf("FFFF: %d\r\n", read_mem(0xFFFF));
 	}
 }
 
@@ -176,7 +160,6 @@ int wait_until_routine_ends(int tries) {
 
 /**
  * Stop DMA, attempting "tries" number of times
- * TODO: Is having multiple tries necessary? just in case?
  */
 int DMA_stop(int tries) {
 	int i;
