@@ -64,24 +64,11 @@ BEGIN
 	GENERIC MAP (
 		clock_enable_input_a => "NORMAL",
 		clock_enable_output_a => "NORMAL",
---		init_file => "./rom/file/Spectrum48_ROM.hex", -- ORIGINAL ROM
 
 		-- CURRENT ONE
 		init_file => "./rom/file/Spectrum48_ROM_LIGHT.hex", -- MODIFIED ROM
 --		init_file => "./rom/file/testrom.hex", -- TEST ROM
 
-
---		init_file => "./rom/file/Spectrum48_ROM_EDITED.hex",
-		
-		
---		init_file => "./rom/file/Spectrum48_ROM_TEST_MENU2.hex",
---		init_file => "./rom/file/test-io.hex",
-
---		init_file => "./rom/file/Spectrum128_ROM0.hex",
---		init_file => "./rom/file/Spectrum128_ROM1.hex",
---		init_file => "./rom/file/test-video.hex",
---		init_file => "./rom/file/test-contention.hex",
---		init_file => "./rom/file/delay_routine.hex",
 		intended_device_family => "Cyclone IV E",
 		lpm_hint => "ENABLE_RUNTIME_MOD=YES, INSTANCE_NAME=ROM",
 		lpm_type => "altsyncram",
