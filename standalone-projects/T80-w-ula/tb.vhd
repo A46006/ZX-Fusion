@@ -43,7 +43,7 @@ architecture tb_arch of tb is
 	
 begin
 	clock_50 <= not clock_50 after 10 ns; -- t=10ns => T=20ns => f=1/20ns = 50 MHz
-	clock_3_5 <= not clock_3_5 after 142.8571428 ns; -- t= 143 ns => T=286 => f=1/286ns =  3,49 MHz
+	-- <= not clock_3_5 after 142.8571428 ns; -- t= 143 ns => T=286 => f=1/286ns =  3,49 MHz
 	clk_50 <= clock_50;
 	clk_3_5 <= clock_3_5;
 	
