@@ -30,8 +30,12 @@ vcom -work work "../t80/T80_Pack.vhd"
 vcom -work work "../t80/T80_Reg.vhd"
 vcom -work work "../t80/T80a.vhd"
 
+vcom -work work "../primitive_blocks/FallingEdge_DFF.vhd"
+vcom -work work "../primitive_blocks/FallingEdge_TFF_RCE.vhd"
+
 vcom -work work "../ula/ula_count.vhd"
 vcom -work work "../ula/ula_port.vhd"
+vcom -work work "../ula/ula_top.vhd"
 
 vcom -work work "../video/video.vhd"
 vcom -work work "../video/data_interpreter.vhd"

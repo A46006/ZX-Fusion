@@ -1180,6 +1180,21 @@ set_location_assignment PIN_AE15 -to KEYB_DATA[4]
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to KEYB_DATA[4]
 set_global_assignment -name SEARCH_PATH ula
 set_global_assignment -name SEARCH_PATH nios_sd_loader
+set_global_assignment -name ENABLE_OCT_DONE OFF
+set_global_assignment -name ENABLE_CONFIGURATION_PINS OFF
+set_global_assignment -name ENABLE_BOOT_SEL_PIN OFF
+set_global_assignment -name USE_CONFIGURATION_DEVICE ON
+set_global_assignment -name CYCLONEIII_CONFIGURATION_DEVICE EPCS64
+set_global_assignment -name CRC_ERROR_OPEN_DRAIN OFF
+set_global_assignment -name OUTPUT_IO_TIMING_NEAR_END_VMEAS "HALF VCCIO" -rise
+set_global_assignment -name OUTPUT_IO_TIMING_NEAR_END_VMEAS "HALF VCCIO" -fall
+set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -rise
+set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -fall
+set_global_assignment -name OPTIMIZATION_MODE "AGGRESSIVE AREA"
+set_global_assignment -name CYCLONEII_OPTIMIZATION_TECHNIQUE AREA
+set_global_assignment -name ALLOW_ANY_RAM_SIZE_FOR_RECOGNITION ON
+set_global_assignment -name ALLOW_ANY_ROM_SIZE_FOR_RECOGNITION ON
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
 set_global_assignment -name VHDL_FILE constants.vhd
 set_global_assignment -name VHDL_FILE tb.vhd
 set_global_assignment -name VHDL_FILE top.vhd
@@ -1217,21 +1232,6 @@ set_global_assignment -name QIP_FILE ram/remaining_ram.qip
 set_global_assignment -name QIP_FILE reset_counter.qip
 set_global_assignment -name QIP_FILE ram/pixel_video_ram.qip
 set_global_assignment -name QIP_FILE ram/color_video_ram.qip
-set_global_assignment -name VHDL_FILE "primitive_blocks/FallingEdge_ TFF_RCE.vhd"
-set_global_assignment -name VHDL_FILE "primitive_blocks/FallingEdge_ DFF.vhd"
+set_global_assignment -name VHDL_FILE primitive_blocks/FallingEdge_TFF_RCE.vhd
+set_global_assignment -name VHDL_FILE primitive_blocks/FallingEdge_DFF.vhd
 set_global_assignment -name QIP_FILE pll/pll.qip
-set_global_assignment -name ENABLE_OCT_DONE OFF
-set_global_assignment -name ENABLE_CONFIGURATION_PINS OFF
-set_global_assignment -name ENABLE_BOOT_SEL_PIN OFF
-set_global_assignment -name USE_CONFIGURATION_DEVICE ON
-set_global_assignment -name CYCLONEIII_CONFIGURATION_DEVICE EPCS64
-set_global_assignment -name CRC_ERROR_OPEN_DRAIN OFF
-set_global_assignment -name OUTPUT_IO_TIMING_NEAR_END_VMEAS "HALF VCCIO" -rise
-set_global_assignment -name OUTPUT_IO_TIMING_NEAR_END_VMEAS "HALF VCCIO" -fall
-set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -rise
-set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -fall
-set_global_assignment -name OPTIMIZATION_MODE "AGGRESSIVE AREA"
-set_global_assignment -name CYCLONEII_OPTIMIZATION_TECHNIQUE AREA
-set_global_assignment -name ALLOW_ANY_RAM_SIZE_FOR_RECOGNITION ON
-set_global_assignment -name ALLOW_ANY_ROM_SIZE_FOR_RECOGNITION ON
-set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
