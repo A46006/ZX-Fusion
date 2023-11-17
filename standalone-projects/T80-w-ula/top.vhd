@@ -11,6 +11,10 @@ entity top is
 		KEY : in std_logic_vector(3 downto 0);
 		LEDR : out std_logic_vector(17 downto 0);
 		LEDG : out std_logic_vector(7 downto 0);
+		
+		KEYB_ADDR : out std_logic_vector(7 downto 0);
+		KEYB_DATA : in std_logic_vector(4 downto 0);
+		
 		HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, HEX6, HEX7 : out STD_LOGIC_VECTOR(0 to 6));
 end top;
 
@@ -154,6 +158,9 @@ begin
 	HEX5 <= "0001000";
 	HEX4 <= "1111110";
 		
+	KEYB_ADDR <= address(15 downto 8);
+	keyboard_data_out <= KEYB_DATA;
+	
 	main_pll : pll port map (
 			areset		=> pll_reset,
 			inclk0		=> CLOCK_50,

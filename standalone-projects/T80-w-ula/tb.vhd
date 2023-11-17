@@ -13,6 +13,10 @@ architecture tb_arch of tb is
 			KEY : in std_logic_vector(3 downto 0);
 			LEDR : out std_logic_vector(17 downto 0);
 			LEDG : out std_logic_vector(7 downto 0);
+			
+			KEYB_ADDR : out std_logic_vector(7 downto 0);
+			KEYB_DATA : in std_logic_vector(4 downto 0);
+			
 			HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, HEX6, HEX7 : out STD_LOGIC_VECTOR(0 to 6)
 		);
 	end component;
@@ -41,6 +45,12 @@ architecture tb_arch of tb is
 	
 	signal halt : std_logic := '0';
 	
+	signal address : std_logic_vector(15 downto 0);
+	signal keyb_addr : std_logic_vector(7 downto 0);
+	signal keyb_data : std_logic_vector(4 downto 0) := "11111";
+	
+	signal READ_ADDR : std_logic := '0';
+	
 begin
 	clock_50 <= not clock_50 after 10 ns; -- t=10ns => T=20ns => f=1/20ns = 50 MHz
 	-- <= not clock_3_5 after 142.8571428 ns; -- t= 143 ns => T=286 => f=1/286ns =  3,49 MHz
@@ -55,10 +65,16 @@ begin
 	
 	busak <= LEDG(0);
 	halt <= LEDG(1);
+	address <= LEDR(15 downto 0);
+	
+	-- Always sending the key F
+	keyb_data <= "10111" when keyb_addr(1) = '0' else "11111";
 	
 	--SW(1 downto 0) <= video_mode;
 	--SW(17) <= native_n_ps2;
 	
+	-- Signal active when the READ in assembly code is being made
+	READ_ADDR <= '1' when address = x"000F" else '0';
 	
 	uut : top port map (
 		CLOCK_50 => clk_50,
@@ -66,6 +82,10 @@ begin
 		KEY => KEY, 
 		LEDR => LEDR, 
 		LEDG => LEDG,
+		
+		KEYB_ADDR => keyb_addr,
+		KEYB_DATA => keyb_data,
+		
 		HEX0 => hex0, 
 		HEX1 => hex1,
 		HEX2 => hex2,
@@ -81,12 +101,14 @@ begin
 	tb : process
 	begin
 		wait for 5 ns;
-	
-		reset <= '1' after 0 ns, '0' after 200 ns;
+		reset <= '0';
+		--reset <= '1' after 0 ns, '0' after 200 ns;
 		
 		wait until reset = '0' and halt = '1';
 		
-		wait for 100us		
+		wait for 100us;
+		
+		wait until reset = '0' and halt = '0';
 		
 		assert false report "fim da simulação!" severity warning;
 		wait; -- will wait forever

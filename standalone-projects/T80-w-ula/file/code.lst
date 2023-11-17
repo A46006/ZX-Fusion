@@ -1,395 +1,568 @@
-; --------------------------------------
-; zasm: assemble "code.asm"
-; date: 2023-11-16 16:18:53
-; --------------------------------------
+              	; --------------------------------------
+              	; zasm: assemble "code.asm"
+              	; date: 2023-11-17 11:35:49
+              	; --------------------------------------
 
 
-#target rom
+              	#target rom
+              	
+              	
+0000:         	#code EPROM, 0x0000, 0x38
+              	
+0000: ED56    		IM 1
+0002: FB      		EI
+              		
+              		; initializing system variables
+              		
+0003: CD1003  		CALL INIT
+              		
+0006: 31A0C0  		LD SP, $C0A0	; Setting SP so it isn't in FFFF
+0009: 2155AA  		LD HL, $AA55	; Writting values to FFFE
+000C: 22FEFF  		LD ($FFFE), HL	;
+              		;LD ($FFF0), HL
+000F:         	START:
+000F: 2AFEFF  		LD HL, ($FFFE)
+0012: 76      		HALT
+0013: 18FA    		JR START
+              	
+              	
+              	
+              	;; Interrupt and keyboard routines follow (code taken from Richard Dymond's ZX Specturm 48k ROM disassembly https://skoolkid.github.io/rom/index.html)
+0038:         	#code interrupt, 0x38, 0x1cd
+0038:         	MASK_INT:
+0038: F5      		push AF
+0039: E5      		push HL
+003A: 2A785C  		LD	HL, ($5C78)
+003D: 23      		INC HL
+003E: 22785C  		LD	($5C78), HL
+0041: 7C      		LD A,H
+0042: B5      		OR L
+0043: 2003    		JR NZ,KEY_INT
+0045: FD3440  		INC (IY+$40)
+0048:         	KEY_INT
+0048: C5      		push BC
+0049: D5      		push DE
+004A: CD5300  		call KEYBOARD
+004D: D1      		pop de
+004E: C1      		pop bc
+004F: E1      		pop hl
+0050: F1      		pop af
+0051: FB      		EI
+0052: C9      		RET
+              		
+0053:         	KEYBOARD:
+0053: CDB200  		CALL KEY_SCAN
+0056: C0      		RET NZ
+              	
+0057: 21005C  		LD HL,$5C00		; Start with KSTATE0.
+005A:         	K_ST_LOOP:
+005A: CB7E    		BIT 7,(HL)		; Jump forward if a 'set is free', i.e. KSTATE0/4 holds +FF.
+005C: 2007    		JR NZ,K_CH_SET	;
+005E: 23      		INC HL 			; However if the set is not free decrease its '5 call counter' and 
+005F: 35      		DEC (HL)		; 	when it reaches zero signal the set as free.
+0060: 2B      		DEC HL			;
+0061: 2002    		JR NZ,K_CH_SET	;
+0063: 36FF    		LD (HL),$FF		;
+0065:         	K_CH_SET:
+0065: 7D      		LD A,L			; Fetch the low byte of the address and 
+0066: 21045C  		LD HL,$5C04		; jump back if the second set (KSTATE4) has still to be considered.
+0069: BD      		CP L			;
+006A: 20EE    		JR NZ,K_ST_LOOP	;
+              		
+006C: CDE300  		CALL K_TEST		; Make the necessary tests and return if needed. 
+006F: D0      		RET NC			; Also change the key value to a 'main code'.
+              		
+0070: 21005C  		LD HL,$5C00		; Look first at KSTATE0.
+0073: BE      		CP (HL) 		; Jump forward if the codes match - indicating a repeat.
+0074: 282E    		JR Z,K_REPEAT	;
+0076: EB      		EX DE,HL		; Save the address of KSTATE0.
+0077: 21045C  		LD HL,$5C04 	; Now look at KSTATE4.
+007A: BE      		CP (HL)			; Jump forward if the codes match - indicating a repeat.
+007B: 2827    		JR Z,K_REPEAT	; 
+              		
+007D: CB7E    		BIT 7,(HL)		; Consider the second set.
+007F: 2004    		JR NZ,K_NEW		; Jump forward if 'free'.
+0081: EB      		EX DE,HL		; Now consider the first set.
+0082: CB7E    		BIT 7,(HL)		; Continue if the set is 'free' but exit if not.
+0084: C8      		RET Z			;
+              		
+0085:         	K_NEW:
+0085: 5F      	 	LD E,A			; The code is passed to the E register and to KSTATE0/4.
+0086: 77      		LD (HL),A		;
+0087: 23      		INC HL			; The '5 call counter' for this set is reset to '5'.
+0088: 3605    		LD (HL),$05		; 
+008A: 23      		INC HL			; The third system variable of the set holds 
+008B: 3A095C  		LD A,($5C09)	; the REPDEL value (normally 0.7 secs.).
+008E: 77      		LD (HL),A		;
+008F: 23      		INC HL			; Point to KSTATE3/7.
+0090: FD4E07  		LD C,(IY+$07) 	; Fetch MODE.
+0093: FD5601  		LD D,(IY+$01) 	; Fetch FLAGS.
+0096: E5      		PUSH HL 		; Save the pointer whilst the 'main code' is decoded.
+0097: CD8E02  		CALL K_DECODE	;
+009A: E1      		POP HL			;
+009B: 77      		LD (HL),A		; The final code value is saved in KSTATE3/7, 
+              						; from where it is collected in case of a repeat.
+009C:         	K_END:
+009C: 32085C  		LD ($5C08),A 	; Enter the final code value into LAST-K and signal 'a new key' 
+009F: FDCB01EE		SET 5,(IY+$01)	; by setting bit 5 of FLAGS.
+00A3: C9      		RET 			; Finally return.
+00A4:         	K_REPEAT:
+00A4: 23      		INC HL 			; Point to the '5 call counter' of the set being used and reset it to 5.
+00A5: 3605    		LD (HL),$05		;
+00A7: 23      		INC HL 			; Point to the third system variable - the REPDEL/REPPER value 
+00A8: 35      		DEC (HL)		; 	- and decrement it.
+00A9: C0      		RET NZ			; Exit from the KEYBOARD subroutine if the delay period has not passed.
+00AA: 3A0A5C  		LD A,($5C0A)	; However once it has passed the delay period for the 
+00AD: 77      		LD (HL),A		;	next repeat is to be REPPER.
+00AE: 23      		INC HL			; The repeat has been accepted so the final code value 
+00AF: 7E      		LD A,(HL)		; 	is fetched from KSTATE3/7 and passed to K_END.
+00B0: 18EA    		JR K_END		;
+              		
+              	; Keyobard scanning subroutine
+00B2:         	KEY_SCAN: 
+00B2: 2E2F    		LD L,$2F
+00B4: 11FFFF  		LD DE,$FFFF
+00B7: 01FEFE  		LD BC,$FEFE
+00BA:         	KEY_LINE:
+00BA: ED78    		IN A,(C)
+00BC: 2F      		CPL
+00BD: E61F    		AND $1F
+00BF: 280E    		JR Z,KEY_DONE
+00C1: 67      		LD H,A
+00C2: 7D      		LD A,L
+00C3:         	KEY_3KEYS:
+00C3: 14      		INC D
+00C4: C0      		RET NZ
+00C5:         	KEY_BITS:
+00C5: D608    		SUB $08
+00C7: CB3C    		SRL H
+00C9: 30FA    		JR NC, KEY_BITS
+00CB: 53      		LD D,E
+00CC: 5F      		LD E,A
+00CD: 20F4    		JR NZ,KEY_3KEYS	
+00CF:         	KEY_DONE:
+00CF: 2D      		DEC L
+00D0: CB00    		RLC B
+00D2: 38E6    		JR C,KEY_LINE
+              		
+00D4: 7A      		LD A,D	; Accept any key value which still has the D register holding +FF,
+00D5: 3C      		INC A	;  i.e. a single key pressed or 'no-key'.
+00D6: C8      		RET Z	;
+00D7: FE28    		CP $28 	; Accept the key value for a pair of keys if the D key is CAPS SHIFT.
+00D9: C8      		RET Z	;
+00DA: FE19    		CP $19 	; Accept the key value for a pair of keys if the D key is SYMBOL SHIFT.
+00DC: C8      		RET Z	;
+00DD: 7B      		LD A,E	; It is however possible for the E key of a pair to be
+00DE: 5A      		LD E,D	;  SYMBOL SHIFT - so this has to be considered.
+00DF: 57      		LD D,A	;
+00E0: FE18    		CP $18	;
+00E2: C9      		RET		; Return with the zero flag set if it was SYMBOL SHIFT and 'another key'; 
+              				; otherwise reset.
+              				
+              				
+              	; Used by KEYBOARD and S_INKEY.	
+00E3:         	K_TEST:
+00E3: 42      		LD B,D			; Copy the shift byte.
+00E4: 1600    		LD D,$00		; Clear the D register for later.
+00E6: 7B      		LD A,E			; Move the key number.
+00E7: FE27    		CP $27			; Return now if the key was 'CAPS SHIFT' only or 'no-key'.
+00E9: D0      		RET NC			;
+00EA: FE18    		CP $18			; Jump forward unless the E key was SYMBOL SHIFT.
+00EC: 2003    		JR NZ,K_MAIN	;
+00EE: CB78    		BIT 7,B			; However accept SYMBOL SHIFT and another key; 
+00F0: C0      		RET NZ			; return with SYMBOL SHIFT only.
+00F1:         	K_MAIN:
+00F1: 210502  		LD HL,KEYTABLE_A ; The base address of the main key table. 
+00F4: 19      		ADD HL,DE		; Index into the table and fetch the 'main code'.
+00F5: 7E      		LD A,(HL)		;
+00F6: 37      		SCF				; Signal 'valid keystroke' before returning.
+00F7: C9      		RET				;
+              		
+              	
+0205:         	#code main_key_table, 0x205, 0xFDFB;0x28E
+0205:         	KEYTABLE_A:
+0205: 42      		DEFB $42 	; B
+0206: 48      		DEFB $48 	; H
+0207: 59      		DEFB $59 	; Y
+0208: 36      		DEFB $36 	; 6
+0209: 35      		DEFB $35 	; 5
+020A: 54      		DEFB $54 	; T
+020B: 47      		DEFB $47 	; G
+020C: 56      		DEFB $56 	; V
+020D: 4E      		DEFB $4E 	; N
+020E: 4A      		DEFB $4A 	; J
+020F: 55      		DEFB $55 	; U
+0210: 37      		DEFB $37 	; 7
+0211: 34      		DEFB $34 	; 4
+0212: 52      		DEFB $52 	; R
+0213: 46      		DEFB $46 	; F
+0214: 43      		DEFB $43 	; C
+0215: 4D      		DEFB $4D 	; M
+0216: 4B      		DEFB $4B 	; K
+0217: 49      		DEFB $49 	; I
+0218: 38      		DEFB $38 	; 8
+0219: 33      		DEFB $33 	; 3
+021A: 45      		DEFB $45 	; E
+021B: 44      		DEFB $44 	; D
+021C: 58      		DEFB $58 	; X
+021D: 0E      		DEFB $0E 	; SYMBOL SHIFT
+021E: 4C      		DEFB $4C 	; L
+021F: 4F      		DEFB $4F 	; O
+0220: 39      		DEFB $39 	; 9
+0221: 32      		DEFB $32 	; 2
+0222: 57      		DEFB $57 	; W
+0223: 53      		DEFB $53 	; S
+0224: 5A      		DEFB $5A 	; Z
+0225: 20      		DEFB $20 	; SPACE
+0226: 0D      		DEFB $0D 	; ENTER
+0227: 50      		DEFB $50 	; P
+0228: 30      		DEFB $30 	; 0
+0229: 31      		DEFB $31 	; 1
+022A: 51      		DEFB $51 	; Q
+022B: 41      		DEFB $41 	; A
+              		
+022C:         	KEYTABLE_B:
+022C: E3      		DEFB $E3 	; READ
+022D: C4      		DEFB $C4 	; BIN
+022E: E0      		DEFB $E0 	; LPRINT
+022F: E4      		DEFB $E4 	; DATA
+0230: B4      		DEFB $B4 	; TAN
+0231: BC      		DEFB $BC 	; SGN
+0232: BD      		DEFB $BD 	; ABS
+0233: BB      		DEFB $BB 	; SQR
+0234: AF      		DEFB $AF 	; CODE
+0235: B0      		DEFB $B0 	; VAL
+0236: B1      		DEFB $B1 	; LEN
+0237: C0      		DEFB $C0 	; USR
+0238: A7      		DEFB $A7 	; PI
+0239: A6      		DEFB $A6 	; INKEY$
+023A: BE      		DEFB $BE 	; PEEK
+023B: AD      		DEFB $AD 	; TAB
+023C: B2      		DEFB $B2 	; SIN
+023D: BA      		DEFB $BA 	; INT
+023E: E5      		DEFB $E5 	; RESTORE
+023F: A5      		DEFB $A5 	; RND
+0240: C2      		DEFB $C2 	; CHR$
+0241: E1      		DEFB $E1 	; LLIST
+0242: B3      		DEFB $B3 	; COS
+0243: B9      		DEFB $B9 	; EXP
+0244: C1      		DEFB $C1 	; STR$
+0245: B8      		DEFB $B8 	; LN
+              		
+0246:         	KEYTABLE_C:
+0246: 7E      		DEFB $7E 	; ~
+0247: DC      		DEFB $DC 	; BRIGHT
+0248: DA      		DEFB $DA 	; PAPER
+0249: 5C      		DEFB $5C 	; \
+024A: B7      		DEFB $B7 	; ATN
+024B: 7B      		DEFB $7B 	; {
+024C: 7D      		DEFB $7D 	; }
+024D: D8      		DEFB $D8 	; CIRCLE
+024E: BF      		DEFB $BF 	; IN
+024F: AE      		DEFB $AE 	; VAL$
+0250: AA      		DEFB $AA 	; SCREEN$
+0251: AB      		DEFB $AB 	; ATTR
+0252: DD      		DEFB $DD 	; INVERSE
+0253: DE      		DEFB $DE 	; OVER
+0254: DF      		DEFB $DF 	; OUT
+0255: 7F      		DEFB $7F 	; ©
+0256: B5      		DEFB $B5 	; ASN
+0257: D6      		DEFB $D6 	; VERIFY
+0258: 7C      		DEFB $7C 	; |
+0259: D5      		DEFB $D5 	; MERGE
+025A: 5D      		DEFB $5D 	; ]
+025B: DB      		DEFB $DB 	; FLASH
+025C: B6      		DEFB $B6 	; ACS
+025D: D9      		DEFB $D9 	; INK
+025E: 5B      		DEFB $5B 	; [
+025F: D7      		DEFB $D7 	; BEEP
+              		
+0260:         	KEYTABLE_D:
+0260: 0C      		DEFB $0C 	; DELETE
+0261: 07      		DEFB $07 	; EDIT
+0262: 06      		DEFB $06 	; CAPS LOCK
+0263: 04      		DEFB $04 	; TRUE VIDEO
+0264: 05      		DEFB $05 	; INV. VIDEO
+0265: 08      		DEFB $08 	; Cursor left
+0266: 0A      		DEFB $0A 	; Cursor down
+0267: 0B      		DEFB $0B 	; Cursor up
+0268: 09      		DEFB $09 	; Cursor right
+0269: 0F      		DEFB $0F 	; GRAPHICS
+              		
+026A:         	KEYTABLE_E:
+026A: E2      	 	DEFB $E2 	; STOP
+026B: 2A      		DEFB $2A 	; *
+026C: 3F      		DEFB $3F 	; ?
+026D: CD      		DEFB $CD 	; STEP
+026E: C8      		DEFB $C8 	; >=
+026F: CC      		DEFB $CC 	; TO
+0270: CB      		DEFB $CB 	; THEN
+0271: 5E      		DEFB $5E 	; ↑
+0272: AC      		DEFB $AC 	; AT
+0273: 2D      		DEFB $2D 	; -
+0274: 2B      		DEFB $2B 	; +
+0275: 3D      		DEFB $3D 	; =
+0276: 2E      		DEFB $2E 	; .
+0277: 2C      		DEFB $2C 	; ,
+0278: 3B      		DEFB $3B 	; ;
+0279: 22      		DEFB $22 	; "
+027A: C7      		DEFB $C7 	; <=
+027B: 3C      		DEFB $3C 	; <
+027C: C3      		DEFB $C3 	; NOT
+027D: 3E      		DEFB $3E 	; >
+027E: C5      		DEFB $C5 	; OR
+027F: 2F      		DEFB $2F 	; /
+0280: C9      		DEFB $C9 	; <>
+0281: 60      		DEFB $60 	; £
+0282: C6      		DEFB $C6 	; AND
+0283: 3A      		DEFB $3A 	; :
+              		
+0284:         	KEYTABLE_F:
+0284: D0      	 	DEFB $D0 	; FORMAT
+0285: CE      		DEFB $CE 	; DEF FN
+0286: A8      		DEFB $A8 	; FN
+0287: CA      		DEFB $CA 	; LINE
+0288: D3      		DEFB $D3 	; OPEN
+0289: D4      		DEFB $D4 	; CLOSE
+028A: D1      		DEFB $D1 	; MOVE
+028B: D2      		DEFB $D2 	; ERASE
+028C: A9      		DEFB $A9 	; POINT
+028D: CF      		DEFB $CF 	; CAT
+              		
+              		
+              	; Code taken from Geoff Wearmouth's ZX Spectrum 128k ROM 1 disassembly
+              	; http://www.fruitcake.plus.com/Sinclair/Spectrum128/ROMDisassembly/Spectrum128ROMDisassembly.htm
+028E:         	K_DECODE:
+028E: 7B      			LD      A,E             ; pick up the stored main key
+028F: FE3A    	        CP      $3A             ; an arbitrary point between digits and letters
+0291: 382F    	        JR      C,L0367         ; forward to K-DIGIT with digits, space, enter.
+              	
+0293: 0D      	        DEC     C               ; decrease MODE ( 0='KLC', 1='E', 2='G')
+              	
+0294: FAAA02  	        JP      M,L034F         ; to K-KLC-LET if was zero
+              	
+0297: 2803    	        JR      Z,L0341         ; to K-E-LET if was 1 for extended letters.
+              	
+              	; proceed with graphic codes.
+              	; Note. should selectively drop return address if code > 'U' ($55).
+              	; i.e. abort the KEYBOARD call.
+              	; e.g. cp 'V'; jr c addit; pop af; ;;addit etc. (5 bytes of instruction).
+              	; (s-inkey$ never gets into graphics mode.)
+              	
+              	;; addit
+0299: C64F    	        ADD     A,$4F           ; add offset to augment 'A' to graphics A say.
+029B: C9      	        RET                     ; return.
+              	                                ; Note. ( but [GRAPH] V gives RND, etc ).
+              	
+              	; ---
+              	
+              	; the jump was to here with extended mode with uppercase A-Z.
+              	
+              	;; K-E-LET
+029C:         	L0341:  
+029C: 212C02  			LD      HL,KEYTABLE_B    ; base address of E-UNSHIFT L022c
+              	                                ; ( $01EB in standard ROM ) 
+029F: 04      	        INC     B               ; test B is it empty i.e. not a shift
+02A0: 2803    	        JR      Z,L034A         ; forward to K-LOOK-UP if neither shift
+              	
+02A2: 214602  	        LD      HL,KEYTABLE_C   ; Address: $0205 L0246-$41 EXT-SHIFT base
+              	
+              	;; K-LOOK-UP
+02A5:         	L034A:  
+02A5: 1600    			LD      D,$00           ; prepare to index
+02A7: 19      	        ADD     HL,DE           ; add the main key value
+02A8: 7E      	        LD      A,(HL)          ; pick up other mode value
+02A9: C9      	        RET                     ; return
+              	
+              	; ---
+              	
+              	; the jump was here with mode = 0
+              	
+              	;; K-KLC-LET
+02AA:         	L034F:  
+02AA: 216A02  			LD      HL,KEYTABLE_E    ; prepare base of sym-codes
+02AD: CB40    	        BIT     0,B             ; shift=$27 sym-shift=$18
+02AF: 28F4    	        JR      Z,L034A         ; back to K-LOOK-UP with symbol-shift
+              	
+02B1: CB5A    	        BIT     3,D             ; test FLAGS is it 'K' mode (from OUT-CURS)
+02B3: 280A    	        JR      Z,L0364         ; skip to K-TOKENS if so
+              	
+02B5: FDCB305E	        BIT     3,(IY+$30)      ; test FLAGS2 - consider CAPS LOCK ?
+02B9: C0      	        RET     NZ              ; return if so with main code.
+              	
+02BA: 04      	        INC     B               ; is shift being pressed ?
+              	                                ; result zero if not
+02BB: C0      	        RET     NZ              ; return if shift pressed.
+              	
+02BC: C620    	        ADD     A,$20           ; else convert the code to lower case.
+02BE: C9      	        RET                     ; return.
+              	
+              	; ---
+              	
+              	; the jump was here for tokens
+              	
+              	;; K-TOKENS
+02BF:         	L0364:  
+02BF: C6A5    			ADD     A,$A5           ; add offset to main code so that 'A'
+              	                                ; becomes 'NEW' etc.
+02C1: C9      	        RET                     ; return
+              	
+              	; ---
+              	
+              	; the jump was here with digits, space, enter and symbol shift (< $xx)
+              	
+              	;; K-DIGIT
+02C2:         	L0367:  
+02C2: FE30    			CP      $30             ; is it '0' or higher ?
+02C4: D8      	        RET     C               ; return with space, enter and symbol-shift
+              	
+02C5: 0D      	        DEC     C               ; test MODE (was 0='KLC', 1='E', 2='G')
+02C6: FAF802  	        JP      M,L039D         ; jump to K-KLC-DGT if was 0.
+              	
+02C9: 2019    	        JR      NZ,L0389        ; forward to K-GRA-DGT if mode was 2.
+              	
+              	; continue with extended digits 0-9.
+              	
+02CB: 218402  	        LD      HL,KEYTABLE_F    ; $0254 - base of E-DIGITS
+02CE: CB68    	        BIT     5,B             ; test - shift=$27 sym-shift=$18
+02D0: 28D3    	        JR      Z,L034A         ; to K-LOOK-UP if sym-shift
+              	
+02D2: FE38    	        CP      $38             ; is character '8' ?
+02D4: 3007    	        JR      NC,L0382        ; to K-8-&-9 if greater than '7'
+              	
+02D6: D620    	        SUB     $20             ; reduce to ink range $10-$17
+02D8: 04      	        INC     B               ; shift ?
+02D9: C8      	        RET     Z               ; return if not.
+              	
+02DA: C608    	        ADD     A,$08           ; add 8 to give paper range $18 - $1F
+02DC: C9      	        RET                     ; return
+              	
+              	; ---
+              	
+              	; 89
+              	
+              	;; K-8-&-9
+02DD:         	L0382:  
+02DD: D636    			SUB     $36             ; reduce to 02 and 03  bright codes
+02DF: 04      	        INC     B               ; test if shift pressed.
+02E0: C8      	        RET     Z               ; return if not.
+              	
+02E1: C6FE    	        ADD     A,$FE           ; subtract 2 setting carry
+02E3: C9      	        RET                     ; to give 0 and 1    flash codes.
+              	
+              	; ---
+              	
+              	;  graphics mode with digits
+              	
+              	;; K-GRA-DGT
+02E4:         	L0389:  
+02E4: 216002  			LD      HL,KEYTABLE_D    ; $0230 base address of CTL-CODES
+              	
+02E7: FE39    	        CP      $39             ; is key '9' ?
+02E9: 28BA    	        JR      Z,L034A         ; back to K-LOOK-UP - changed to $0F, GRAPHICS.
+              	
+02EB: FE30    	        CP      $30             ; is key '0' ?
+02ED: 28B6    	        JR      Z,L034A         ; back to K-LOOK-UP - changed to $0C, delete.
+              	
+              	; for keys '0' - '7' we assign a mosaic character depending on shift.
+              	
+02EF: E607    	        AND     $07             ; convert character to number. 0 - 7.
+02F1: C680    	        ADD     A,$80           ; add offset - they start at $80
+              	
+02F3: 04      	        INC     B               ; destructively test for shift
+02F4: C8      	        RET     Z               ; and return if not pressed.
+              	
+02F5: EE0F    	        XOR     $0F             ; toggle bits becomes range $88-$8F
+02F7: C9      	        RET                     ; return.
+              	
+              	; ---
+              	
+              	; now digits in 'KLC' mode
+              	
+              	;; K-KLC-DGT
+02F8:         	L039D:  
+02F8: 04      			INC     B               ; return with digit codes if neither
+02F9: C8      	        RET     Z               ; shift key pressed.
+              	
+02FA: CB68    	        BIT     5,B             ; test for caps shift.
+              	
+02FC: 216002  	        LD      HL,KEYTABLE_D    ; prepare base of table CTL-CODES.
+02FF: 20A4    	        JR      NZ,L034A        ; back to K-LOOK-UP if shift pressed.
+              	
+              	; must have been symbol shift
+              	
+0301: D610    	        SUB     $10             ; for ASCII most will now be correct
+              	                                ; on a standard typewriter.
+0303: FE22    	        CP      $22             ; but '@' is not - see below.
+0305: 2806    	        JR      Z,L03B2         ; forward to to K-@-CHAR if so
+              	
+0307: FE20    	        CP      $20             ; '_' is the other one that fails
+0309: C0      	        RET     NZ              ; return if not.
+              	
+030A: 3E5F    	        LD      A,$5F           ; substitute ASCII '_'
+030C: C9      	        RET                     ; return.
+              	
+              	; ---
+              	
+              	;; K-@-CHAR
+030D:         	L03B2:  
+030D: 3E40    			LD      A,$40           ; substitute ASCII '@'
+030F: C9      	        RET                     ; return.
+              		
+              	
+              	; Simple code to initialize necessary system variables
+0310:         	INIT:
+              		; KSTATE
+0310: 3EFF    		LD A, $FF
+0312: 21005C  		LD HL, $5C00
+              		
+0315: 77      		LD (HL), A	; FF -> 5C00
+0316: 23      		INC HL
+0317: AF      		XOR A		; A = 0
+0318: 77      		LD (HL), A	; 00 -> 5C01
+0319: 23      		INC HL
+031A: 77      		LD (HL), A	; 00 -> 5C02
+031B: 23      		INC HL
+031C: 77      		LD (HL), A	; 00 -> 5C03
+              		
+031D: 3EFF    		LD A, $FF
+031F: 23      		INC HL
+0320: 77      		LD (HL), A	; FF -> 5C04
+0321: AF      		XOR A		; A = 0
+0322: 23      		INC HL
+0323: 77      		LD (HL), A	; 00 -> 5C05
+0324: 23      		INC HL
+0325: 77      		LD (HL), A	; 00 -> 5C06
+0326: 23      		INC HL
+0327: 77      		LD (HL), A	; 00 -> 5C07
+              	
+              		; LAST_K
+0328: 23      		INC HL
+0329: 77      		LD (HL), A	; 00 -> 5C08
+              		
+              		; REPDEL (time that key must be held down before it repeats)
+032A: 23      		INC HL
+032B: 3E23    		LD A, $23
+032D: 77      		LD (HL), A	; 0x23 -> 5C09
+              		
+              		; REPPER
+032E: 23      		INC HL
+032F: 3E05    		LD A, $05
+0331: 77      		LD (HL), A	; 5 -> 5C0A
+              		
+0332: FD213A5C		LD IY, $5C3A ; IY INIT
+              		
+              		; FLAGS
+0336: AF      		XOR A		; A = 0
+0337: FD7701  		LD (IY+$01), A
+              		
+              		; MODE
+033A: FD7707  		LD (IY+$07), A
+              		
+              		; FLAGS2
+033D: FD7730  		LD (IY+$30), A
+0340: C9      		RET
 
 
-#code EPROM, 0x0000, 0x38
-
-	IM 1
-	EI
-	
-	; initializing system variables
-	
-	; KSTATE
-	LD A, $FF
-	LD HL, $5C00
-	
-	LD (HL), A	; FF -> 5C00
-	INC HL
-	XOR A		; A = 0
-	LD (HL), A	; 00 -> 5C01
-	INC HL
-	LD (HL), A	; 00 -> 5C02
-	INC HL
-	LD (HL), A	; 00 -> 5C03
-	
-	LD A, $FF
-	INC HL
-	LD (HL), A	; FF -> 5C04
-	XOR A		; A = 0
-	INC HL
-	LD (HL), A	; 00 -> 5C05
-	INC HL
-	LD (HL), A	; 00 -> 5C06
-	INC HL
-	LD (HL), A	; 00 -> 5C07
-
-	; LAST_K
-	INC HL
-	LD (HL), A	; 00 -> 5C08
-	
-	
-	LD SP, $C0A0	; Setting SP so it isn't in FFFF
-	LD HL, $AA55	; Writting values to FFFE
-	LD ($FFFE), HL	;
-	;LD ($FFF0), HL
-START:
-	LD HL, ($FFFE)
-	HALT
-	JR START
-
-
-
-;; Interrupt and keyboard routines follow
-#code interrupt, 0x38, 0x1cd
-MASK_INT:
-	push AF
-	push HL
-	LD	HL, ($5C78)
-	INC HL
-	LD	($5C78), HL
-	LD A,H
-	OR L
-	JR NZ,KEY_INT
-	INC (IY+$40)
-KEY_INT
-	push BC
-	push DE
-	call KEYBOARD
-	pop de
-	pop bc
-	pop hl
-	pop af
-	EI
-	RET
-	
-KEYBOARD:
-	CALL KEY_SCAN
-	RET NZ
-
-	LD HL,$5C00		; Start with KSTATE0.
-K_ST_LOOP:
-	BIT 7,(HL)		; Jump forward if a 'set is free', i.e. KSTATE0/4 holds +FF.
-	JR NZ,K_CH_SET	;
-	INC HL 			; However if the set is not free decrease its '5 call counter' and 
-	DEC (HL)		; 	when it reaches zero signal the set as free.
-	DEC HL			;
-	JR NZ,K_CH_SET	;
-	LD (HL),$FF		;
-K_CH_SET:
-	LD A,L			; Fetch the low byte of the address and 
-	LD HL,$5C04		; jump back if the second set (KSTATE4) has still to be considered.
-	CP L			;
-	JR NZ,K_ST_LOOP	;
-	
-	CALL K_TEST		; Make the necessary tests and return if needed. 
-	RET NC			; Also change the key value to a 'main code'.
-	
-	LD HL,$5C00		; Look first at KSTATE0.
-	CP (HL) 		; Jump forward if the codes match - indicating a repeat.
-	JR Z,K_REPEAT	;
-	EX DE,HL		; Save the address of KSTATE0.
-	LD HL,$5C04 	; Now look at KSTATE4.
-	CP (HL)			; Jump forward if the codes match - indicating a repeat.
-	JR Z,K_REPEAT	; 
-	
-	BIT 7,(HL)		; Consider the second set.
-	JR NZ,K_NEW		; Jump forward if 'free'.
-	EX DE,HL		; Now consider the first set.
-	BIT 7,(HL)		; Continue if the set is 'free' but exit if not.
-	RET Z			;
-	
-K_NEW:
- 	LD E,A			; The code is passed to the E register and to KSTATE0/4.
-	LD (HL),A		;
-	INC HL			; The '5 call counter' for this set is reset to '5'.
-	LD (HL),$05		; 
-	INC HL			; The third system variable of the set holds 
-	LD A,($5C09)	; the REPDEL value (normally 0.7 secs.).
-	LD (HL),A		;
-	INC HL			; Point to KSTATE3/7.
-	; TODO rest of the code here
-	;....
-	;...
-K_END:
-K_REPEAT:
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	
-	RET
-	
-; Keyobard scanning subroutine
-KEY_SCAN: 
-	LD L,$2F
-	LD DE,$FFFF
-	LD BC,$FEFE
-KEY_LINE:
-	IN A,(C)
-	CPL
-	AND $1F
-	JR Z,KEY_DONE
-	LD H,A
-	LD A,L
-KEY_3KEYS:
-	INC D
-	RET NZ
-KEY_BITS:
-	SUB $08
-	SRL H
-	JR NC, KEY_BITS
-	LD D,E
-	LD E,A
-	JR NZ,KEY_3KEYS	
-KEY_DONE:
-	DEC L
-	RLC B
-	JR C,KEY_LINE
-	
-	LD A,D	; Accept any key value which still has the D register holding +FF,
-	INC A	;  i.e. a single key pressed or 'no-key'.
-	RET Z	;
-	CP $28 	; Accept the key value for a pair of keys if the D key is CAPS SHIFT.
-	RET Z	;
-	CP $19 	; Accept the key value for a pair of keys if the D key is SYMBOL SHIFT.
-	RET Z	;
-	LD A,E	; It is however possible for the E key of a pair to be
-	LD E,D	;  SYMBOL SHIFT - so this has to be considered.
-	LD D,A	;
-	CP $18	;
-	RET		; Return with the zero flag set if it was SYMBOL SHIFT and 'another key'; 
-			; otherwise reset.
-			
-			
-; Used by KEYBOARD and S_INKEY.	
-K_TEST:
-	LD B,D			; Copy the shift byte.
-	LD D,$00		; Clear the D register for later.
-	LD A,E			; Move the key number.
-	CP $27			; Return now if the key was 'CAPS SHIFT' only or 'no-key'.
-	RET NC			;
-	CP $18			; Jump forward unless the E key was SYMBOL SHIFT.
-	JR NZ,K_MAIN	;
-	BIT 7,B			; However accept SYMBOL SHIFT and another key; 
-	RET NZ			; return with SYMBOL SHIFT only.
-K_MAIN:
-	LD HL,KEYTABLE_A ; The base address of the main key table. 
-	ADD HL,DE		; Index into the table and fetch the 'main code'.
-	LD A,(HL)		;
-	SCF				; Signal 'valid keystroke' before returning.
-	RET				;
-	
-
-#code main_key_table, 0x205, 0xFDFB;0x28E
-KEYTABLE_A:
-	DEFB $42 	; B
-	DEFB $48 	; H
-	DEFB $59 	; Y
-	DEFB $36 	; 6
-	DEFB $35 	; 5
-	DEFB $54 	; T
-	DEFB $47 	; G
-	DEFB $56 	; V
-	DEFB $4E 	; N
-	DEFB $4A 	; J
-	DEFB $55 	; U
-	DEFB $37 	; 7
-	DEFB $34 	; 4
-	DEFB $52 	; R
-	DEFB $46 	; F
-	DEFB $43 	; C
-	DEFB $4D 	; M
-	DEFB $4B 	; K
-	DEFB $49 	; I
-	DEFB $38 	; 8
-	DEFB $33 	; 3
-	DEFB $45 	; E
-	DEFB $44 	; D
-	DEFB $58 	; X
-	DEFB $0E 	; SYMBOL SHIFT
-	DEFB $4C 	; L
-	DEFB $4F 	; O
-	DEFB $39 	; 9
-	DEFB $32 	; 2
-	DEFB $57 	; W
-	DEFB $53 	; S
-	DEFB $5A 	; Z
-	DEFB $20 	; SPACE
-	DEFB $0D 	; ENTER
-	DEFB $50 	; P
-	DEFB $30 	; 0
-	DEFB $31 	; 1
-	DEFB $51 	; Q
-	DEFB $41 	; A
-	
-KEYTABLE_B:
-	DEFB $E3 	; READ
-	DEFB $C4 	; BIN
-	DEFB $E0 	; LPRINT
-	DEFB $E4 	; DATA
-	DEFB $B4 	; TAN
-	DEFB $BC 	; SGN
-	DEFB $BD 	; ABS
-	DEFB $BB 	; SQR
-	DEFB $AF 	; CODE
-	DEFB $B0 	; VAL
-	DEFB $B1 	; LEN
-	DEFB $C0 	; USR
-	DEFB $A7 	; PI
-	DEFB $A6 	; INKEY$
-	DEFB $BE 	; PEEK
-	DEFB $AD 	; TAB
-	DEFB $B2 	; SIN
-	DEFB $BA 	; INT
-	DEFB $E5 	; RESTORE
-	DEFB $A5 	; RND
-	DEFB $C2 	; CHR$
-	DEFB $E1 	; LLIST
-	DEFB $B3 	; COS
-	DEFB $B9 	; EXP
-	DEFB $C1 	; STR$
-	DEFB $B8 	; LN
-	
-KEYTABLE_C:
-	DEFB $7E 	; ~
-	DEFB $DC 	; BRIGHT
-	DEFB $DA 	; PAPER
-	DEFB $5C 	; \
-	DEFB $B7 	; ATN
-	DEFB $7B 	; {
-	DEFB $7D 	; }
-	DEFB $D8 	; CIRCLE
-	DEFB $BF 	; IN
-	DEFB $AE 	; VAL$
-	DEFB $AA 	; SCREEN$
-	DEFB $AB 	; ATTR
-	DEFB $DD 	; INVERSE
-	DEFB $DE 	; OVER
-	DEFB $DF 	; OUT
-	DEFB $7F 	; ©
-	DEFB $B5 	; ASN
-	DEFB $D6 	; VERIFY
-	DEFB $7C 	; |
-	DEFB $D5 	; MERGE
-	DEFB $5D 	; ]
-	DEFB $DB 	; FLASH
-	DEFB $B6 	; ACS
-	DEFB $D9 	; INK
-	DEFB $5B 	; [
-	DEFB $D7 	; BEEP
-	
-KEYTABLE_D:
-	DEFB $0C 	; DELETE
-	DEFB $07 	; EDIT
-	DEFB $06 	; CAPS LOCK
-	DEFB $04 	; TRUE VIDEO
-	DEFB $05 	; INV. VIDEO
-	DEFB $08 	; Cursor left
-	DEFB $0A 	; Cursor down
-	DEFB $0B 	; Cursor up
-	DEFB $09 	; Cursor right
-	DEFB $0F 	; GRAPHICS
-	
-KEYTABLE_E:
- 	DEFB $E2 	; STOP
-	DEFB $2A 	; *
-	DEFB $3F 	; ?
-	DEFB $CD 	; STEP
-	DEFB $C8 	; >=
-	DEFB $CC 	; TO
-	DEFB $CB 	; THEN
-	DEFB $5E 	; ↑
-	DEFB $AC 	; AT
-	DEFB $2D 	; -
-	DEFB $2B 	; +
-	DEFB $3D 	; =
-	DEFB $2E 	; .
-	DEFB $2C 	; ,
-	DEFB $3B 	; ;
-	DEFB $22 	; "
-	DEFB $C7 	; <=
-	DEFB $3C 	; <
-	DEFB $C3 	; NOT
-	DEFB $3E 	; >
-	DEFB $C5 	; OR
-	DEFB $2F 	; /
-	DEFB $C9 	; <>
-	DEFB $60 	; £
-	DEFB $C6 	; AND
-	DEFB $3A 	; :
-	
-KEYTABLE_F:
- 	DEFB $D0 	; FORMAT
-	DEFB $CE 	; DEF FN
-	DEFB $A8 	; FN
-	DEFB $CA 	; LINE
-	DEFB $D3 	; OPEN
-	DEFB $D4 	; CLOSE
-	DEFB $D1 	; MOVE
-	DEFB $D2 	; ERASE
-	DEFB $A9 	; POINT
-	DEFB $CF 	; CAT
-
-
-; +++ segments +++
-
-#CODE EPROM           = $0000 =     0,  size = $0038 =    56
-#CODE interrupt       = $0038 =    56,  size = $01CD =   461
-#CODE main_key_table  = $0205 =   517,  size = $FDFB = 65019
-
-; +++ global symbols +++
-
-EPROM               = $0000 =     0  EPROM          code.asm:4 (unused)
-EPROM_end           = $0038 =    56  EPROM          code.asm:4 (unused)
-EPROM_size          = $0038 =    56  EPROM          code.asm:4 (unused)
-KEYBOARD            = $0053 =    83  interrupt      code.asm:74
-KEYTABLE_A          = $0205 =   517  main_key_table code.asm:196
-KEYTABLE_B          = $022C =   556  main_key_table code.asm:237 (unused)
-KEYTABLE_C          = $0246 =   582  main_key_table code.asm:265 (unused)
-KEYTABLE_D          = $0260 =   608  main_key_table code.asm:293 (unused)
-KEYTABLE_E          = $026A =   618  main_key_table code.asm:305 (unused)
-KEYTABLE_F          = $0284 =   644  main_key_table code.asm:333 (unused)
-KEY_3KEYS           = $00A9 =   169  interrupt      code.asm:146
-KEY_BITS            = $00AB =   171  interrupt      code.asm:149
-KEY_DONE            = $00B5 =   181  interrupt      code.asm:156
-KEY_INT             = $0048 =    72  interrupt      code.asm:63
-KEY_LINE            = $00A0 =   160  interrupt      code.asm:139
-KEY_SCAN            = $0098 =   152  interrupt      code.asm:135
-K_CH_SET            = $0065 =   101  interrupt      code.asm:87
-K_END               = $0090 =   144  interrupt      code.asm:122 (unused)
-K_MAIN              = $00D7 =   215  interrupt      code.asm:187
-K_NEW               = $0085 =   133  interrupt      code.asm:110
-K_REPEAT            = $0090 =   144  interrupt      code.asm:123
-K_ST_LOOP           = $005A =    90  interrupt      code.asm:79
-K_TEST              = $00C9 =   201  interrupt      code.asm:177
-MASK_INT            = $0038 =    56  interrupt      code.asm:53 (unused)
-START               = $0026 =    38  EPROM          code.asm:44
-_z80_               = $0001 =     1                 code.asm:1 (unused)
-interrupt           = $0038 =    56  interrupt      code.asm:52 (unused)
-interrupt_end       = $0205 =   517  interrupt      code.asm:52 (unused)
-interrupt_size      = $01CD =   461  interrupt      code.asm:52 (unused)
-main_key_table      = $0205 =   517  main_key_table code.asm:195 (unused)
-main_key_table_end  = $0000 = 65536  main_key_table code.asm:195 (unused)
-main_key_table_size = $FDFB = 65019  main_key_table code.asm:195 (unused)
-
-
-total time: 0.0061 sec.
+total time: 0.0101 sec.
 no errors

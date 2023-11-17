@@ -23,22 +23,26 @@ vcom -work work "../T80/T80_Reg.vhd"
 vcom -work work "../T80/T80a.vhd"
 
 vcom -work work "../ram.vhd"
+vcom -work work "../pll.vhd"
+vcom -work work "../reset_counter.vhd"
 vcom -work work "../top.vhd"
 vcom -work work "../tb.vhd"
 
 vsim -t ps -novopt  work.tb
 
+add wave -position end  -color red sim:/tb/READ_ADDR
 add wave -position end  -color white sim:/tb/clk_50
-add wave -position end  -color green sim:/tb/global_reset
-add wave -position end  -color green sim:/tb/pll_reset
-add wave -position end  -color green sim:/tb/ula_reset_n
-add wave -position end  -color green sim:/tb/cpu_reset_n
+add wave -position end  -color green sim:/tb/uut/global_reset
+add wave -position end  -color green sim:/tb/uut/pll_reset
+add wave -position end  -color green sim:/tb/uut/ula_reset_n
+add wave -position end  -color green sim:/tb/uut/cpu_reset_n
 
 add wave -position end  -color white sim:/tb/uut/ula_clk
 add wave -position end  -color white sim:/tb/uut/cpu_clk
 
 add wave -position end  -color blue -radix hex sim:/tb/uut/cpu_data
 add wave -position end  -color blue -radix hex sim:/tb/uut/data_in
+add wave -position end  -color cyan -radix hex sim:/tb/uut/ula_en
 add wave -position end  -color cyan -radix hex sim:/tb/uut/ula_data_out
 add wave -position end  -color blue -radix hex sim:/tb/uut/data_out
 add wave -position end  -color red -radix hex sim:/tb/uut/cpu_address
@@ -57,6 +61,13 @@ add wave -position end  -color blue sim:/tb/uut/cpu_int_n
 
 add wave -position end  -color cyan -radix hex sim:/tb/uut/read_en
 add wave -position end  -color cyan -radix hex sim:/tb/uut/write_en
+
+add wave -position end  -color red -radix hex sim:/tb/uut/ula/ula_counters/c
+add wave -position end  -color red sim:/tb/uut/ula/ula_counters/FD0/clk
+add wave -position end  -color red sim:/tb/uut/ula/ula_counters/FD0/D
+add wave -position end  -color red sim:/tb/uut/ula/ula_counters/FD0/Q
+add wave -position end  -color red sim:/tb/uut/ula/ula_counters/FD0/internal_q
+
 
 
 
