@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring comment="Rename resource &apos;memory_manipulator/file_format_reader&apos; to &apos;file_reader&apos;" description="Rename resource &apos;file_format_reader&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="file_format_reader" name="file_reader" stamp="1700237815425" updateReferences="true"/>&#x0A;<refactoring comment="Rename resource &apos;memory_manipulator/spectrum_comm&apos; to &apos;spectrum_control_IFs&apos;" description="Rename resource &apos;spectrum_comm&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="spectrum_comm" name="spectrum_control_IFs" stamp="1700237845147" updateReferences="true"/>
+</session>

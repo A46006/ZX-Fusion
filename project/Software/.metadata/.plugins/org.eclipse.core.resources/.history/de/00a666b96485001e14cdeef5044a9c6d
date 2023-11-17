@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <math.h>
 //#include ".\SD\test_sd.c"
-#include "file_reader/asm_opcodes.h"
-#include "file_reader/formats.h"
-#include "spectrum_control_IFs/Peripheral_Interfaces/per_hal.h"
+#include ".\file_format_reader\formats.h"
+#include ".\file_format_reader\asm_opcodes.h"
+#include ".\spectrum_comm\Peripheral_Interfaces\per_hal.h"
 
 #define PAGE_DATA_ADDR 0xC000
 #define MENU_CODE_ADDR 0xB000

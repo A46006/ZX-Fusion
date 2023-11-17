@@ -1,4 +1,4 @@
-#include "../Peripheral_Interfaces/per_hal.h"
+#include "../../spectrum_control_IFs/Peripheral_Interfaces/per_hal.h"
 
 void listen_for_en() {
 	int read, write, en;

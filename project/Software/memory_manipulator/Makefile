@@ -149,12 +149,12 @@ C_SRCS += SD/ff15/ffunicode.c
 C_SRCS += SD/ff15/sdmmc.c
 C_SRCS += SD/sd_if.c
 C_SRCS += SD/test_sd.c
-C_SRCS += file_format_reader/file_format_aux.c
-C_SRCS += file_format_reader/formats.c
 C_SRCS += main.c
-C_SRCS += spectrum_comm/DMA/dma_hal.c
-C_SRCS += spectrum_comm/Peripheral_Interfaces/per_hal.c
 C_SRCS += terasic_lib/debug.c
+C_SRCS += file_reader/file_format_aux.c
+C_SRCS += file_reader/formats.c
+C_SRCS += spectrum_control_IFs/DMA/dma_hal.c
+C_SRCS += spectrum_control_IFs/Peripheral_Interfaces/per_hal.c
 CXX_SRCS :=
 ASM_SRCS :=
 

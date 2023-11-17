@@ -1,4 +1,4 @@
-#include "../Peripheral_Interfaces/per_hw.h"
+#include "../../spectrum_control_IFs/Peripheral_Interfaces/per_hw.h"
 
 void listen_for_en();
 

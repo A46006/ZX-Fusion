@@ -1,8 +1,8 @@
+#include "../file_reader/file_format_aux.h"
+#include "../file_reader/mem_addrs.h"
+#include "../spectrum_control_IFs/DMA/dma_hal.h"
 #include "../terasic_lib/terasic_includes.h"
-#include "file_format_aux.h"
-#include "..\spectrum_comm\DMA\dma_hal.h"
 #include "..\SD\sd_if.h"
-#include "mem_addrs.h"
 
 /* *******************
  * .SNA format
