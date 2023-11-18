@@ -30,7 +30,7 @@ vcom -work work "../tb.vhd"
 
 vsim -t ps -novopt  work.tb
 
-add wave -position end  -color red sim:/tb/READ_ADDR
+add wave -position end  -color blue sim:/tb/READ_ADDR
 add wave -position end  -color white sim:/tb/clk_50
 add wave -position end  -color green sim:/tb/uut/global_reset
 add wave -position end  -color green sim:/tb/uut/pll_reset
@@ -45,8 +45,8 @@ add wave -position end  -color blue -radix hex sim:/tb/uut/data_in
 add wave -position end  -color cyan -radix hex sim:/tb/uut/ula_en
 add wave -position end  -color cyan -radix hex sim:/tb/uut/ula_data_out
 add wave -position end  -color blue -radix hex sim:/tb/uut/data_out
-add wave -position end  -color red -radix hex sim:/tb/uut/cpu_address
-add wave -position end  -color red -radix hex sim:/tb/uut/address
+add wave -position end  -color white -radix hex sim:/tb/uut/cpu_address
+add wave -position end  -color white -radix hex sim:/tb/uut/address
 
 add wave -position end  -color yellow sim:/tb/bus_rq
 add wave -position end  -color yellow sim:/tb/nmi
@@ -62,11 +62,22 @@ add wave -position end  -color blue sim:/tb/uut/cpu_int_n
 add wave -position end  -color cyan -radix hex sim:/tb/uut/read_en
 add wave -position end  -color cyan -radix hex sim:/tb/uut/write_en
 
-add wave -position end  -color red -radix hex sim:/tb/uut/ula/ula_counters/c
-add wave -position end  -color red sim:/tb/uut/ula/ula_counters/FD0/clk
-add wave -position end  -color red sim:/tb/uut/ula/ula_counters/FD0/D
-add wave -position end  -color red sim:/tb/uut/ula/ula_counters/FD0/Q
-add wave -position end  -color red sim:/tb/uut/ula/ula_counters/FD0/internal_q
+add wave -position end  -color yellow -radix hex sim:/tb/uut/ula/ula_counters/c
+add wave -position end  -color yellow sim:/tb/uut/ula/ula_counters/contention_time
+add wave -position end  -color yellow sim:/tb/uut/ula/ula_counters/memory_contention
+add wave -position end  -color yellow sim:/tb/uut/ula/ula_counters/io_contention
+add wave -position end  -color yellow sim:/tb/uut/ula/ula_counters/m_wait
+add wave -position end  -color yellow sim:/tb/uut/ula/ula_counters/nInt
+add wave -position end  -color yellow sim:/tb/uut/ula/ula_counters/vsync
+add wave -position end  -color yellow sim:/tb/uut/ula/ula_counters/v
+#add wave -position end  -color yellow -radix hex sim:/tb/uut/ula/ula_counters/nC
+#add wave -position end  -color yellow sim:/tb/uut/ula/ula_counters/FD0/clk
+#add wave -position end  -color yellow sim:/tb/uut/ula/ula_counters/FD0/D
+#add wave -position end  -color yellow sim:/tb/uut/ula/ula_counters/FD0/Q
+#add wave -position end  -color yellow sim:/tb/uut/ula/ula_counters/FD0/internal_q
+#add wave -position end  -color yellow sim:/tb/uut/ula/ula_counters/FD0/nRESET
+#add wave -position end  -color yellow sim:/tb/uut/ula/ula_counters/FD0/SET
+#add wave -position end  -color yellow sim:/tb/uut/ula/ula_counters/FD0/EN
 
 
 

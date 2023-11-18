@@ -56,7 +56,10 @@ architecture Behavior of ula_count is
 	component FallingEdge_DFF is
 	port( 
 		clk : in std_logic;
+		nRESET : in std_logic;
+		SET : in std_logic;
 		D : in std_logic;
+		EN : in std_logic;
 		Q : out std_logic;
 		nQ : out std_logic
 	);
@@ -298,42 +301,66 @@ begin
 		clk 	=> fd0_clk,
 		D 		=> nC(0),
 		Q 		=> c(0),
-		nQ 	=> nC(0)
+		nQ 	=> nC(0),
+		
+		SET	=> '0',
+		nRESET	=> nRESET,
+		EN		=> '1'
 	);
 
 	FD1 : FallingEdge_DFF port map(
 		clk 	=> fd1_clk,
 		D 		=> nC(1),
 		Q 		=> c(1),
-		nQ 	=> nC(1)
+		nQ 	=> nC(1),
+		
+		SET	=> '0',
+		nRESET	=> nRESET,
+		EN		=> '1'
 	);
 	
 	FD2 : FallingEdge_DFF port map(
 		clk 	=> fd2_clk,
 		D 		=> nC(2),
 		Q 		=> c(2),
-		nQ 	=> nC(2)
+		nQ 	=> nC(2),
+		
+		SET	=> '0',
+		nRESET	=> nRESET,
+		EN		=> '1'
 	);
 	
 	FD3 : FallingEdge_DFF port map(
 		clk 	=> fd3_clk,
 		D 		=> nC(3),
 		Q 		=> c(3),
-		nQ 	=> nC(3)
+		nQ 	=> nC(3),
+		
+		SET	=> '0',
+		nRESET	=> nRESET,
+		EN		=> '1'
 	);
 
 	FD4 : FallingEdge_DFF port map(
 		clk 	=> fd4_clk,
 		D 		=> nC(4),
 		Q 		=> c(4),
-		nQ 	=> nC(4)
+		nQ 	=> nC(4),
+		
+		SET	=> '0',
+		nRESET	=> nRESET,
+		EN		=> '1'
 	);
 	
 	FD5 : FallingEdge_DFF port map(
 		clk 	=> fd5_clk,
 		D 		=> nC(5),
 		Q 		=> c(5),
-		nQ 	=> nC(5)
+		nQ 	=> nC(5),
+		
+		SET	=> '0',
+		nRESET	=> nRESET,
+		EN		=> '1'
 	);
 	
 	TCR : FallingEdge_TFF_RCE port map(
@@ -455,35 +482,55 @@ begin
 		clk 	=> clk_flashff,
 		D 		=> n_flash_ctr(0),
 		Q 		=> flash_ctr(0),
-		nQ 	=> n_flash_ctr(0)
+		nQ 	=> n_flash_ctr(0),
+		
+		SET	=> '0',
+		nRESET	=> nRESET,
+		EN		=> '1'
 	);
 	
 	FlashFD1 : FallingEdge_DFF port map(
 		clk 	=> flash_ctr(0),
 		D 		=> n_flash_ctr(1),
 		Q 		=> flash_ctr(1),
-		nQ 	=> n_flash_ctr(1)
+		nQ 	=> n_flash_ctr(1),
+		
+		SET	=> '0',
+		nRESET	=> nRESET,
+		EN		=> '1'
 	);
 	
 	FlashFD2 : FallingEdge_DFF port map(
 		clk 	=> flash_ctr(1),
 		D 		=> n_flash_ctr(2),
 		Q 		=> flash_ctr(2),
-		nQ 	=> n_flash_ctr(2)
+		nQ 	=> n_flash_ctr(2),
+		
+		SET	=> '0',
+		nRESET	=> nRESET,
+		EN		=> '1'
 	);
 	
 	FlashFD3 : FallingEdge_DFF port map(
 		clk 	=> flash_ctr(2),
 		D 		=> n_flash_ctr(3),
 		Q 		=> flash_ctr(3),
-		nQ 	=> n_flash_ctr(3)
+		nQ 	=> n_flash_ctr(3),
+		
+		SET	=> '0',
+		nRESET	=> nRESET,
+		EN		=> '1'
 	);
 	
 	FlashFD4 : FallingEdge_DFF port map(
 		clk 	=> flash_ctr(3),
 		D 		=> n_flash_ctr(4),
 		Q 		=> flash_ctr(4),
-		nQ 	=> n_flash_ctr(4)
+		nQ 	=> n_flash_ctr(4),
+		
+		SET	=> '0',
+		nRESET	=> nRESET,
+		EN		=> '1'
 	);
 	
 end Behavior;
