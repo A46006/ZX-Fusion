@@ -30,7 +30,6 @@ vcom -work work "../tb.vhd"
 
 vsim -t ps -novopt  work.tb
 
-add wave -position end  -color blue sim:/tb/READ_ADDR
 add wave -position end  -color white sim:/tb/clk_50
 add wave -position end  -color green sim:/tb/uut/global_reset
 add wave -position end  -color green sim:/tb/uut/pll_reset
@@ -46,7 +45,10 @@ add wave -position end  -color cyan -radix hex sim:/tb/uut/ula_en
 add wave -position end  -color cyan -radix hex sim:/tb/uut/ula_data_out
 add wave -position end  -color blue -radix hex sim:/tb/uut/data_out
 add wave -position end  -color white -radix hex sim:/tb/uut/cpu_address
+add wave -position end  -color white -radix hex sim:/tb/uut/nios_address
 add wave -position end  -color white -radix hex sim:/tb/uut/address
+add wave -position end  -color orange -radix hex sim:/tb/uut/SW
+add wave -position end  -color orange -radix hex sim:/tb/address
 
 add wave -position end  -color yellow sim:/tb/bus_rq
 add wave -position end  -color yellow sim:/tb/nmi
@@ -56,13 +58,19 @@ add wave -position end  -color pink -radix hex sim:/tb/uut/busak_n
 
 add wave -position end  -color white -radix hex sim:/tb/uut/ram_en
 add wave -position end  -color white -radix hex sim:/tb/uut/ula_en
+add wave -position end  -color white -radix hex sim:/tb/uut/nios_en
 
 add wave -position end  -color blue sim:/tb/uut/cpu_int_n
 
 add wave -position end  -color cyan -radix hex sim:/tb/uut/read_en
+add wave -position end  -color pink -radix hex sim:/tb/uut/nios_rd_n
 add wave -position end  -color cyan -radix hex sim:/tb/uut/write_en
+add wave -position end  -color pink -radix hex sim:/tb/uut/nios_wr_n
+add wave -position end  -color cyan -radix hex sim:/tb/uut/mreq_n
+add wave -position end  -color pink -radix hex sim:/tb/uut/nios_mreq_n
+add wave -position end  -color cyan -radix hex sim:/tb/uut/iorq_n
+add wave -position end  -color pink -radix hex sim:/tb/uut/nios_iorq_n
 
-add wave -position end  -color yellow -radix hex sim:/tb/uut/ula/ula_counters/c
 add wave -position end  -color yellow sim:/tb/uut/ula/ula_counters/contention_time
 add wave -position end  -color yellow sim:/tb/uut/ula/ula_counters/memory_contention
 add wave -position end  -color yellow sim:/tb/uut/ula/ula_counters/io_contention

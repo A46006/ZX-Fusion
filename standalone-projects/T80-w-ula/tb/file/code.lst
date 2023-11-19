@@ -1,6 +1,6 @@
               	; --------------------------------------
               	; zasm: assemble "code.asm"
-              	; date: 2023-11-17 11:35:49
+              	; date: 2023-11-19 20:55:30
               	; --------------------------------------
 
 
@@ -28,7 +28,7 @@
               	
               	
               	;; Interrupt and keyboard routines follow (code taken from Richard Dymond's ZX Specturm 48k ROM disassembly https://skoolkid.github.io/rom/index.html)
-0038:         	#code interrupt, 0x38, 0x1cd
+0038:         	#code interrupt, 0x38, 0x2E
 0038:         	MASK_INT:
 0038: F5      		push AF
 0039: E5      		push HL
@@ -42,141 +42,144 @@
 0048:         	KEY_INT
 0048: C5      		push BC
 0049: D5      		push DE
-004A: CD5300  		call KEYBOARD
+004A: CD6800  		call KEYBOARD
 004D: D1      		pop de
 004E: C1      		pop bc
 004F: E1      		pop hl
 0050: F1      		pop af
 0051: FB      		EI
 0052: C9      		RET
-              		
-0053:         	KEYBOARD:
-0053: CDB200  		CALL KEY_SCAN
-0056: C0      		RET NZ
               	
-0057: 21005C  		LD HL,$5C00		; Start with KSTATE0.
-005A:         	K_ST_LOOP:
-005A: CB7E    		BIT 7,(HL)		; Jump forward if a 'set is free', i.e. KSTATE0/4 holds +FF.
-005C: 2007    		JR NZ,K_CH_SET	;
-005E: 23      		INC HL 			; However if the set is not free decrease its '5 call counter' and 
-005F: 35      		DEC (HL)		; 	when it reaches zero signal the set as free.
-0060: 2B      		DEC HL			;
-0061: 2002    		JR NZ,K_CH_SET	;
-0063: 36FF    		LD (HL),$FF		;
-0065:         	K_CH_SET:
-0065: 7D      		LD A,L			; Fetch the low byte of the address and 
-0066: 21045C  		LD HL,$5C04		; jump back if the second set (KSTATE4) has still to be considered.
-0069: BD      		CP L			;
-006A: 20EE    		JR NZ,K_ST_LOOP	;
+0066:         	#code nmi, 0x66, 0x1cd
+0066: ED45    		RETN
+              	
+0068:         	KEYBOARD:
+0068: CDC700  		CALL KEY_SCAN
+006B: C0      		RET NZ
+              	
+006C: 21005C  		LD HL,$5C00		; Start with KSTATE0.
+006F:         	K_ST_LOOP:
+006F: CB7E    		BIT 7,(HL)		; Jump forward if a 'set is free', i.e. KSTATE0/4 holds +FF.
+0071: 2007    		JR NZ,K_CH_SET	;
+0073: 23      		INC HL 			; However if the set is not free decrease its '5 call counter' and 
+0074: 35      		DEC (HL)		; 	when it reaches zero signal the set as free.
+0075: 2B      		DEC HL			;
+0076: 2002    		JR NZ,K_CH_SET	;
+0078: 36FF    		LD (HL),$FF		;
+007A:         	K_CH_SET:
+007A: 7D      		LD A,L			; Fetch the low byte of the address and 
+007B: 21045C  		LD HL,$5C04		; jump back if the second set (KSTATE4) has still to be considered.
+007E: BD      		CP L			;
+007F: 20EE    		JR NZ,K_ST_LOOP	;
               		
-006C: CDE300  		CALL K_TEST		; Make the necessary tests and return if needed. 
-006F: D0      		RET NC			; Also change the key value to a 'main code'.
+0081: CDF800  		CALL K_TEST		; Make the necessary tests and return if needed. 
+0084: D0      		RET NC			; Also change the key value to a 'main code'.
               		
-0070: 21005C  		LD HL,$5C00		; Look first at KSTATE0.
-0073: BE      		CP (HL) 		; Jump forward if the codes match - indicating a repeat.
-0074: 282E    		JR Z,K_REPEAT	;
-0076: EB      		EX DE,HL		; Save the address of KSTATE0.
-0077: 21045C  		LD HL,$5C04 	; Now look at KSTATE4.
-007A: BE      		CP (HL)			; Jump forward if the codes match - indicating a repeat.
-007B: 2827    		JR Z,K_REPEAT	; 
+0085: 21005C  		LD HL,$5C00		; Look first at KSTATE0.
+0088: BE      		CP (HL) 		; Jump forward if the codes match - indicating a repeat.
+0089: 282E    		JR Z,K_REPEAT	;
+008B: EB      		EX DE,HL		; Save the address of KSTATE0.
+008C: 21045C  		LD HL,$5C04 	; Now look at KSTATE4.
+008F: BE      		CP (HL)			; Jump forward if the codes match - indicating a repeat.
+0090: 2827    		JR Z,K_REPEAT	; 
               		
-007D: CB7E    		BIT 7,(HL)		; Consider the second set.
-007F: 2004    		JR NZ,K_NEW		; Jump forward if 'free'.
-0081: EB      		EX DE,HL		; Now consider the first set.
-0082: CB7E    		BIT 7,(HL)		; Continue if the set is 'free' but exit if not.
-0084: C8      		RET Z			;
+0092: CB7E    		BIT 7,(HL)		; Consider the second set.
+0094: 2004    		JR NZ,K_NEW		; Jump forward if 'free'.
+0096: EB      		EX DE,HL		; Now consider the first set.
+0097: CB7E    		BIT 7,(HL)		; Continue if the set is 'free' but exit if not.
+0099: C8      		RET Z			;
               		
-0085:         	K_NEW:
-0085: 5F      	 	LD E,A			; The code is passed to the E register and to KSTATE0/4.
-0086: 77      		LD (HL),A		;
-0087: 23      		INC HL			; The '5 call counter' for this set is reset to '5'.
-0088: 3605    		LD (HL),$05		; 
-008A: 23      		INC HL			; The third system variable of the set holds 
-008B: 3A095C  		LD A,($5C09)	; the REPDEL value (normally 0.7 secs.).
-008E: 77      		LD (HL),A		;
-008F: 23      		INC HL			; Point to KSTATE3/7.
-0090: FD4E07  		LD C,(IY+$07) 	; Fetch MODE.
-0093: FD5601  		LD D,(IY+$01) 	; Fetch FLAGS.
-0096: E5      		PUSH HL 		; Save the pointer whilst the 'main code' is decoded.
-0097: CD8E02  		CALL K_DECODE	;
-009A: E1      		POP HL			;
-009B: 77      		LD (HL),A		; The final code value is saved in KSTATE3/7, 
+009A:         	K_NEW:
+009A: 5F      	 	LD E,A			; The code is passed to the E register and to KSTATE0/4.
+009B: 77      		LD (HL),A		;
+009C: 23      		INC HL			; The '5 call counter' for this set is reset to '5'.
+009D: 3605    		LD (HL),$05		; 
+009F: 23      		INC HL			; The third system variable of the set holds 
+00A0: 3A095C  		LD A,($5C09)	; the REPDEL value (normally 0.7 secs.).
+00A3: 77      		LD (HL),A		;
+00A4: 23      		INC HL			; Point to KSTATE3/7.
+00A5: FD4E07  		LD C,(IY+$07) 	; Fetch MODE.
+00A8: FD5601  		LD D,(IY+$01) 	; Fetch FLAGS.
+00AB: E5      		PUSH HL 		; Save the pointer whilst the 'main code' is decoded.
+00AC: CD8E02  		CALL K_DECODE	;
+00AF: E1      		POP HL			;
+00B0: 77      		LD (HL),A		; The final code value is saved in KSTATE3/7, 
               						; from where it is collected in case of a repeat.
-009C:         	K_END:
-009C: 32085C  		LD ($5C08),A 	; Enter the final code value into LAST-K and signal 'a new key' 
-009F: FDCB01EE		SET 5,(IY+$01)	; by setting bit 5 of FLAGS.
-00A3: C9      		RET 			; Finally return.
-00A4:         	K_REPEAT:
-00A4: 23      		INC HL 			; Point to the '5 call counter' of the set being used and reset it to 5.
-00A5: 3605    		LD (HL),$05		;
-00A7: 23      		INC HL 			; Point to the third system variable - the REPDEL/REPPER value 
-00A8: 35      		DEC (HL)		; 	- and decrement it.
-00A9: C0      		RET NZ			; Exit from the KEYBOARD subroutine if the delay period has not passed.
-00AA: 3A0A5C  		LD A,($5C0A)	; However once it has passed the delay period for the 
-00AD: 77      		LD (HL),A		;	next repeat is to be REPPER.
-00AE: 23      		INC HL			; The repeat has been accepted so the final code value 
-00AF: 7E      		LD A,(HL)		; 	is fetched from KSTATE3/7 and passed to K_END.
-00B0: 18EA    		JR K_END		;
+00B1:         	K_END:
+00B1: 32085C  		LD ($5C08),A 	; Enter the final code value into LAST-K and signal 'a new key' 
+00B4: FDCB01EE		SET 5,(IY+$01)	; by setting bit 5 of FLAGS.
+00B8: C9      		RET 			; Finally return.
+00B9:         	K_REPEAT:
+00B9: 23      		INC HL 			; Point to the '5 call counter' of the set being used and reset it to 5.
+00BA: 3605    		LD (HL),$05		;
+00BC: 23      		INC HL 			; Point to the third system variable - the REPDEL/REPPER value 
+00BD: 35      		DEC (HL)		; 	- and decrement it.
+00BE: C0      		RET NZ			; Exit from the KEYBOARD subroutine if the delay period has not passed.
+00BF: 3A0A5C  		LD A,($5C0A)	; However once it has passed the delay period for the 
+00C2: 77      		LD (HL),A		;	next repeat is to be REPPER.
+00C3: 23      		INC HL			; The repeat has been accepted so the final code value 
+00C4: 7E      		LD A,(HL)		; 	is fetched from KSTATE3/7 and passed to K_END.
+00C5: 18EA    		JR K_END		;
               		
               	; Keyobard scanning subroutine
-00B2:         	KEY_SCAN: 
-00B2: 2E2F    		LD L,$2F
-00B4: 11FFFF  		LD DE,$FFFF
-00B7: 01FEFE  		LD BC,$FEFE
-00BA:         	KEY_LINE:
-00BA: ED78    		IN A,(C)
-00BC: 2F      		CPL
-00BD: E61F    		AND $1F
-00BF: 280E    		JR Z,KEY_DONE
-00C1: 67      		LD H,A
-00C2: 7D      		LD A,L
-00C3:         	KEY_3KEYS:
-00C3: 14      		INC D
-00C4: C0      		RET NZ
-00C5:         	KEY_BITS:
-00C5: D608    		SUB $08
-00C7: CB3C    		SRL H
-00C9: 30FA    		JR NC, KEY_BITS
-00CB: 53      		LD D,E
-00CC: 5F      		LD E,A
-00CD: 20F4    		JR NZ,KEY_3KEYS	
-00CF:         	KEY_DONE:
-00CF: 2D      		DEC L
-00D0: CB00    		RLC B
-00D2: 38E6    		JR C,KEY_LINE
+00C7:         	KEY_SCAN: 
+00C7: 2E2F    		LD L,$2F
+00C9: 11FFFF  		LD DE,$FFFF
+00CC: 01FEFE  		LD BC,$FEFE
+00CF:         	KEY_LINE:
+00CF: ED78    		IN A,(C)
+00D1: 2F      		CPL
+00D2: E61F    		AND $1F
+00D4: 280E    		JR Z,KEY_DONE
+00D6: 67      		LD H,A
+00D7: 7D      		LD A,L
+00D8:         	KEY_3KEYS:
+00D8: 14      		INC D
+00D9: C0      		RET NZ
+00DA:         	KEY_BITS:
+00DA: D608    		SUB $08
+00DC: CB3C    		SRL H
+00DE: 30FA    		JR NC, KEY_BITS
+00E0: 53      		LD D,E
+00E1: 5F      		LD E,A
+00E2: 20F4    		JR NZ,KEY_3KEYS	
+00E4:         	KEY_DONE:
+00E4: 2D      		DEC L
+00E5: CB00    		RLC B
+00E7: 38E6    		JR C,KEY_LINE
               		
-00D4: 7A      		LD A,D	; Accept any key value which still has the D register holding +FF,
-00D5: 3C      		INC A	;  i.e. a single key pressed or 'no-key'.
-00D6: C8      		RET Z	;
-00D7: FE28    		CP $28 	; Accept the key value for a pair of keys if the D key is CAPS SHIFT.
-00D9: C8      		RET Z	;
-00DA: FE19    		CP $19 	; Accept the key value for a pair of keys if the D key is SYMBOL SHIFT.
-00DC: C8      		RET Z	;
-00DD: 7B      		LD A,E	; It is however possible for the E key of a pair to be
-00DE: 5A      		LD E,D	;  SYMBOL SHIFT - so this has to be considered.
-00DF: 57      		LD D,A	;
-00E0: FE18    		CP $18	;
-00E2: C9      		RET		; Return with the zero flag set if it was SYMBOL SHIFT and 'another key'; 
+00E9: 7A      		LD A,D	; Accept any key value which still has the D register holding +FF,
+00EA: 3C      		INC A	;  i.e. a single key pressed or 'no-key'.
+00EB: C8      		RET Z	;
+00EC: FE28    		CP $28 	; Accept the key value for a pair of keys if the D key is CAPS SHIFT.
+00EE: C8      		RET Z	;
+00EF: FE19    		CP $19 	; Accept the key value for a pair of keys if the D key is SYMBOL SHIFT.
+00F1: C8      		RET Z	;
+00F2: 7B      		LD A,E	; It is however possible for the E key of a pair to be
+00F3: 5A      		LD E,D	;  SYMBOL SHIFT - so this has to be considered.
+00F4: 57      		LD D,A	;
+00F5: FE18    		CP $18	;
+00F7: C9      		RET		; Return with the zero flag set if it was SYMBOL SHIFT and 'another key'; 
               				; otherwise reset.
               				
               				
               	; Used by KEYBOARD and S_INKEY.	
-00E3:         	K_TEST:
-00E3: 42      		LD B,D			; Copy the shift byte.
-00E4: 1600    		LD D,$00		; Clear the D register for later.
-00E6: 7B      		LD A,E			; Move the key number.
-00E7: FE27    		CP $27			; Return now if the key was 'CAPS SHIFT' only or 'no-key'.
-00E9: D0      		RET NC			;
-00EA: FE18    		CP $18			; Jump forward unless the E key was SYMBOL SHIFT.
-00EC: 2003    		JR NZ,K_MAIN	;
-00EE: CB78    		BIT 7,B			; However accept SYMBOL SHIFT and another key; 
-00F0: C0      		RET NZ			; return with SYMBOL SHIFT only.
-00F1:         	K_MAIN:
-00F1: 210502  		LD HL,KEYTABLE_A ; The base address of the main key table. 
-00F4: 19      		ADD HL,DE		; Index into the table and fetch the 'main code'.
-00F5: 7E      		LD A,(HL)		;
-00F6: 37      		SCF				; Signal 'valid keystroke' before returning.
-00F7: C9      		RET				;
+00F8:         	K_TEST:
+00F8: 42      		LD B,D			; Copy the shift byte.
+00F9: 1600    		LD D,$00		; Clear the D register for later.
+00FB: 7B      		LD A,E			; Move the key number.
+00FC: FE27    		CP $27			; Return now if the key was 'CAPS SHIFT' only or 'no-key'.
+00FE: D0      		RET NC			;
+00FF: FE18    		CP $18			; Jump forward unless the E key was SYMBOL SHIFT.
+0101: 2003    		JR NZ,K_MAIN	;
+0103: CB78    		BIT 7,B			; However accept SYMBOL SHIFT and another key; 
+0105: C0      		RET NZ			; return with SYMBOL SHIFT only.
+0106:         	K_MAIN:
+0106: 210502  		LD HL,KEYTABLE_A ; The base address of the main key table. 
+0109: 19      		ADD HL,DE		; Index into the table and fetch the 'main code'.
+010A: 7E      		LD A,(HL)		;
+010B: 37      		SCF				; Signal 'valid keystroke' before returning.
+010C: C9      		RET				;
               		
               	
 0205:         	#code main_key_table, 0x205, 0xFDFB;0x28E
@@ -564,5 +567,5 @@
 0340: C9      		RET
 
 
-total time: 0.0101 sec.
+total time: 0.0095 sec.
 no errors

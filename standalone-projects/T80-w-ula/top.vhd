@@ -120,11 +120,11 @@ architecture Behavior of top is
 	
 	-- DIRECTLY CPU RELATED
 	signal cpu_clk, bus_rq_n : std_logic := '1';
-	signal m1_n, mem_req_n, cpu_rd_n, cpu_wr_n, mem_refresh_n, halt_n, busak_n, read_en, write_en: std_logic;
-	signal cpu_address, address, in_address : std_logic_vector(15 downto 0) := x"0000";
-	signal cpu_data, cpu_data_i, cpu_data_o, input_data_out, input_data_in, data_in, data_out : std_logic_vector(7 downto 0) := x"00";
+	signal m1_n, cpu_mreq_n, cpu_rd_n, cpu_wr_n, mem_refresh_n, halt_n, busak_n, read_en, write_en: std_logic;
+	signal cpu_address, address : std_logic_vector(15 downto 0) := x"0000";
+	signal cpu_data, cpu_data_i, cpu_data_o, data_in, data_out : std_logic_vector(7 downto 0) := x"00";
 	
-	signal io_req_n : std_logic := '1';
+	signal cpu_iorq_n : std_logic := '1';
 	
 	signal data_view : std_logic_vector(7 downto 0);
 	
@@ -145,6 +145,13 @@ architecture Behavior of top is
 	signal flash_clk : std_logic;
 	
 	signal keyboard_data_out : std_logic_vector(4 downto 0) := "10111";
+	
+	signal mreq_n, iorq_n : std_logic := '1';
+	-- "NIOS" --
+	signal nios_en : std_logic := '0';
+	signal nios_data_out, nios_data_in : std_logic_vector(7 downto 0) := x"00";
+	signal nios_address : std_logic_vector(15 downto 0) := x"0000";
+	signal nios_rd_n, nios_wr_n, nios_mreq_n, nios_iorq_n : std_logic := '1';
 	
 	-- reset counter --
 	signal ctr_en : std_logic := '1';
@@ -171,7 +178,7 @@ begin
 
 	z80 : T80a port map (
 			RESET_n => cpu_reset_n, CLK_n => cpu_clk, WAIT_n => '1', INT_n => cpu_int_n, NMI_n => nmi_n, BUSRQ_n => bus_rq_n,
-			M1_n => m1_n, MREQ_n => mem_req_n, IORQ_n => io_req_n, RD_n => cpu_rd_n, WR_n => cpu_wr_n, RFSH_n => mem_refresh_n,
+			M1_n => m1_n, MREQ_n => cpu_mreq_n, IORQ_n => cpu_iorq_n, RD_n => cpu_rd_n, WR_n => cpu_wr_n, RFSH_n => mem_refresh_n,
 			HALT_n => halt_n, BUSAK_n => busak_n,
 			A => cpu_address, D => cpu_data);
 			
@@ -196,7 +203,7 @@ begin
 			nTCLKA		=> ula_tclka_n,
 			nTCLKB		=> ula_tclkb_n,
 			
-			MREQ_n		=> mem_req_n,
+			MREQ_n		=> mreq_n,
 			IOREQ_n		=> ula_in_iorq_n,
 
 			TOP_ADDRESS	=> ula_a,
@@ -205,7 +212,7 @@ begin
 			CPU_CLK		=> cpu_clk,
 			FLASH_CLK	=> flash_clk
 	);
-	ula_in_iorq_n <= io_req_n OR address(0); -- spider modification (TODO make sure this is necessary)
+	ula_in_iorq_n <= iorq_n OR address(0); -- spider modification (TODO make sure this is necessary)
 	ula_a <= address(15) & address(14);
 
 	cpu_data <= "ZZZZZZZZ" when cpu_rd_n = '1' and cpu_wr_n = '0' else cpu_data_i; -- READ
@@ -218,12 +225,17 @@ begin
 	data_view <= cpu_data when cpu_rd_n = '0' and cpu_wr_n = '1' else cpu_data_o;
 	--LEDG <= data_view;
 	
-	ram_en <= not mem_req_n;
+	ram_en <= not mreq_n;
 	
-	ula_en <= '1' when io_req_n = '0' and mem_req_n = '1' and address(7 downto 0) = X"FE" else '0';
+	ula_en <= '1' when iorq_n = '0' and cpu_mreq_n = '1' and address(7 downto 0) = X"FE" else '0';
 	
-	read_en <= not cpu_rd_n;
-	write_en <= not cpu_wr_n;
+	-- DMA mux --
+	read_en <= (not cpu_rd_n) WHEN busak_n = '1' else (not nios_rd_n);
+	write_en <= (not cpu_wr_n) WHEN busak_n = '1' else (not nios_wr_n);
+	mreq_n <= cpu_mreq_n WHEN busak_n = '1' else nios_mreq_n;
+	iorq_n <= cpu_iorq_n WHEN busak_n = '1' else nios_iorq_n;
+	data_out <= cpu_data_o WHEN busak_n = '1' else nios_data_out;
+	address <= cpu_address WHEN busak_n = '1' else nios_address;
 	
 	mem: ram port map (
 			address	=> address,
@@ -237,29 +249,36 @@ begin
 	
 	bus_rq_n <= not SW(17);
 	nmi_n <= not SW(16);
+	--nios_rd_n <= not SW(15);
+	nios_wr_n <= not SW(15);
+	nios_mreq_n <= not SW(14);
+	--nios_iorq_n <= not SW(12);
 	--int_n <= not SW(15);
 	
-	in_address(7 downto 0) <= SW(7 downto 0);
-	input_data_out <= SW(15 downto 8);
+	nios_data_out <= SW(7 downto 0);
+	nios_address(5 downto 0) <= SW(13 downto 8);
+	nios_address(15 downto 6) <= "1111111111";
+	LEDG(7 downto 0) <= nios_data_in;
 	
-	address <= in_address when busak_n = '0' else cpu_address;
-	data_out <= input_data_out when busak_n = '0' else cpu_data_o;
+	address <= nios_address when busak_n = '0' else cpu_address;
+	data_out <= nios_data_out when busak_n = '0' else cpu_data_o;
 	
-	input_data_in <= data_in;
+	nios_data_in <= data_in;
 	cpu_data_i <= data_in;
 	
 	data_in <= 	ram_data_out when read_en = '1' 		and ram_en = '1' else
+					nios_data_out when read_en = '1'		and nios_en = '1' else
 					ula_data_out when read_en = '1'		and ula_en = '1' else
 					(others => '0') when global_reset = '1' else
 					"ZZZZZZZZ";
 	
 	LEDR(15 downto 0) <= address;
 	
-	LEDG(0) <= not busak_n;
-	LEDG(1) <= not halt_n;
+	--LEDG(0) <= not busak_n;
+	--LEDG(1) <= not halt_n;
 
-	LEDR(17) <= not cpu_rd_n;
-	LEDR(16) <= not cpu_wr_n;
+	LEDR(17) <= not halt_n;
+	LEDR(16) <= not busak_n;
 
 	--cpu_data_i <= SW(7 downto 0);
 	
@@ -284,6 +303,6 @@ begin
 	cpu_reset_n <= '0' when rst_ctr_num(9 downto 7) = "001" else '1';
 	
 	-- TEST signals --
-	ula_tclka_n <= not (io_req_n or mem_req_n or cpu_rd_n or not cpu_wr_n);
-	ula_tclkb_n <= not (io_req_n or mem_req_n or not cpu_rd_n or cpu_wr_n);
+	ula_tclka_n <= not (cpu_iorq_n or cpu_mreq_n or cpu_rd_n or not cpu_wr_n);
+	ula_tclkb_n <= not (cpu_iorq_n or cpu_mreq_n or not cpu_rd_n or cpu_wr_n);
 end Behavior;

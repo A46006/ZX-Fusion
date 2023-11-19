@@ -45,11 +45,14 @@ architecture tb_arch of tb is
 	
 	signal halt : std_logic := '0';
 	
-	signal address : std_logic_vector(15 downto 0);
 	signal keyb_addr : std_logic_vector(7 downto 0);
 	signal keyb_data : std_logic_vector(4 downto 0) := "11111";
 	
-	signal READ_ADDR : std_logic := '0';
+	
+	signal mreq, iorq : std_logic := '0';
+	signal read_en, write_en : std_logic := '0';
+	signal address : std_logic_vector(5 downto 0);
+	signal data : std_logic_vector(7 downto 0);
 	
 begin
 	clock_50 <= not clock_50 after 10 ns; -- t=10ns => T=20ns => f=1/20ns = 50 MHz
@@ -62,10 +65,14 @@ begin
 	SW(17) <= bus_rq;
 	SW(16) <= nmi;
 	SW(15) <= int;
+	SW(14) <= write_en;
+	--SW(13) <= mreq;
 	
-	busak <= LEDG(0);
-	halt <= LEDG(1);
-	address <= LEDR(15 downto 0);
+	busak <= LEDR(16);
+	halt <= LEDR(17);
+	
+	SW(7 downto 0) <= data;
+	SW(13 downto 8) <= address;
 	
 	-- Always sending the key F
 	keyb_data <= "10111" when keyb_addr(1) = '0' else "11111";
@@ -73,8 +80,6 @@ begin
 	--SW(1 downto 0) <= video_mode;
 	--SW(17) <= native_n_ps2;
 	
-	-- Signal active when the READ in assembly code is being made
-	READ_ADDR <= '1' when address = x"000F" else '0';
 	
 	uut : top port map (
 		CLOCK_50 => clk_50,
@@ -106,9 +111,47 @@ begin
 		
 		wait until reset = '0' and halt = '1';
 		
-		wait for 100us;
+		wait for 200 us;
 		
-		wait until reset = '0' and halt = '0';
+		bus_rq <= '1';
+		
+		wait until busak = '1';
+		
+		wait for 100 ns;
+		
+		address <= "111110";
+		data <= x"55";
+		wait for 100 ns;
+		
+		write_en <= '1';
+		mreq <= '1';
+		
+		wait for 100 ns;
+		
+		mreq <= '0';
+		write_en <= '0';
+		address <= "111111";
+		data <= x"AA";
+		wait for 100 ns;
+		
+		write_en <= '1';
+		mreq <= '1';
+		
+		wait for 100 ns;
+		
+		mreq <= '0';
+		write_en <= '0';
+		
+		wait for 100 ns;
+		
+		nmi <= '1';
+		bus_rq <= '0';
+		
+		wait until busak = '0';
+		wait for 600 ns;
+		
+		nmi <= '0';
+		
 		
 		assert false report "fim da simulação!" severity warning;
 		wait; -- will wait forever

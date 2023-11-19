@@ -22,7 +22,7 @@ START:
 
 
 ;; Interrupt and keyboard routines follow (code taken from Richard Dymond's ZX Specturm 48k ROM disassembly https://skoolkid.github.io/rom/index.html)
-#code interrupt, 0x38, 0x1cd
+#code interrupt, 0x38, 0x2E
 MASK_INT:
 	push AF
 	push HL
@@ -43,7 +43,10 @@ KEY_INT
 	pop af
 	EI
 	RET
-	
+
+#code nmi, 0x66, 0x1cd
+	RETN
+
 KEYBOARD:
 	CALL KEY_SCAN
 	RET NZ
