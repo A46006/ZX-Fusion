@@ -68,6 +68,8 @@ BEGIN
 		-- CURRENT ONE
 		init_file => "./rom/file/Spectrum48_ROM_LIGHT.hex", -- MODIFIED ROM
 --		init_file => "./rom/file/testrom.hex", -- TEST ROM
+--		init_file => "./rom/file/Spectrum48_ROM.hex",
+
 
 		intended_device_family => "Cyclone IV E",
 		lpm_hint => "ENABLE_RUNTIME_MOD=YES, INSTANCE_NAME=ROM",

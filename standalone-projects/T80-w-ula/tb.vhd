@@ -153,6 +153,49 @@ begin
 		nmi <= '0';
 		
 		
+		wait for 15622114 ns; -- Value obtained through simulation (to trigger DMA and NMI during INT routine)
+		
+		
+		bus_rq <= '1';
+		
+		wait until busak = '1';
+		
+		wait for 100 ns;
+		
+		address <= "111110";
+		data <= x"55";
+		wait for 100 ns;
+		
+		write_en <= '1';
+		mreq <= '1';
+		
+		wait for 100 ns;
+		
+		mreq <= '0';
+		write_en <= '0';
+		address <= "111111";
+		data <= x"AA";
+		wait for 100 ns;
+		
+		write_en <= '1';
+		mreq <= '1';
+		
+		wait for 100 ns;
+		
+		mreq <= '0';
+		write_en <= '0';
+		
+		wait for 100 ns;
+		
+		nmi <= '1';
+		bus_rq <= '0';
+		
+		wait until busak = '0';
+		wait for 600 ns;
+		
+		nmi <= '0';
+		
+		
 		assert false report "fim da simulação!" severity warning;
 		wait; -- will wait forever
 	end process;
