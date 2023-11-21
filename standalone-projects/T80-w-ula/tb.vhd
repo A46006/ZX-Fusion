@@ -119,7 +119,8 @@ begin
 		
 		wait for 100 ns;
 		
-		address <= "111110";
+		--address <= "111110";
+		address <= "000000"; -- "FFC0"
 		data <= x"55";
 		wait for 100 ns;
 		
@@ -130,8 +131,9 @@ begin
 		
 		mreq <= '0';
 		write_en <= '0';
-		address <= "111111";
-		data <= x"AA";
+		--address <= "111111";
+		--data <= x"AA";
+		address <= "000001"; -- "FFC1"
 		wait for 100 ns;
 		
 		write_en <= '1';
@@ -139,8 +141,99 @@ begin
 		
 		wait for 100 ns;
 		
-		mreq <= '0';
 		write_en <= '0';
+		mreq <= '0';
+		
+		address <= "000010"; -- "FFC2"
+		wait for 100 ns;-------------------
+		
+		write_en <= '1';
+		mreq <= '1';
+		
+		wait for 100 ns;
+		
+		write_en <= '0';
+		mreq <= '0';
+		
+		address <= "000011"; -- "FFC3"
+		wait for 100 ns;
+		
+		write_en <= '1';
+		mreq <= '1';
+		
+		wait for 100 ns;
+		
+		write_en <= '0';
+		mreq <= '0';
+		
+		address <= "000100"; -- "FFC4"
+		wait for 100 ns;
+		
+		write_en <= '1';
+		mreq <= '1';
+		
+		wait for 100 ns;
+		
+		write_en <= '0';
+		mreq <= '0';
+		
+		address <= "000101"; -- "FFC5"
+		wait for 100 ns;
+		
+		write_en <= '1';
+		mreq <= '1';
+		
+		wait for 100 ns;
+		
+		write_en <= '0';
+		mreq <= '0';
+		
+		address <= "111100"; -- "FFFC"
+		wait for 100 ns;
+		
+		write_en <= '1';
+		mreq <= '1';
+		
+		wait for 100 ns;
+		
+
+		write_en <= '0';
+		mreq <= '0';
+		
+		address <= "111101"; -- "FFFD"
+		wait for 100 ns;
+		
+		write_en <= '1';
+		mreq <= '1';
+		
+		wait for 100 ns;
+		
+				
+		write_en <= '0';
+		mreq <= '0';
+		
+		address <= "111110"; -- "FFFE"
+		wait for 100 ns;
+		
+		write_en <= '1';
+		mreq <= '1';
+		
+		wait for 100 ns;
+				
+		write_en <= '0';
+		mreq <= '0';
+		
+		address <= "111111"; -- "FFFF"
+		wait for 100 ns;
+		
+		write_en <= '1';
+		mreq <= '1';
+		
+		wait for 100 ns;
+		
+		
+		write_en <= '0';
+		mreq <= '0';
 		
 		wait for 100 ns;
 		
@@ -153,7 +246,8 @@ begin
 		nmi <= '0';
 		
 		
-		wait for 15622114 ns; -- Value obtained through simulation (to trigger DMA and NMI during INT routine)
+		--wait for 15622114 ns; -- Value obtained through simulation (to trigger DMA and NMI during INT routine), with only two writes
+		wait for 15620614 ns; -- Value obtained through calculation, based on the one above, with 8 more writes
 		
 		
 		bus_rq <= '1';

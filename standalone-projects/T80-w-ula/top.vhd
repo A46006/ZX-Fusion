@@ -2,7 +2,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 --use ieee.numeric_std.all;
 use IEEE.STD_LOGIC_ARITH.ALL;
---use IEEE.STD_LOGIC_UNSIGNED.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity top is
 	port (
@@ -43,9 +43,85 @@ architecture Behavior of top is
 			areset		: IN STD_LOGIC  := '0';
 			inclk0		: IN STD_LOGIC  := '0';
 			c0				: OUT STD_LOGIC ;
+			c1				: OUT STD_LOGIC ;
+			c2				: OUT STD_LOGIC ;
 			locked		: OUT STD_LOGIC 
 		);
 	end component;
+	
+	---------
+	-- RAM --
+	---------
+	
+	-- Address 0x0000 - 0x3FFF
+	component rom IS
+		PORT
+		(
+			address		: IN STD_LOGIC_VECTOR (13 DOWNTO 0);
+			clken		: IN STD_LOGIC  := '1';
+			clock		: IN STD_LOGIC  := '1';
+			data		: IN STD_LOGIC_VECTOR (7 DOWNTO 0);
+			rden		: IN STD_LOGIC  := '1';
+			wren		: IN STD_LOGIC ;
+			q		: OUT STD_LOGIC_VECTOR (7 DOWNTO 0)
+		);
+	END component;
+	
+	-- Address 0x4000 - 0x57FF
+	component pixel_video_ram IS
+		PORT
+		(
+			-- a -> accessed by video
+			-- b -> accessed by CPU
+			address_a		: IN STD_LOGIC_VECTOR (12 DOWNTO 0);
+			address_b		: IN STD_LOGIC_VECTOR (12 DOWNTO 0);
+			clock_a		: IN STD_LOGIC  := '1';
+			clock_b		: IN STD_LOGIC ;
+			data_a		: IN STD_LOGIC_VECTOR (7 DOWNTO 0);
+			data_b		: IN STD_LOGIC_VECTOR (7 DOWNTO 0);
+			enable_a		: IN STD_LOGIC  := '1';
+			enable_b		: IN STD_LOGIC  := '1';
+			wren_a		: IN STD_LOGIC  := '0';
+			wren_b		: IN STD_LOGIC  := '0';
+			q_a		: OUT STD_LOGIC_VECTOR (7 DOWNTO 0);
+			q_b		: OUT STD_LOGIC_VECTOR (7 DOWNTO 0)
+		);
+	END component;
+	
+	-- Address 0x5800 - 0x5AFF
+	component color_video_ram IS
+	PORT
+	(
+		-- a -> accessed by video
+		-- b -> accessed by CPU
+		address_a		: IN STD_LOGIC_VECTOR (9 DOWNTO 0);
+		address_b		: IN STD_LOGIC_VECTOR (9 DOWNTO 0);
+		clock_a		: IN STD_LOGIC  := '1';
+		clock_b		: IN STD_LOGIC ;
+		data_a		: IN STD_LOGIC_VECTOR (7 DOWNTO 0);
+		data_b		: IN STD_LOGIC_VECTOR (7 DOWNTO 0);
+		enable_a		: IN STD_LOGIC  := '1';
+		enable_b		: IN STD_LOGIC  := '1';
+		wren_a		: IN STD_LOGIC  := '0';
+		wren_b		: IN STD_LOGIC  := '0';
+		q_a		: OUT STD_LOGIC_VECTOR (7 DOWNTO 0);
+		q_b		: OUT STD_LOGIC_VECTOR (7 DOWNTO 0)
+	);
+	END component;
+
+	-- Address 0x5B00 - 0xFFFF
+	component remaining_ram IS
+		PORT
+		(
+			address		: IN STD_LOGIC_VECTOR (15 DOWNTO 0);
+			clken		: IN STD_LOGIC  := '1';
+			clock		: IN STD_LOGIC  := '1';
+			data		: IN STD_LOGIC_VECTOR (7 DOWNTO 0);
+			rden		: IN STD_LOGIC  := '1';
+			wren		: IN STD_LOGIC ;
+			q		: OUT STD_LOGIC_VECTOR (7 DOWNTO 0)
+		);
+	END component;
 
 	component T80a is
 		port(
@@ -101,19 +177,6 @@ architecture Behavior of top is
 		);
 	end component;
 	
-	component ram IS
-		PORT
-		(
-			address		: IN STD_LOGIC_VECTOR (15 DOWNTO 0);
-			clken		: IN STD_LOGIC  := '1';
-			clock		: IN STD_LOGIC  := '1';
-			data		: IN STD_LOGIC_VECTOR (7 DOWNTO 0);
-			rden		: IN STD_LOGIC  := '1';
-			wren		: IN STD_LOGIC ;
-			q		: OUT STD_LOGIC_VECTOR (7 DOWNTO 0)
-		);
-	END component;
-	
 	-- COUNTER RELATED
 	signal count : std_logic_vector(2 downto 0) := "000"; -- minimum of 3 clocks for reset
 	signal global_reset : std_logic;
@@ -131,8 +194,6 @@ architecture Behavior of top is
 	signal nmi_n : std_logic := '1';
 	signal cpu_int_n : std_logic := '1';
 	
-	signal ram_en : std_logic := '0';
-	signal ram_data_out : std_logic_vector(7 downto 0) := (others => '0');
 	signal ula_clk : std_logic := '0';
 	signal pll_locked : std_logic;
 	
@@ -147,11 +208,37 @@ architecture Behavior of top is
 	signal keyboard_data_out : std_logic_vector(4 downto 0) := "10111";
 	
 	signal mreq_n, iorq_n : std_logic := '1';
+	
+	signal video_clock : std_logic := '0';
 	-- "NIOS" --
 	signal nios_en : std_logic := '0';
 	signal nios_data_out, nios_data_in : std_logic_vector(7 downto 0) := x"00";
 	signal nios_address : std_logic_vector(15 downto 0) := x"0000";
 	signal nios_rd_n, nios_wr_n, nios_mreq_n, nios_iorq_n : std_logic := '1';
+	
+	-- ROM --
+	signal rom_address : std_logic_vector(13 downto 0);
+	signal rom_en : std_logic;
+	signal rom_data_in : std_logic_vector(7 downto 0) := (others => '0'); -- Is this necessary?
+	signal rom_data_out : std_logic_vector(7 downto 0);
+	
+	-- Pixel RAM --
+	signal video_pixel_addr, cpu_pixel_addr : std_logic_vector(12 downto 0);
+	signal cpu_pixel_addr_num : std_logic_vector(15 downto 0);
+	signal cpu_pixel_data_out, video_pixel_data_out : std_logic_vector(7 downto 0);
+	signal cpu_pixel_en, video_pixel_read : std_logic;
+	
+	-- Color RAM --
+	signal video_color_addr, cpu_color_addr : std_logic_vector(9 downto 0);
+	signal cpu_color_addr_num : std_logic_vector(15 downto 0);
+	signal cpu_color_data_out, video_color_data_out : std_logic_vector(7 downto 0);
+	signal ula_read_bus : std_logic_vector(7 downto 0); -- for floating bus behaviour recreation
+	signal cpu_color_en, video_color_read : std_logic;
+	
+	-- Remaining RAM --
+	signal ram_address : std_logic_vector(15 downto 0);
+	signal ram_en : std_logic;
+	signal ram_data_out : std_logic_vector(7 downto 0);
 	
 	-- reset counter --
 	signal ctr_en : std_logic := '1';
@@ -168,12 +255,74 @@ begin
 	KEYB_ADDR <= address(15 downto 8);
 	keyboard_data_out <= KEYB_DATA;
 	
+	---------
+	-- PLL --
+	---------
 	main_pll : pll port map (
-			areset		=> pll_reset,
-			inclk0		=> CLOCK_50,
-			c0				=> ula_clk,
-			locked		=> pll_locked
-	);
+			areset	=> pll_reset,
+			inclk0	=> CLOCK_50,
+			c0			=> ula_clk,	      -- 7 MHz
+			c1			=> open, --audio_ctrl_clk,	-- 18 MHz
+			c2			=> video_clock,		-- 65 MHz
+			locked	=> pll_locked
+		);
+	
+	---------
+	-- ROM --
+	---------
+	rom_mem : rom port map (
+			address	=> rom_address,
+			clken		=> rom_en,				-- ENABLE
+			clock		=> CLOCK_50,			-- SHOULD THIS BE THE CLOCK?
+			data		=> rom_data_in,		-- Always 0?
+			rden		=> read_en,				-- CPU read
+			wren		=> write_en,				-- CPU write (Always 0?)
+			q			=> rom_data_out		-- Data out
+		);
+		
+	----------------
+	-- PIXEL RAM --
+	----------------
+	pixel_memory : pixel_video_ram port map(
+			-- VIDEO --								-- CPU --
+			address_a 	=> video_pixel_addr, 	address_b 	=> cpu_pixel_addr,
+			clock_a 		=> video_clock, 			clock_b 		=> CLOCK_50,		-- SHOULD THESE BE THE CLOCKS?
+			data_a 		=> (others => '0'), 		data_b 		=> data_out,
+			enable_a 	=> video_pixel_read, 	enable_b 	=> cpu_pixel_en,
+			wren_a 		=> '0',						wren_b		=> write_en,
+			q_a			=> video_pixel_data_out, q_b			=> cpu_pixel_data_out
+		);
+		
+	---------------
+	-- COLOR RAM --
+	---------------
+	color_memory : color_video_ram port map(
+			-- VIDEO --									-- CPU --
+			address_a	=> video_color_addr,		address_b => cpu_color_addr,
+			clock_a 		=> video_clock, 			clock_b 		=> CLOCK_50,		-- SHOULD THESE BE THE CLOCKS?
+			data_a 		=> (others => '0'), 		data_b 		=> data_out,
+			enable_a		=> video_color_read,		enable_b		=> cpu_color_en,
+			wren_a 		=> '0',						wren_b		=> write_en,
+			q_a			=> video_color_data_out,q_b			=> cpu_color_data_out
+		);
+		
+	-- Combining both memory data busses into one, for floating bus behaviour recreation
+	ula_read_bus <= 	video_pixel_data_out when video_pixel_read = '0' else 
+							video_color_data_out when video_color_read = '0' else
+							"ZZZZZZZZ";
+		
+	-------------------
+	-- REMAINING RAM --
+	-------------------
+	ram : remaining_ram port map(
+			address	=> ram_address,
+			clken		=> ram_en,				-- ENABLE
+			clock		=> CLOCK_50,			-- SHOULD THIS BE THE CLOCK?
+			data		=> data_out,			-- Data in
+			rden		=> read_en,				-- read
+			wren		=> write_en,			-- write
+			q			=> ram_data_out		-- Data out
+		);
 	
 
 	z80 : T80a port map (
@@ -215,9 +364,61 @@ begin
 	ula_in_iorq_n <= iorq_n OR address(0); -- spider modification (TODO make sure this is necessary)
 	ula_a <= address(15) & address(14);
 
+
+	ula_en <= '1' when iorq_n = '0' and cpu_mreq_n = '1' and address(7 downto 0) = X"FE" else '0';
+	-- MEMORY --
+	
+	-- '1' when in the range 0x0000 to 0x3FFF
+	rom_en <= not (mreq_n or cpu_rd_n or address(15) or address(14));--(not mreq_n) and (not cpu_rd_n)
+	
+
+	-- '1' when in the range 0x4000 to 0x4fff OR in the range 0x5000 to 0x57FF
+	cpu_pixel_en <= not (mreq_n or 
+							address(15) or (not address(14)) or address(13) or ( -- limits address to 0x4000 to 0x5FFF
+									not (not address(12) or not address(11)) -- limits address to not exceed 0x57FF
+								));
+
+	-- '1' when in the range 0x5800 to 0x5AFF
+	cpu_color_en <= not (mreq_n or 
+								address(15) or (not address(14)) or address(13) or (not address(12)) or (not address(11)) or address(10) or ( -- limit address to 0x5800 to 0x5BFF
+										not (not address(9) or not address(8)) -- A9 and A8 can't be both 1, limiting address to 0x5AFF instead of 0x5BFF
+									));
+	
+	-- '1' when mem_req is on but no other memory is being accessed
+	ram_en <= (not mreq_n) and (
+						address(15) or (address(14) and ( -- 01000000... to 11111111... (0x4000 to 0xFFFF)
+							address(13) OR ( -- 01100000... to 11111111... (0x6000 to 0xFFFF)
+								(address(12) and address(11)) AND -- 01011000... to 11111111... (0x5800 to 0xFFFF)
+								(address(10) or (address(9) and address(8))) -- 01011011... to 11111111... (0x5B00 to 0xFFFF)
+							)
+						))
+					);
+	
+
+	
 	cpu_data <= "ZZZZZZZZ" when cpu_rd_n = '1' and cpu_wr_n = '0' else cpu_data_i; -- READ
 	cpu_data_o <= "ZZZZZZZZ" when cpu_rd_n = '0' and cpu_wr_n = '1' else cpu_data; -- WRITE
 
+	
+	----------------------
+	-- Memory Addresses --
+	----------------------
+	cpu_pixel_addr_num <= (address - x"4000");
+	cpu_color_addr_num <= (address - x"5800");
+	
+	rom_address <= address(13 downto 0) when rom_en = '1' 
+											else (others => '0');
+	cpu_pixel_addr <= cpu_pixel_addr_num(12 downto 0) when cpu_pixel_en = '1'
+											else (others => '0');
+											
+	cpu_color_addr <= cpu_color_addr_num(9 downto 0) when cpu_color_en = '1'
+											else (others => '0');
+											
+	ram_address <= (address-x"5B00") when ram_en = '1'
+											else (others => '0');
+											
+											
+	
 			
 	--clock_n <= KEY(0);
 	global_reset <= not KEY(1);
@@ -225,27 +426,6 @@ begin
 	data_view <= cpu_data when cpu_rd_n = '0' and cpu_wr_n = '1' else cpu_data_o;
 	--LEDG <= data_view;
 	
-	ram_en <= not mreq_n;
-	
-	ula_en <= '1' when iorq_n = '0' and cpu_mreq_n = '1' and address(7 downto 0) = X"FE" else '0';
-	
-	-- DMA mux --
-	read_en <= (not cpu_rd_n) WHEN busak_n = '1' else (not nios_rd_n);
-	write_en <= (not cpu_wr_n) WHEN busak_n = '1' else (not nios_wr_n);
-	mreq_n <= cpu_mreq_n WHEN busak_n = '1' else nios_mreq_n;
-	iorq_n <= cpu_iorq_n WHEN busak_n = '1' else nios_iorq_n;
-	data_out <= cpu_data_o WHEN busak_n = '1' else nios_data_out;
-	address <= cpu_address WHEN busak_n = '1' else nios_address;
-	
-	mem: ram port map (
-			address	=> address,
-			clken		=> ram_en,
-			clock		=> CLOCK_50,
-			data		=> data_out,
-			rden		=> read_en,
-			wren		=> write_en,
-			q			=> ram_data_out
-		);
 	
 	bus_rq_n <= not SW(17);
 	nmi_n <= not SW(16);
@@ -260,15 +440,17 @@ begin
 	nios_address(15 downto 6) <= "1111111111";
 	LEDG(7 downto 0) <= nios_data_in;
 	
-	address <= nios_address when busak_n = '0' else cpu_address;
-	data_out <= nios_data_out when busak_n = '0' else cpu_data_o;
 	
 	nios_data_in <= data_in;
 	cpu_data_i <= data_in;
 	
-	data_in <= 	ram_data_out when read_en = '1' 		and ram_en = '1' else
+	data_in <= 	rom_data_out when read_en = '1' 			and rom_en = '1' else
+					cpu_pixel_data_out when read_en = '1' 	and cpu_pixel_en = '1' else
+					cpu_color_data_out when read_en = '1'	and cpu_color_en = '1' else
+					ram_data_out when read_en = '1' 		and ram_en = '1' else
 					nios_data_out when read_en = '1'		and nios_en = '1' else
 					ula_data_out when read_en = '1'		and ula_en = '1' else
+					ula_read_bus when read_en = '1'			and iorq_n = '0' else --and address = x"FF" else -- an attempt to recreate the floating bus behavior
 					(others => '0') when global_reset = '1' else
 					"ZZZZZZZZ";
 	
@@ -301,6 +483,14 @@ begin
 	pll_reset <= '1' when rst_ctr_num(9 downto 3)= "0000001" else '0';
 	ula_reset_n <= '0' when rst_ctr_num(9 downto 5) = "00001" else '1';
 	cpu_reset_n <= '0' when rst_ctr_num(9 downto 7) = "001" else '1';
+	
+	-- DMA mux --
+	read_en <= (not cpu_rd_n) WHEN busak_n = '1' else (not nios_rd_n);
+	write_en <= (not cpu_wr_n) WHEN busak_n = '1' else (not nios_wr_n);
+	mreq_n <= cpu_mreq_n WHEN busak_n = '1' else nios_mreq_n;
+	iorq_n <= cpu_iorq_n WHEN busak_n = '1' else nios_iorq_n;
+	data_out <= cpu_data_o WHEN busak_n = '1' else nios_data_out;
+	address <= cpu_address WHEN busak_n = '1' else nios_address;
 	
 	-- TEST signals --
 	ula_tclka_n <= not (cpu_iorq_n or cpu_mreq_n or cpu_rd_n or not cpu_wr_n);

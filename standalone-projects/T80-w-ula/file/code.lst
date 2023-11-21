@@ -1,6 +1,6 @@
               	; --------------------------------------
               	; zasm: assemble "code.asm"
-              	; date: 2023-11-19 20:55:30
+              	; date: 2023-11-21 15:40:21
               	; --------------------------------------
 
 
@@ -182,7 +182,7 @@
 010C: C9      		RET				;
               		
               	
-0205:         	#code main_key_table, 0x205, 0xFDFB;0x28E
+0205:         	#code main_key_table, 0x205, 0x3DCD;0xFDFB;0x28E
 0205:         	KEYTABLE_A:
 0205: 42      		DEFB $42 	; B
 0206: 48      		DEFB $48 	; H
@@ -567,5 +567,5 @@
 0340: C9      		RET
 
 
-total time: 0.0095 sec.
+total time: 0.0076 sec.
 no errors

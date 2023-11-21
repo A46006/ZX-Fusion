@@ -176,7 +176,7 @@ K_MAIN:
 	RET				;
 	
 
-#code main_key_table, 0x205, 0xFDFB;0x28E
+#code main_key_table, 0x205, 0x3DCD;0xFDFB;0x28E
 KEYTABLE_A:
 	DEFB $42 	; B
 	DEFB $48 	; H
