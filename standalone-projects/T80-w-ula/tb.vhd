@@ -292,7 +292,6 @@ begin
 		-- Check basecamp for assert or whatever
 		-- stops every time address is FFFE
 		-- It is through TCL files. Call them inside z.do
-		wait until address
 		
 		assert false report "fim da simulação!" severity warning;
 		wait; -- will wait forever

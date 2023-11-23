@@ -26,14 +26,15 @@ vcom -work work "../rom/rom.vhd"
 #vcom -work work "../ram/pixel_video_ram.vhd"
 #vcom -work work "../ram/color_video_ram.vhd"
 vcom -work work "../ram/remaining_ram.vhd"
-vcom -work work "../pll.vhd"
+#vcom -work work "../pll.vhd"
+vcom -work work "../CLK_CTR.vhd"
 vcom -work work "../reset_counter.vhd"
 vcom -work work "../top.vhd"
 vcom -work work "../tb.vhd"
 
 vsim -t ps -novopt  work.tb
 
-#add wave -position end  -color white sim:/tb/clk_50
+add wave -position end  -color white sim:/tb/clk_50
 add wave -position end  -color green sim:/tb/uut/global_reset
 add wave -position end  -color green sim:/tb/uut/pll_reset
 add wave -position end  -color green sim:/tb/uut/ula_reset_n

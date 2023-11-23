@@ -37,15 +37,24 @@ architecture Behavior of top is
 		);
 	END component;
 	
-	component pll is
+	component CLK_CTR is
 		PORT
 		(
-			areset		: IN STD_LOGIC  := '0';
-			inclk0		: IN STD_LOGIC  := '0';
-			c0				: OUT STD_LOGIC ;
-			locked		: OUT STD_LOGIC 
+			aclr		: IN STD_LOGIC ;
+			clock		: IN STD_LOGIC ;
+			q		: OUT STD_LOGIC_VECTOR (2 DOWNTO 0)
 		);
 	end component;
+	
+--	component pll is
+--		PORT
+--		(
+--			areset		: IN STD_LOGIC  := '0';
+--			inclk0		: IN STD_LOGIC  := '0';
+--			c0				: OUT STD_LOGIC ;
+--			locked		: OUT STD_LOGIC 
+--		);
+--	end component;
 	
 	---------
 	-- RAM --
@@ -188,6 +197,9 @@ architecture Behavior of top is
 	signal rst_ctr_num : std_logic_vector(9 downto 0) := (others => '0');
 	signal pll_reset, ula_reset_n, cpu_reset_n : std_logic := '1';
 	
+	
+	signal clk_ctr_num : std_logic_vector(2 downto 0) := (others => '0');
+	
 begin
 	address_low : conv_7seg port map (address(7 downto 0), HEX1, HEX0);
 	address_high : conv_7seg port map (address(15 downto 8), HEX3, HEX2);
@@ -201,12 +213,20 @@ begin
 	---------
 	-- PLL --
 	---------
-	main_pll : pll port map (
-			areset	=> pll_reset,
-			inclk0	=> CLOCK_50,
-			c0			=> ula_clk,	      -- 7 MHz
-			locked	=> pll_locked
+--	main_pll : pll port map (
+--			areset	=> pll_reset,
+--			inclk0	=> CLOCK_50,
+--			c0			=> ula_clk,	      -- 7 MHz
+--			locked	=> pll_locked
+--		);
+
+	ula_clk <= clk_ctr_num(2);
+	main_pll : CLK_CTR port map (
+			aclr	=> pll_reset,
+			clock	=> CLOCK_50,
+			q		=> clk_ctr_num	      -- 6.25 MHz
 		);
+
 	
 	---------
 	-- ROM --
