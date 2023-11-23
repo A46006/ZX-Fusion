@@ -43,8 +43,6 @@ architecture Behavior of top is
 			areset		: IN STD_LOGIC  := '0';
 			inclk0		: IN STD_LOGIC  := '0';
 			c0				: OUT STD_LOGIC ;
-			c1				: OUT STD_LOGIC ;
-			c2				: OUT STD_LOGIC ;
 			locked		: OUT STD_LOGIC 
 		);
 	end component;
@@ -65,48 +63,6 @@ architecture Behavior of top is
 			wren		: IN STD_LOGIC ;
 			q		: OUT STD_LOGIC_VECTOR (7 DOWNTO 0)
 		);
-	END component;
-	
-	-- Address 0x4000 - 0x57FF
-	component pixel_video_ram IS
-		PORT
-		(
-			-- a -> accessed by video
-			-- b -> accessed by CPU
-			address_a		: IN STD_LOGIC_VECTOR (12 DOWNTO 0);
-			address_b		: IN STD_LOGIC_VECTOR (12 DOWNTO 0);
-			clock_a		: IN STD_LOGIC  := '1';
-			clock_b		: IN STD_LOGIC ;
-			data_a		: IN STD_LOGIC_VECTOR (7 DOWNTO 0);
-			data_b		: IN STD_LOGIC_VECTOR (7 DOWNTO 0);
-			enable_a		: IN STD_LOGIC  := '1';
-			enable_b		: IN STD_LOGIC  := '1';
-			wren_a		: IN STD_LOGIC  := '0';
-			wren_b		: IN STD_LOGIC  := '0';
-			q_a		: OUT STD_LOGIC_VECTOR (7 DOWNTO 0);
-			q_b		: OUT STD_LOGIC_VECTOR (7 DOWNTO 0)
-		);
-	END component;
-	
-	-- Address 0x5800 - 0x5AFF
-	component color_video_ram IS
-	PORT
-	(
-		-- a -> accessed by video
-		-- b -> accessed by CPU
-		address_a		: IN STD_LOGIC_VECTOR (9 DOWNTO 0);
-		address_b		: IN STD_LOGIC_VECTOR (9 DOWNTO 0);
-		clock_a		: IN STD_LOGIC  := '1';
-		clock_b		: IN STD_LOGIC ;
-		data_a		: IN STD_LOGIC_VECTOR (7 DOWNTO 0);
-		data_b		: IN STD_LOGIC_VECTOR (7 DOWNTO 0);
-		enable_a		: IN STD_LOGIC  := '1';
-		enable_b		: IN STD_LOGIC  := '1';
-		wren_a		: IN STD_LOGIC  := '0';
-		wren_b		: IN STD_LOGIC  := '0';
-		q_a		: OUT STD_LOGIC_VECTOR (7 DOWNTO 0);
-		q_b		: OUT STD_LOGIC_VECTOR (7 DOWNTO 0)
-	);
 	END component;
 
 	-- Address 0x5B00 - 0xFFFF
@@ -222,19 +178,6 @@ architecture Behavior of top is
 	signal rom_data_in : std_logic_vector(7 downto 0) := (others => '0'); -- Is this necessary?
 	signal rom_data_out : std_logic_vector(7 downto 0);
 	
-	-- Pixel RAM --
-	signal video_pixel_addr, cpu_pixel_addr : std_logic_vector(12 downto 0);
-	signal cpu_pixel_addr_num : std_logic_vector(15 downto 0);
-	signal cpu_pixel_data_out, video_pixel_data_out : std_logic_vector(7 downto 0);
-	signal cpu_pixel_en, video_pixel_read : std_logic;
-	
-	-- Color RAM --
-	signal video_color_addr, cpu_color_addr : std_logic_vector(9 downto 0);
-	signal cpu_color_addr_num : std_logic_vector(15 downto 0);
-	signal cpu_color_data_out, video_color_data_out : std_logic_vector(7 downto 0);
-	signal ula_read_bus : std_logic_vector(7 downto 0); -- for floating bus behaviour recreation
-	signal cpu_color_en, video_color_read : std_logic;
-	
 	-- Remaining RAM --
 	signal ram_address : std_logic_vector(15 downto 0);
 	signal ram_en : std_logic;
@@ -262,8 +205,6 @@ begin
 			areset	=> pll_reset,
 			inclk0	=> CLOCK_50,
 			c0			=> ula_clk,	      -- 7 MHz
-			c1			=> open, --audio_ctrl_clk,	-- 18 MHz
-			c2			=> video_clock,		-- 65 MHz
 			locked	=> pll_locked
 		);
 	
@@ -279,37 +220,7 @@ begin
 			wren		=> write_en,				-- CPU write (Always 0?)
 			q			=> rom_data_out		-- Data out
 		);
-		
-	----------------
-	-- PIXEL RAM --
-	----------------
-	pixel_memory : pixel_video_ram port map(
-			-- VIDEO --								-- CPU --
-			address_a 	=> video_pixel_addr, 	address_b 	=> cpu_pixel_addr,
-			clock_a 		=> video_clock, 			clock_b 		=> CLOCK_50,		-- SHOULD THESE BE THE CLOCKS?
-			data_a 		=> (others => '0'), 		data_b 		=> data_out,
-			enable_a 	=> video_pixel_read, 	enable_b 	=> cpu_pixel_en,
-			wren_a 		=> '0',						wren_b		=> write_en,
-			q_a			=> video_pixel_data_out, q_b			=> cpu_pixel_data_out
-		);
-		
-	---------------
-	-- COLOR RAM --
-	---------------
-	color_memory : color_video_ram port map(
-			-- VIDEO --									-- CPU --
-			address_a	=> video_color_addr,		address_b => cpu_color_addr,
-			clock_a 		=> video_clock, 			clock_b 		=> CLOCK_50,		-- SHOULD THESE BE THE CLOCKS?
-			data_a 		=> (others => '0'), 		data_b 		=> data_out,
-			enable_a		=> video_color_read,		enable_b		=> cpu_color_en,
-			wren_a 		=> '0',						wren_b		=> write_en,
-			q_a			=> video_color_data_out,q_b			=> cpu_color_data_out
-		);
-		
-	-- Combining both memory data busses into one, for floating bus behaviour recreation
-	ula_read_bus <= 	video_pixel_data_out when video_pixel_read = '0' else 
-							video_color_data_out when video_color_read = '0' else
-							"ZZZZZZZZ";
+
 		
 	-------------------
 	-- REMAINING RAM --
@@ -371,18 +282,6 @@ begin
 	-- '1' when in the range 0x0000 to 0x3FFF
 	rom_en <= not (mreq_n or cpu_rd_n or address(15) or address(14));--(not mreq_n) and (not cpu_rd_n)
 	
-
-	-- '1' when in the range 0x4000 to 0x4fff OR in the range 0x5000 to 0x57FF
-	cpu_pixel_en <= not (mreq_n or 
-							address(15) or (not address(14)) or address(13) or ( -- limits address to 0x4000 to 0x5FFF
-									not (not address(12) or not address(11)) -- limits address to not exceed 0x57FF
-								));
-
-	-- '1' when in the range 0x5800 to 0x5AFF
-	cpu_color_en <= not (mreq_n or 
-								address(15) or (not address(14)) or address(13) or (not address(12)) or (not address(11)) or address(10) or ( -- limit address to 0x5800 to 0x5BFF
-										not (not address(9) or not address(8)) -- A9 and A8 can't be both 1, limiting address to 0x5AFF instead of 0x5BFF
-									));
 	
 	-- '1' when mem_req is on but no other memory is being accessed
 	ram_en <= (not mreq_n) and (
@@ -403,15 +302,8 @@ begin
 	----------------------
 	-- Memory Addresses --
 	----------------------
-	cpu_pixel_addr_num <= (address - x"4000");
-	cpu_color_addr_num <= (address - x"5800");
 	
 	rom_address <= address(13 downto 0) when rom_en = '1' 
-											else (others => '0');
-	cpu_pixel_addr <= cpu_pixel_addr_num(12 downto 0) when cpu_pixel_en = '1'
-											else (others => '0');
-											
-	cpu_color_addr <= cpu_color_addr_num(9 downto 0) when cpu_color_en = '1'
 											else (others => '0');
 											
 	ram_address <= (address-x"5B00") when ram_en = '1'
@@ -445,12 +337,9 @@ begin
 	cpu_data_i <= data_in;
 	
 	data_in <= 	rom_data_out when read_en = '1' 			and rom_en = '1' else
-					cpu_pixel_data_out when read_en = '1' 	and cpu_pixel_en = '1' else
-					cpu_color_data_out when read_en = '1'	and cpu_color_en = '1' else
 					ram_data_out when read_en = '1' 		and ram_en = '1' else
 					nios_data_out when read_en = '1'		and nios_en = '1' else
 					ula_data_out when read_en = '1'		and ula_en = '1' else
-					ula_read_bus when read_en = '1'			and iorq_n = '0' else --and address = x"FF" else -- an attempt to recreate the floating bus behavior
 					(others => '0') when global_reset = '1' else
 					"ZZZZZZZZ";
 	

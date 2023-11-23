@@ -23,8 +23,8 @@ vcom -work work "../T80/T80_Reg.vhd"
 vcom -work work "../T80/T80a.vhd"
 
 vcom -work work "../rom/rom.vhd"
-vcom -work work "../ram/pixel_video_ram.vhd"
-vcom -work work "../ram/color_video_ram.vhd"
+#vcom -work work "../ram/pixel_video_ram.vhd"
+#vcom -work work "../ram/color_video_ram.vhd"
 vcom -work work "../ram/remaining_ram.vhd"
 vcom -work work "../pll.vhd"
 vcom -work work "../reset_counter.vhd"
@@ -59,8 +59,8 @@ add wave -position end  -color pink -radix hex sim:/tb/halt
 add wave -position end  -color pink -radix hex sim:/tb/uut/busak_n
 
 add wave -position end  -color white -radix hex sim:/tb/uut/rom_en
-add wave -position end  -color white -radix hex sim:/tb/uut/cpu_pixel_en
-add wave -position end  -color white -radix hex sim:/tb/uut/cpu_color_en
+#add wave -position end  -color white -radix hex sim:/tb/uut/cpu_pixel_en
+#add wave -position end  -color white -radix hex sim:/tb/uut/cpu_color_en
 add wave -position end  -color white -radix hex sim:/tb/uut/ram_en
 add wave -position end  -color white -radix hex sim:/tb/uut/ula_en
 add wave -position end  -color white -radix hex sim:/tb/uut/nios_en
@@ -96,8 +96,8 @@ add wave -position end  -color pink -radix hex sim:/tb/uut/nios_iorq_n
 
 
 add wave -position end  -color white -radix hex sim:/tb/uut/rom_address
-add wave -position end  -color white -radix hex sim:/tb/uut/cpu_pixel_addr
-add wave -position end  -color white -radix hex sim:/tb/uut/cpu_color_addr
+#add wave -position end  -color white -radix hex sim:/tb/uut/cpu_pixel_addr
+#add wave -position end  -color white -radix hex sim:/tb/uut/cpu_color_addr
 add wave -position end  -color white -radix hex sim:/tb/uut/ram_address
 
 

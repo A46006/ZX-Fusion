@@ -75,7 +75,9 @@ BEGIN
 		clock_enable_output_a => "BYPASS",
 		clock_enable_output_b => "BYPASS",
 		indata_reg_b => "CLOCK1",
-		init_file => "./video/file/screenData.hex",
+--		init_file => "./video/file/screenData.hex",
+--		init_file => "./file/screenData.hex", -- used in video TB scope
+--		init_file => "./video/file/screenDataBugTest.hex",
 		intended_device_family => "Cyclone IV E",
 		lpm_type => "altsyncram",
 		numwords_a => 6144,
