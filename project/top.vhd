@@ -97,7 +97,8 @@ architecture Behavior of top is
 			HALT_n          : out std_logic;
 			BUSAK_n         : out std_logic;
 			A                       : out std_logic_vector(15 downto 0);
-			D                       : inout std_logic_vector(7 downto 0));
+			D                       : inout std_logic_vector(7 downto 0);
+			INT_INF         : out std_logic_vector(3 downto 0));
 			
 			--DEBUG_PC	: out std_logic_vector(15 downto 0));
 	end component;
@@ -309,6 +310,7 @@ architecture Behavior of top is
 			cpu_cmd_ack_external_connection_export : out   std_logic;                                        --  acknowledge, for clearing buffers			
 			cpu_cmd_en_external_connection_export  : in    std_logic                     := '0';             --  enable nios for cpu to send commands to
 			cpu_cmd_external_connection_export     : in    std_logic_vector(7 downto 0)  := (others => '0'); --  cpu data line, used for commands
+			cpu_int_inf_external_connection_export : in    std_logic_vector(3 downto 0)  := (others => '0'); -- IFF2, IFF1, IM
 			cpu_rd_n_external_connection_export    : in    std_logic                     := '0';             --  read enable from T80
 			cpu_wr_n_external_connection_export    : in    std_logic                     := '0';             --  write enable from T80
 			
@@ -377,6 +379,11 @@ architecture Behavior of top is
 	signal cpu_data: std_logic_vector(7 downto 0) := X"00";
 	signal cpu_data_in : std_logic_vector(7 downto 0) := X"00";
 	signal cpu_data_out : std_logic_vector(7 downto 0) := X"00";
+	
+	-- Internal CPU --
+	signal cpu_int_inf : std_logic_vector(3 downto 0) := "0000";
+	--signal iff2, iff1 : std_logic := '0';                                -- Interrupt flip-flops
+	--signal im : std_logic_vector(1 downto 0) := "00";                    -- Interrupt Mode
 	
 	-- NIOS --
 	signal nios_en, nios_reset_n : std_logic;
@@ -568,8 +575,12 @@ begin
 			HALT_n	=> cpu_halt_n,			-- Halt
 			BUSAK_n	=> cpu_busak_n,		-- Bus Acknowledge
 			A			=> cpu_address,		-- Address
-			D			=> cpu_data				-- Data
+			D			=> cpu_data,			-- Data
+			INT_INF	=> cpu_int_inf		-- IFF2, IFF1, IM
 		);
+	--iff2 <= cpu_int_inf(3);
+	--iff1 <= cpu_int_inf(2);
+	--im <= cpu_int_inf(1 downto 0);
 		
 	----------
 	-- NIOS --
@@ -594,7 +605,8 @@ begin
 			cpu_cmd_ack_external_connection_export => cpu_cmd_ack,
 			cpu_address_external_connection_export => cpu_address_reg_out,
 			cpu_cmd_en_external_connection_export	=> nios_en_reg_out,
-			cpu_cmd_external_connection_export		=> cpu_cmd_reg_out,			-- should it be just data_out?
+			cpu_cmd_external_connection_export		=> cpu_cmd_reg_out,
+			cpu_int_inf_external_connection_export => cpu_int_inf,
 			cpu_rd_n_external_connection_export		=> cpu_rd_n_reg_out,
 			cpu_wr_n_external_connection_export		=> cpu_wr_n_reg_out,
 		

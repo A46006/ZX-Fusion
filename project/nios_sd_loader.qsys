@@ -161,6 +161,14 @@
          type = "String";
       }
    }
+   element cpu_int_inf
+   {
+      datum _sortIndex
+      {
+         value = "24";
+         type = "int";
+      }
+   }
    element cpu_rd_n
    {
       datum _sortIndex
@@ -448,6 +456,11 @@
    type="conduit"
    dir="end" />
  <interface
+   name="cpu_int_inf_external_connection"
+   internal="cpu_int_inf.external_connection"
+   type="conduit"
+   dir="end" />
+ <interface
    name="cpu_rd_n_external_connection"
    internal="cpu_rd_n.external_connection"
    type="conduit"
@@ -571,7 +584,7 @@
   <parameter name="dataAddrWidth" value="20" />
   <parameter name="dataMasterHighPerformanceAddrWidth" value="1" />
   <parameter name="dataMasterHighPerformanceMapParam" value="" />
-  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='onchip_memory.s1' start='0x40000' end='0x80000' type='altera_avalon_onchip_memory2.s1' /><slave name='cpu.debug_mem_slave' start='0x80800' end='0x81000' type='altera_nios2_gen2.debug_mem_slave' /><slave name='timer.s1' start='0x81000' end='0x81020' type='altera_avalon_timer.s1' /><slave name='sd_cs.s1' start='0x81020' end='0x81030' type='altera_avalon_pio.s1' /><slave name='cpu_address_direct.s1' start='0x81030' end='0x81040' type='altera_avalon_pio.s1' /><slave name='cpu_cmd_ack.s1' start='0x81040' end='0x81050' type='altera_avalon_pio.s1' /><slave name='cpu_address.s1' start='0x81050' end='0x81060' type='altera_avalon_pio.s1' /><slave name='nmi_n.s1' start='0x81060' end='0x81070' type='altera_avalon_pio.s1' /><slave name='bus_ack_n.s1' start='0x81070' end='0x81080' type='altera_avalon_pio.s1' /><slave name='bus_req_n.s1' start='0x81080' end='0x81090' type='altera_avalon_pio.s1' /><slave name='data.s1' start='0x81090' end='0x810A0' type='altera_avalon_pio.s1' /><slave name='address.s1' start='0x810A0' end='0x810B0' type='altera_avalon_pio.s1' /><slave name='ctrl_bus.s1' start='0x810B0' end='0x810C0' type='altera_avalon_pio.s1' /><slave name='cpu_cmd.s1' start='0x810C0' end='0x810D0' type='altera_avalon_pio.s1' /><slave name='cpu_wr_n.s1' start='0x810D0' end='0x810E0' type='altera_avalon_pio.s1' /><slave name='cpu_rd_n.s1' start='0x810E0' end='0x810F0' type='altera_avalon_pio.s1' /><slave name='cpu_cmd_en.s1' start='0x810F0' end='0x81100' type='altera_avalon_pio.s1' /><slave name='sd_miso.s1' start='0x81100' end='0x81110' type='altera_avalon_pio.s1' /><slave name='sd_mosi.s1' start='0x81110' end='0x81120' type='altera_avalon_pio.s1' /><slave name='sd_clk.s1' start='0x81120' end='0x81130' type='altera_avalon_pio.s1' /><slave name='sd_wp_n.s1' start='0x81130' end='0x81140' type='altera_avalon_pio.s1' /><slave name='ledg_pio.s1' start='0x81140' end='0x81150' type='altera_avalon_pio.s1' /><slave name='jtag_uart.avalon_jtag_slave' start='0x81150' end='0x81158' type='altera_avalon_jtag_uart.avalon_jtag_slave' /></address-map>]]></parameter>
+  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='cpu_int_inf.s1' start='0x0' end='0x10' type='altera_avalon_pio.s1' /><slave name='onchip_memory.s1' start='0x40000' end='0x80000' type='altera_avalon_onchip_memory2.s1' /><slave name='cpu.debug_mem_slave' start='0x80800' end='0x81000' type='altera_nios2_gen2.debug_mem_slave' /><slave name='timer.s1' start='0x81000' end='0x81020' type='altera_avalon_timer.s1' /><slave name='sd_cs.s1' start='0x81020' end='0x81030' type='altera_avalon_pio.s1' /><slave name='cpu_address_direct.s1' start='0x81030' end='0x81040' type='altera_avalon_pio.s1' /><slave name='cpu_cmd_ack.s1' start='0x81040' end='0x81050' type='altera_avalon_pio.s1' /><slave name='cpu_address.s1' start='0x81050' end='0x81060' type='altera_avalon_pio.s1' /><slave name='nmi_n.s1' start='0x81060' end='0x81070' type='altera_avalon_pio.s1' /><slave name='bus_ack_n.s1' start='0x81070' end='0x81080' type='altera_avalon_pio.s1' /><slave name='bus_req_n.s1' start='0x81080' end='0x81090' type='altera_avalon_pio.s1' /><slave name='data.s1' start='0x81090' end='0x810A0' type='altera_avalon_pio.s1' /><slave name='address.s1' start='0x810A0' end='0x810B0' type='altera_avalon_pio.s1' /><slave name='ctrl_bus.s1' start='0x810B0' end='0x810C0' type='altera_avalon_pio.s1' /><slave name='cpu_cmd.s1' start='0x810C0' end='0x810D0' type='altera_avalon_pio.s1' /><slave name='cpu_wr_n.s1' start='0x810D0' end='0x810E0' type='altera_avalon_pio.s1' /><slave name='cpu_rd_n.s1' start='0x810E0' end='0x810F0' type='altera_avalon_pio.s1' /><slave name='cpu_cmd_en.s1' start='0x810F0' end='0x81100' type='altera_avalon_pio.s1' /><slave name='sd_miso.s1' start='0x81100' end='0x81110' type='altera_avalon_pio.s1' /><slave name='sd_mosi.s1' start='0x81110' end='0x81120' type='altera_avalon_pio.s1' /><slave name='sd_clk.s1' start='0x81120' end='0x81130' type='altera_avalon_pio.s1' /><slave name='sd_wp_n.s1' start='0x81130' end='0x81140' type='altera_avalon_pio.s1' /><slave name='ledg_pio.s1' start='0x81140' end='0x81150' type='altera_avalon_pio.s1' /><slave name='jtag_uart.avalon_jtag_slave' start='0x81150' end='0x81158' type='altera_avalon_jtag_uart.avalon_jtag_slave' /></address-map>]]></parameter>
   <parameter name="data_master_high_performance_paddr_base" value="0" />
   <parameter name="data_master_high_performance_paddr_size" value="0" />
   <parameter name="data_master_paddr_base" value="0" />
@@ -810,6 +823,24 @@
   <parameter name="simDoTestBenchWiring" value="false" />
   <parameter name="simDrivenValue" value="0" />
   <parameter name="width" value="1" />
+ </module>
+ <module
+   name="cpu_int_inf"
+   kind="altera_avalon_pio"
+   version="18.1"
+   enabled="1">
+  <parameter name="bitClearingEdgeCapReg" value="false" />
+  <parameter name="bitModifyingOutReg" value="false" />
+  <parameter name="captureEdge" value="false" />
+  <parameter name="clockRate" value="50000000" />
+  <parameter name="direction" value="Input" />
+  <parameter name="edgeType" value="RISING" />
+  <parameter name="generateIRQ" value="false" />
+  <parameter name="irqType" value="LEVEL" />
+  <parameter name="resetValue" value="0" />
+  <parameter name="simDoTestBenchWiring" value="false" />
+  <parameter name="simDrivenValue" value="0" />
+  <parameter name="width" value="4" />
  </module>
  <module name="cpu_rd_n" kind="altera_avalon_pio" version="18.1" enabled="1">
   <parameter name="bitClearingEdgeCapReg" value="false" />
@@ -1198,6 +1229,15 @@
  <connection
    kind="avalon"
    version="18.1"
+   start="cpu.data_master"
+   end="cpu_int_inf.s1">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x0000" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="18.1"
    start="cpu.instruction_master"
    end="cpu.debug_mem_slave">
   <parameter name="arbitrationPriority" value="1" />
@@ -1239,6 +1279,7 @@
    start="clk.clk"
    end="cpu_address_direct.clk" />
  <connection kind="clock" version="18.1" start="clk.clk" end="sd_cs.clk" />
+ <connection kind="clock" version="18.1" start="clk.clk" end="cpu_int_inf.clk" />
  <connection kind="clock" version="18.1" start="clk.clk" end="onchip_memory.clk1" />
  <connection kind="interrupt" version="18.1" start="cpu.irq" end="jtag_uart.irq">
   <parameter name="irqNumber" value="1" />
@@ -1312,6 +1353,11 @@
    start="clk.clk_reset"
    end="cpu_address_direct.reset" />
  <connection kind="reset" version="18.1" start="clk.clk_reset" end="sd_cs.reset" />
+ <connection
+   kind="reset"
+   version="18.1"
+   start="clk.clk_reset"
+   end="cpu_int_inf.reset" />
  <connection
    kind="reset"
    version="18.1"

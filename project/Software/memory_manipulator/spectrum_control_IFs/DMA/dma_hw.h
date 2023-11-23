@@ -37,3 +37,7 @@
 
 // Get cpu address (for after "releasing" cpu)
 #define CPU_ADDR_GET		IORD_ALTERA_AVALON_PIO_DATA(CPU_ADDRESS_DIRECT_BASE)
+
+// Get Interrupt Information (IFF2, IFF1, IM)
+#define INT_INF_BASE_GET	IORD_ALTERA_AVALON_PIO_DATA(CPU_INT_INF_BASE)
+

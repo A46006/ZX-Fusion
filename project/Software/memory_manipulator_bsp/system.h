@@ -4,7 +4,7 @@
  * Machine generated for CPU 'cpu' in SOPC Builder design 'nios_sd_loader'
  * SOPC Builder design path: ../../nios_sd_loader.sopcinfo
  *
- * Generated: Tue Nov 14 11:27:49 GMT 2023
+ * Generated: Thu Nov 23 18:11:46 GMT 2023
  */
 
 /*
@@ -390,6 +390,33 @@
 #define CPU_CMD_EN_RESET_VALUE 0
 #define CPU_CMD_EN_SPAN 16
 #define CPU_CMD_EN_TYPE "altera_avalon_pio"
+
+
+/*
+ * cpu_int_inf configuration
+ *
+ */
+
+#define ALT_MODULE_CLASS_cpu_int_inf altera_avalon_pio
+#define CPU_INT_INF_BASE 0x0
+#define CPU_INT_INF_BIT_CLEARING_EDGE_REGISTER 0
+#define CPU_INT_INF_BIT_MODIFYING_OUTPUT_REGISTER 0
+#define CPU_INT_INF_CAPTURE 0
+#define CPU_INT_INF_DATA_WIDTH 4
+#define CPU_INT_INF_DO_TEST_BENCH_WIRING 0
+#define CPU_INT_INF_DRIVEN_SIM_VALUE 0
+#define CPU_INT_INF_EDGE_TYPE "NONE"
+#define CPU_INT_INF_FREQ 50000000
+#define CPU_INT_INF_HAS_IN 1
+#define CPU_INT_INF_HAS_OUT 0
+#define CPU_INT_INF_HAS_TRI 0
+#define CPU_INT_INF_IRQ -1
+#define CPU_INT_INF_IRQ_INTERRUPT_CONTROLLER_ID -1
+#define CPU_INT_INF_IRQ_TYPE "NONE"
+#define CPU_INT_INF_NAME "/dev/cpu_int_inf"
+#define CPU_INT_INF_RESET_VALUE 0
+#define CPU_INT_INF_SPAN 16
+#define CPU_INT_INF_TYPE "altera_avalon_pio"
 
 
 /*

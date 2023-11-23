@@ -39,6 +39,16 @@ int DMA_request(int tries) {
 	return 0;
 }
 
+alt_u8 read_IFF1() {
+	return (INT_INF_BASE_GET & 4) >> 2;
+}
+alt_u8 read_IFF2() {
+	return (INT_INF_BASE_GET & 8) >> 2;
+}
+alt_u8 read_IM() {
+	return (INT_INF_BASE_GET & 3) >> 2;
+}
+
 alt_u8 read_mem(alt_u16 addr) {
 	alt_u8 data;
 

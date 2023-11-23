@@ -233,13 +233,13 @@ void load_page(FILENAMES* list) {
 		}
 	// if there is no list of files
 	} else {
-		//char* err_name = "NO FILES, RESET TO LEAVE..Â®";
-		char* err_name = "NO SUPPORTED FILES, RESET..Â®"; // copyright R symbol = . + 0x80
+		//char* err_name = "NO FILES, RESET TO LEAVE..®";
+		char* err_name = "NO SUPPORTED FILES, RESET..®"; // copyright R symbol = . + 0x80
 		if (no_sd) {
-			err_name = "NO SD CARD, RESET TO LEAVE..Â®";
+			err_name = "NO SD CARD, RESET TO LEAVE..®";
 		} else {
 			sd_empty = TRUE;
-			//char* err_name = "NO SUPPORTED FILES, RESET TO LEAVE..Â®";
+			//char* err_name = "NO SUPPORTED FILES, RESET TO LEAVE..®";
 		}
 		int name_len = strlen(err_name);
 		//printf("0x%02X\r\n", err_name[name_len-1]);
@@ -357,7 +357,7 @@ int main(int argc, char *argv[]) {
 	printf("NUM OF PAGES: %d\r\n", max_page);
 	if (max_page < 0) {
 		printf("no sd\r\n");
-		max_page = 0;
+		max_page = 1;
 		no_sd = TRUE;
 	}
 	curr_page = 0;
@@ -390,7 +390,8 @@ int main(int argc, char *argv[]) {
 					// load a game
 					if (!no_sd && !sd_empty) load_game(&curr_page_file_list);
 //					printf("SLEEEEEEEP\r\n");
-//					usleep(10000000);
+//					//usleep(10000000);
+//					usleep(1000000);
 //					save_state(&curr_page_file_list);
 				}
 				break;

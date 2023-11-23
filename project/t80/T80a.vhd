@@ -93,7 +93,8 @@ entity T80a is
 		HALT_n          : out std_logic;
 		BUSAK_n         : out std_logic;
 		A                       : out std_logic_vector(15 downto 0);
-		D                       : inout std_logic_vector(7 downto 0));
+		D                       : inout std_logic_vector(7 downto 0);
+		INT_INF         : out std_logic_vector(3 downto 0));
 
 		--DEBUG_PC   : out std_logic_vector(15 downto 0));
 end T80a;
@@ -179,7 +180,7 @@ begin
 			IntCycle_n => IntCycle_n,
 			
 			REG => reg);
-
+	INT_INF <= reg(211 downto 208);
 	process (CLK_n)
 	begin
 		if CLK_n'event and CLK_n = '0' then

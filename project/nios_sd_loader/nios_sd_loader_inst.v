@@ -19,6 +19,7 @@
 		.sd_cs_external_connection_export              (<connected-to-sd_cs_external_connection_export>),              //              sd_cs_external_connection.export
 		.sd_miso_external_connection_export            (<connected-to-sd_miso_external_connection_export>),            //            sd_miso_external_connection.export
 		.sd_mosi_external_connection_export            (<connected-to-sd_mosi_external_connection_export>),            //            sd_mosi_external_connection.export
-		.sd_wp_n_external_connection_export            (<connected-to-sd_wp_n_external_connection_export>)             //            sd_wp_n_external_connection.export
+		.sd_wp_n_external_connection_export            (<connected-to-sd_wp_n_external_connection_export>),            //            sd_wp_n_external_connection.export
+		.cpu_int_inf_external_connection_export        (<connected-to-cpu_int_inf_external_connection_export>)         //        cpu_int_inf_external_connection.export
 	);
 

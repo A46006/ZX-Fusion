@@ -235,7 +235,7 @@ void fill_sna_header(alt_u8* buffer, REGS* regs) {
 	buffer[SNA_OFFSET_IX] = regs->IX >> 8; // low byte
 	buffer[SNA_OFFSET_IX+1] = regs->IX & 0xFF; // high byte
 
-	buffer[SNA_OFFSET_IFF2] = regs->IFF1 << 2;
+	buffer[SNA_OFFSET_IFF2] = regs->IFF2 << 2;
 	buffer[SNA_OFFSET_R] = regs->R;
 
 	buffer[SNA_OFFSET_F] = regs->F;
@@ -976,9 +976,9 @@ REGS generate_regs_save_state() {
 		.PC = conv_data_8_16(pc, 0), // PC is in the stack
 
 		// cannot obtain next 3 values, so
-		.IM = 1,
-		.IFF1 = 1,
-		.IFF2 = 1,
+		.IM = read_IM(),
+		.IFF1 = read_IFF1(),
+		.IFF2 = read_IFF2(),
 		.border = read_mem(BORDER_COLOR_ADDR) >> 3
 	};
 

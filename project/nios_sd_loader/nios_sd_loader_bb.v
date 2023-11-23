@@ -20,7 +20,8 @@ module nios_sd_loader (
 	sd_cs_external_connection_export,
 	sd_miso_external_connection_export,
 	sd_mosi_external_connection_export,
-	sd_wp_n_external_connection_export);	
+	sd_wp_n_external_connection_export,
+	cpu_int_inf_external_connection_export);	
 
 	output	[15:0]	address_external_connection_export;
 	input		bus_ack_n_external_connection_export;
@@ -43,4 +44,5 @@ module nios_sd_loader (
 	input		sd_miso_external_connection_export;
 	output		sd_mosi_external_connection_export;
 	input		sd_wp_n_external_connection_export;
+	input	[3:0]	cpu_int_inf_external_connection_export;
 endmodule

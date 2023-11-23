@@ -9,6 +9,10 @@ void DMA_init();
 
 int DMA_request(int tries);
 
+alt_u8 read_IFF1();
+alt_u8 read_IFF2();
+alt_u8 read_IM();
+
 alt_u8 read_mem(alt_u16 addr);
 void read_buf_mem(alt_u16 addr, int start, int len, alt_u8* ret);
 
