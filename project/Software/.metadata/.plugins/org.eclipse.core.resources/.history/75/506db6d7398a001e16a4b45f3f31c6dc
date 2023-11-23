@@ -358,7 +358,7 @@ int main(int argc, char *argv[]) {
 
 	t = clock() - t;
 
-	printf ("It took %ld us\r\n",t);
+	printf ("It took me %ld clicks (%f seconds).\n",t,((float)t)/1000000);
 	//printf ("It took me %u clicks (%x seconds).\n",t,((float)t)/1000000);
 
 	usleep(3000000 - t);

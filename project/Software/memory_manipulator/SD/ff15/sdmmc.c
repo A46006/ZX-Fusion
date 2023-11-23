@@ -346,7 +346,7 @@ DSTATUS MMC_disk_initialize (
 
 	// New generation cards APPARENTLY fail to enter Idle state with CMD0 unless
 	// they get 3 seconds of wait time after powering up. Newer off brand cards do, but older ones don't
-	usleep(3000000);
+	//usleep(3000000);
 
 	usleep(10000);			// 10ms
 	SD_CS_DISABLE;		// Initialize port pin tied to CS

@@ -136,7 +136,7 @@ int string_to_num(char* string, int str_len, int num_len) {
 	return result;
 }
 
-int write_menu() {
+int inject_menu() {
 
 	printf("\r\nListening...\r\n");
 	listen_for_en();
@@ -326,6 +326,12 @@ int main(int argc, char *argv[]) {
 	clock_t t;
 
 	t = clock();
+	printf ("Calculating...\n");
+
+	t = clock() - t;
+
+	printf ("It took me %ld clicks (%f seconds).\n",t,((float)t)/1000000);
+	printf ("It took me %u clicks (%x seconds).\n",t,((float)t)/1000000);
 
 
 	curr_page_file_list.size = 0;
@@ -340,8 +346,8 @@ int main(int argc, char *argv[]) {
 
 	DMA_init();
 
-	printf("Writing menu...\r\n");
-	int res = write_menu();
+	printf("Injecting menu...\r\n");
+	int res = inject_menu();
 	if (res == -1) {
 		printf("inject menu went wrong\r\n");
 		return res;
@@ -356,12 +362,6 @@ int main(int argc, char *argv[]) {
 		no_sd = TRUE;
 	}
 
-	t = clock() - t;
-
-	printf ("It took %ld us\r\n",t);
-	//printf ("It took me %u clicks (%x seconds).\n",t,((float)t)/1000000);
-
-	usleep(3000000 - t);
 
 	// Calculating maximum amount of pages
 	max_page = num_of_pages();
@@ -412,7 +412,7 @@ int main(int argc, char *argv[]) {
 
 				printf("shouldn't be happening\r\n");
 				printf("writing menu...\r\n");
-				int res = write_menu();
+				int res = inject_menu();
 				if (res == -1) {
 					printf("write menu went wrong\r\n");
 					return res;
