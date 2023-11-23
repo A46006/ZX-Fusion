@@ -187,9 +187,6 @@ int load_SNA(char* filename) {
 	int border_num = ((regs.border & 0b111) << 3) | ((regs.border & 0b100) ? 0 : 0b111);
 	write_mem(addr, border_num);
 
-
-	//free(stack_addition.data);
-	//free(routine);
 	close_file();
 
 	//write_buf_mem(0x4000, data, data_offset, sizeof data);
@@ -200,17 +197,16 @@ int load_SNA(char* filename) {
 
 	// Restore data overwritten by routine as soon as the snapshot's PC is detected in z80 address bus
 	// This means the z80 is about to start executing the loaded code
-	// TODO uncomment
-//	int wait_res = wait_until_routine_ends(1000);
-//	printf("wait res: %d\r\n", wait_res);
-//	if (!wait_res) {
-//		DMA_request(10);
-//
-//		write_buf_mem(NMI_ROUTINE_ADDR, data_bk, 0, data_bk_len);
-//		write_buf_mem(OLD_STACK_START_ADDR, bottom_data_bk, 0, OLD_STACK_SIZE);
-//
-//		DMA_stop(10);
-//	}
+	int wait_res = wait_until_routine_ends(1000);
+	printf("wait res: %d\r\n", wait_res);
+	if (!wait_res) {
+		DMA_request(10);
+
+		write_buf_mem(NMI_ROUTINE_ADDR, data_bk, 0, data_bk_len);
+		write_buf_mem(OLD_STACK_START_ADDR, bottom_data_bk, 0, OLD_STACK_SIZE);
+
+		DMA_stop(10);
+	}
 	return 0;
 }
 
@@ -268,16 +264,12 @@ int save_SNA(char* filename) {
 	alt_u16 addr = 0x4000;
 	unsigned int bytes_written;
 
-	printf("FFFE state A: %02X\r\n", read_mem(0xFFFE));
-
 	// Saving the first block of the file to write it with register values later
 	// Also to make sure the save state doesn't include the register data on screen
 	int data_len = remaining_bytes - SNA_OFFSET_DATA;
 	read_buf_mem(addr, SNA_OFFSET_DATA, data_len, first_block_buf);
 	addr += data_len;
 	//memcpy(first_block_buf, write_buf, remaining_bytes);
-
-	printf("FFFE state B: %02X\r\n", read_mem(0xFFFE));
 
 
 	// write routine to extract register values
@@ -286,11 +278,7 @@ int save_SNA(char* filename) {
 	alt_u8 save_routine[routine_size];
 	generate_SAVE_routine(save_routine, type);
 
-	printf("FFFE state C: %02X\r\n", read_mem(0xFFFE));
-
 	write_buf_mem(0x4000, save_routine, 0, routine_size);
-
-	printf("FFFE state D: %02X\r\n", read_mem(0xFFFE));
 
 	// execute routine
 	DMA_stop_w_interrupt();
@@ -316,9 +304,6 @@ int save_SNA(char* filename) {
 
 	// generate regs struct with the save state's registers
 	REGS regs = generate_regs_save_state();
-
-	printf("SP: 0x%04X\r\n", regs.SP);
-	printf("trans SP: 0x%04X\r\n", conv_data_8_16(&regs.SP, 0) - 0x4000 + 0x1b);
 
 	// fill header of file with register values
 	fill_sna_header(first_block_buf, &regs);
@@ -907,8 +892,6 @@ int load_z80(char* filename) {
 
 
 	state = NONE; // redundant?
-	//free(stack_addition.data);
-	//free(routine);
 	close_file();
 
 	// stop DMA with NMI on
@@ -926,7 +909,6 @@ int load_z80(char* filename) {
 
 		DMA_stop(10);
 	}
-	//free(data_bk);
 
 	printf("\r\nLOADED\r\n");
 

@@ -44,11 +44,12 @@ alt_u8 read_mem(alt_u16 addr) {
 
 	DATA_IN;
 
+	ADDR_SET(addr);
+
 	ctrl_bus_state &= READ_SET;
 	ctrl_bus_state &= MEM_REQ_SET;
 	CTRL_BUS_SET(ctrl_bus_state);
 
-	ADDR_SET(addr);
 	usleep(1);
 	data = DATA_GET;
 	IOWR_ALTERA_AVALON_PIO_DATA(LEDG_PIO_BASE, data);
@@ -69,13 +70,14 @@ void read_buf_mem(alt_u16 addr, int start, int len, alt_u8* ret) {
 void write_mem(alt_u16 addr, const alt_u8 data) {
 	DATA_OUT;
 
+	ADDR_SET(addr);
+	DATA_SET(data);
+
 	ctrl_bus_state &= WRITE_SET;
 	ctrl_bus_state &= MEM_REQ_SET;
 	CTRL_BUS_SET(ctrl_bus_state);
 
 
-	ADDR_SET(addr);
-	DATA_SET(data);
 	IOWR_ALTERA_AVALON_PIO_DATA(LEDG_PIO_BASE, data);
 	usleep(1);
 
@@ -97,11 +99,12 @@ alt_u8 read_io(alt_u16 addr) {
 
 	DATA_IN;
 
+	ADDR_SET(addr);
+
 	ctrl_bus_state &= READ_SET;
 	ctrl_bus_state &= IO_REQ_SET;
 	CTRL_BUS_SET(ctrl_bus_state);
 
-	ADDR_SET(addr);
 	usleep(100);
 	data = DATA_GET;
 	IOWR_ALTERA_AVALON_PIO_DATA(LEDG_PIO_BASE, data);
@@ -115,13 +118,13 @@ alt_u8 read_io(alt_u16 addr) {
 void write_io(alt_u16 addr, alt_u8 data) {
 	DATA_OUT;
 
+	ADDR_SET(addr);
+	DATA_SET(data);
+
 	ctrl_bus_state &= WRITE_SET;
 	ctrl_bus_state &= IO_REQ_SET;
 	CTRL_BUS_SET(ctrl_bus_state);
 
-
-	ADDR_SET(addr);
-	DATA_SET(data);
 	IOWR_ALTERA_AVALON_PIO_DATA(LEDG_PIO_BASE, data);
 	usleep(100);
 

@@ -70,11 +70,7 @@ int num_of_pages() {
 }
 
 void free_file_list(FILENAMES* filenames) {
-	//for (int i = 0; i < FILES_PER_PAGE; i++)
-	//	free(filenames->filenames[i]);
-	//free(filenames->filenames);
 	filenames->size = 0;
-	//filenames->filenames = NULL;
 }
 
 void list_files_of_page(FILENAMES* filenames, int page_num) {
@@ -241,7 +237,7 @@ int get_save_num(char* filename, int* len) {
 	return -1;
 }
 
-void print_filenames(FILENAMES* files, bool free_en) {
+void print_filenames(FILENAMES* files) {
 	int filename;
 	size_t entries_left = files->size;
 	size_t files_in_page = FILES_PER_PAGE;
@@ -252,13 +248,7 @@ void print_filenames(FILENAMES* files, bool free_en) {
 
 	for (filename = 0; filename < files_in_page; filename++) {
 		printf("\t[%d]: %s\r\n", filename, files->filenames + (filename * FILENAME_LEN));
-//		if (free_en)
-//			free(files->filenames[filename]);
-//
 	}
-
-//	if (free_en)
-//		free(files->filenames);
 }
 
 FRESULT init_file_read(char* filename) {

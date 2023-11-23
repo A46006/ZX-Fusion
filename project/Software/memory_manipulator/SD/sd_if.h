@@ -22,7 +22,7 @@ int get_save_num(char* filename, int* len);
 void free_file_list(FILENAMES* filenames);
 
 
-void print_filenames(FILENAMES* files, bool free_en);
+void print_filenames(FILENAMES* files);
 
 FRESULT init_file_read(char* filename);
 FRESULT init_file_write_create(char* filename);
