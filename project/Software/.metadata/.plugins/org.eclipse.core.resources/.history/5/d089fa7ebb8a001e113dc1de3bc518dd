@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <math.h>
 //#include ".\SD\test_sd.c"
-#include ".\spectrum_comm\Peripheral_Interfaces\per_hal.h"
 #include "file_reader/asm_opcodes.h"
 #include "file_reader/formats.h"
+#include "spectrum_control_IFs/Peripheral_Interfaces/per_hal.h"
 
 #define PAGE_DATA_ADDR 0xC000
 #define MENU_CODE_ADDR 0xB000
@@ -136,7 +136,7 @@ int string_to_num(char* string, int str_len, int num_len) {
 	return result;
 }
 
-int inject_menu() {
+int write_menu() {
 
 	printf("\r\nListening...\r\n");
 	listen_for_en();
@@ -233,13 +233,13 @@ void load_page(FILENAMES* list) {
 		}
 	// if there is no list of files
 	} else {
-		//char* err_name = "NO FILES, RESET TO LEAVE..ï¿½";
+		//char* err_name = "NO FILES, RESET TO LEAVE..®";
 		char* err_name = "NO SUPPORTED FILES, RESET..®"; // copyright R symbol = . + 0x80
 		if (no_sd) {
 			err_name = "NO SD CARD, RESET TO LEAVE..®";
 		} else {
 			sd_empty = TRUE;
-			//char* err_name = "NO SUPPORTED FILES, RESET TO LEAVE..ï¿½";
+			//char* err_name = "NO SUPPORTED FILES, RESET TO LEAVE..®";
 		}
 		int name_len = strlen(err_name);
 		//printf("0x%02X\r\n", err_name[name_len-1]);
@@ -274,7 +274,7 @@ void load_page(FILENAMES* list) {
 
 	DMA_stop_w_interrupt();
 
-	print_filenames(list, 0);
+	print_filenames(list);
 }
 
 void load_game(FILENAMES* list) {
@@ -321,9 +321,13 @@ void load_game(FILENAMES* list) {
 	printf("LOAD COMPLETE!\r\n");
 }
 
-//unsigned int freeBytes;
 
 int main(int argc, char *argv[]) {
+	clock_t t;
+
+	t = clock();
+
+
 	curr_page_file_list.size = 0;
 
 	memcpy(curr_page_file_list.filenames, (int)'f', FILES_PER_PAGE * FILENAME_LEN);
@@ -336,8 +340,8 @@ int main(int argc, char *argv[]) {
 
 	DMA_init();
 
-	printf("Injecting menu...\r\n");
-	int res = inject_menu();
+	printf("Writing menu...\r\n");
+	int res = write_menu();
 	if (res == -1) {
 		printf("inject menu went wrong\r\n");
 		return res;
@@ -351,17 +355,6 @@ int main(int argc, char *argv[]) {
 		//printf("No SD card\r\n");
 		no_sd = TRUE;
 	}
-
-
-	// Calculating maximum amount of pages
-	max_page = num_of_pages();
-	printf("NUM OF PAGES: %d\r\n", max_page);
-	if (max_page < 0) {
-		printf("no sd\r\n");
-		max_page = 0;
-		no_sd = TRUE;
-	}
-	curr_page = 0;
 
 	// Main execution loop
 	while (1) {
@@ -390,10 +383,10 @@ int main(int argc, char *argv[]) {
 				} else if (is_write()) {
 					// load a game
 					if (!no_sd && !sd_empty) load_game(&curr_page_file_list);
-					// TO TEST RESULT TODO remove later
-					/*printf("SLEEEEEEEP\r\n");
-					usleep(5000000);
-					save_state(&curr_page_file_list);*/
+//					printf("SLEEEEEEEP\r\n");
+//					//usleep(10000000);
+//					usleep(1000000);
+//					save_state(&curr_page_file_list);
 				}
 				break;
 			case INIT:
@@ -402,7 +395,7 @@ int main(int argc, char *argv[]) {
 
 				printf("shouldn't be happening\r\n");
 				printf("writing menu...\r\n");
-				int res = inject_menu();
+				int res = write_menu();
 				if (res == -1) {
 					printf("write menu went wrong\r\n");
 					return res;
@@ -414,13 +407,6 @@ int main(int argc, char *argv[]) {
 		per_cmd_ack();
 	}
 
-
-	//my_list_test();
-
-	//close_SD(hFat);
-
-	//free_file_list(curr_page_file_list);
-	//free(curr_game_filename);
 	return 0;
 
 }

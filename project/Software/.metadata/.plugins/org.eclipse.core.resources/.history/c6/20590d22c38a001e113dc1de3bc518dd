@@ -387,8 +387,6 @@ int main(int argc, char *argv[]) {
 		listen_for_en();
 		printf("cmd\r\n");
 
-		// Initializing here. Save states could be requested without loading a game with SD Loader
-		// and initializing it at that time makes the save state command take 3 seconds to start.
 		init_SD_local(&t);
 
 		enum per_if_type type = get_if_type();
