@@ -4,7 +4,7 @@
  * Machine generated for CPU 'cpu' in SOPC Builder design 'nios_sd_loader'
  * SOPC Builder design path: ../../nios_sd_loader.sopcinfo
  *
- * Generated: Thu Nov 23 18:11:46 GMT 2023
+ * Generated: Fri Nov 24 15:39:25 GMT 2023
  */
 
 /*
@@ -134,6 +134,7 @@
  */
 
 #define __ALTERA_AVALON_JTAG_UART
+#define __ALTERA_AVALON_LCD_16207
 #define __ALTERA_AVALON_ONCHIP_MEMORY2
 #define __ALTERA_AVALON_PIO
 #define __ALTERA_AVALON_TIMER
@@ -156,19 +157,19 @@
 #define ALT_NUM_INTERNAL_INTERRUPT_CONTROLLERS 1
 #define ALT_NUM_INTERRUPT_CONTROLLERS 1
 #define ALT_STDERR "/dev/jtag_uart"
-#define ALT_STDERR_BASE 0x81150
+#define ALT_STDERR_BASE 0x81170
 #define ALT_STDERR_DEV jtag_uart
 #define ALT_STDERR_IS_JTAG_UART
 #define ALT_STDERR_PRESENT
 #define ALT_STDERR_TYPE "altera_avalon_jtag_uart"
 #define ALT_STDIN "/dev/jtag_uart"
-#define ALT_STDIN_BASE 0x81150
+#define ALT_STDIN_BASE 0x81170
 #define ALT_STDIN_DEV jtag_uart
 #define ALT_STDIN_IS_JTAG_UART
 #define ALT_STDIN_PRESENT
 #define ALT_STDIN_TYPE "altera_avalon_jtag_uart"
 #define ALT_STDOUT "/dev/jtag_uart"
-#define ALT_STDOUT_BASE 0x81150
+#define ALT_STDOUT_BASE 0x81170
 #define ALT_STDOUT_DEV jtag_uart
 #define ALT_STDOUT_IS_JTAG_UART
 #define ALT_STDOUT_PRESENT
@@ -181,7 +182,7 @@
  *
  */
 
-#define ADDRESS_BASE 0x810a0
+#define ADDRESS_BASE 0x810c0
 #define ADDRESS_BIT_CLEARING_EDGE_REGISTER 0
 #define ADDRESS_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define ADDRESS_CAPTURE 0
@@ -209,7 +210,7 @@
  */
 
 #define ALT_MODULE_CLASS_bus_ack_n altera_avalon_pio
-#define BUS_ACK_N_BASE 0x81070
+#define BUS_ACK_N_BASE 0x81090
 #define BUS_ACK_N_BIT_CLEARING_EDGE_REGISTER 0
 #define BUS_ACK_N_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define BUS_ACK_N_CAPTURE 0
@@ -236,7 +237,7 @@
  */
 
 #define ALT_MODULE_CLASS_bus_req_n altera_avalon_pio
-#define BUS_REQ_N_BASE 0x81080
+#define BUS_REQ_N_BASE 0x810a0
 #define BUS_REQ_N_BIT_CLEARING_EDGE_REGISTER 0
 #define BUS_REQ_N_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define BUS_REQ_N_CAPTURE 0
@@ -263,7 +264,7 @@
  */
 
 #define ALT_MODULE_CLASS_cpu_address altera_avalon_pio
-#define CPU_ADDRESS_BASE 0x81050
+#define CPU_ADDRESS_BASE 0x81070
 #define CPU_ADDRESS_BIT_CLEARING_EDGE_REGISTER 0
 #define CPU_ADDRESS_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define CPU_ADDRESS_CAPTURE 0
@@ -290,7 +291,7 @@
  */
 
 #define ALT_MODULE_CLASS_cpu_address_direct altera_avalon_pio
-#define CPU_ADDRESS_DIRECT_BASE 0x81030
+#define CPU_ADDRESS_DIRECT_BASE 0x81050
 #define CPU_ADDRESS_DIRECT_BIT_CLEARING_EDGE_REGISTER 0
 #define CPU_ADDRESS_DIRECT_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define CPU_ADDRESS_DIRECT_CAPTURE 0
@@ -317,7 +318,7 @@
  */
 
 #define ALT_MODULE_CLASS_cpu_cmd altera_avalon_pio
-#define CPU_CMD_BASE 0x810c0
+#define CPU_CMD_BASE 0x810e0
 #define CPU_CMD_BIT_CLEARING_EDGE_REGISTER 0
 #define CPU_CMD_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define CPU_CMD_CAPTURE 0
@@ -344,7 +345,7 @@
  */
 
 #define ALT_MODULE_CLASS_cpu_cmd_ack altera_avalon_pio
-#define CPU_CMD_ACK_BASE 0x81040
+#define CPU_CMD_ACK_BASE 0x81060
 #define CPU_CMD_ACK_BIT_CLEARING_EDGE_REGISTER 0
 #define CPU_CMD_ACK_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define CPU_CMD_ACK_CAPTURE 0
@@ -371,7 +372,7 @@
  */
 
 #define ALT_MODULE_CLASS_cpu_cmd_en altera_avalon_pio
-#define CPU_CMD_EN_BASE 0x810f0
+#define CPU_CMD_EN_BASE 0x81110
 #define CPU_CMD_EN_BIT_CLEARING_EDGE_REGISTER 0
 #define CPU_CMD_EN_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define CPU_CMD_EN_CAPTURE 0
@@ -398,7 +399,7 @@
  */
 
 #define ALT_MODULE_CLASS_cpu_int_inf altera_avalon_pio
-#define CPU_INT_INF_BASE 0x0
+#define CPU_INT_INF_BASE 0x81030
 #define CPU_INT_INF_BIT_CLEARING_EDGE_REGISTER 0
 #define CPU_INT_INF_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define CPU_INT_INF_CAPTURE 0
@@ -425,7 +426,7 @@
  */
 
 #define ALT_MODULE_CLASS_cpu_rd_n altera_avalon_pio
-#define CPU_RD_N_BASE 0x810e0
+#define CPU_RD_N_BASE 0x81100
 #define CPU_RD_N_BIT_CLEARING_EDGE_REGISTER 0
 #define CPU_RD_N_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define CPU_RD_N_CAPTURE 0
@@ -452,7 +453,7 @@
  */
 
 #define ALT_MODULE_CLASS_cpu_wr_n altera_avalon_pio
-#define CPU_WR_N_BASE 0x810d0
+#define CPU_WR_N_BASE 0x810f0
 #define CPU_WR_N_BIT_CLEARING_EDGE_REGISTER 0
 #define CPU_WR_N_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define CPU_WR_N_CAPTURE 0
@@ -479,7 +480,7 @@
  */
 
 #define ALT_MODULE_CLASS_ctrl_bus altera_avalon_pio
-#define CTRL_BUS_BASE 0x810b0
+#define CTRL_BUS_BASE 0x810d0
 #define CTRL_BUS_BIT_CLEARING_EDGE_REGISTER 0
 #define CTRL_BUS_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define CTRL_BUS_CAPTURE 0
@@ -506,7 +507,7 @@
  */
 
 #define ALT_MODULE_CLASS_data altera_avalon_pio
-#define DATA_BASE 0x81090
+#define DATA_BASE 0x810b0
 #define DATA_BIT_CLEARING_EDGE_REGISTER 0
 #define DATA_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define DATA_CAPTURE 0
@@ -544,7 +545,7 @@
  */
 
 #define ALT_MODULE_CLASS_jtag_uart altera_avalon_jtag_uart
-#define JTAG_UART_BASE 0x81150
+#define JTAG_UART_BASE 0x81170
 #define JTAG_UART_IRQ 1
 #define JTAG_UART_IRQ_INTERRUPT_CONTROLLER_ID 0
 #define JTAG_UART_NAME "/dev/jtag_uart"
@@ -557,12 +558,26 @@
 
 
 /*
+ * lcd configuration
+ *
+ */
+
+#define ALT_MODULE_CLASS_lcd altera_avalon_lcd_16207
+#define LCD_BASE 0x81020
+#define LCD_IRQ -1
+#define LCD_IRQ_INTERRUPT_CONTROLLER_ID -1
+#define LCD_NAME "/dev/lcd"
+#define LCD_SPAN 16
+#define LCD_TYPE "altera_avalon_lcd_16207"
+
+
+/*
  * ledg_pio configuration
  *
  */
 
 #define ALT_MODULE_CLASS_ledg_pio altera_avalon_pio
-#define LEDG_PIO_BASE 0x81140
+#define LEDG_PIO_BASE 0x81160
 #define LEDG_PIO_BIT_CLEARING_EDGE_REGISTER 0
 #define LEDG_PIO_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define LEDG_PIO_CAPTURE 0
@@ -589,7 +604,7 @@
  */
 
 #define ALT_MODULE_CLASS_nmi_n altera_avalon_pio
-#define NMI_N_BASE 0x81060
+#define NMI_N_BASE 0x81080
 #define NMI_N_BIT_CLEARING_EDGE_REGISTER 0
 #define NMI_N_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define NMI_N_CAPTURE 0
@@ -645,7 +660,7 @@
  */
 
 #define ALT_MODULE_CLASS_sd_clk altera_avalon_pio
-#define SD_CLK_BASE 0x81120
+#define SD_CLK_BASE 0x81140
 #define SD_CLK_BIT_CLEARING_EDGE_REGISTER 0
 #define SD_CLK_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define SD_CLK_CAPTURE 0
@@ -672,7 +687,7 @@
  */
 
 #define ALT_MODULE_CLASS_sd_cs altera_avalon_pio
-#define SD_CS_BASE 0x81020
+#define SD_CS_BASE 0x81040
 #define SD_CS_BIT_CLEARING_EDGE_REGISTER 0
 #define SD_CS_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define SD_CS_CAPTURE 0
@@ -699,7 +714,7 @@
  */
 
 #define ALT_MODULE_CLASS_sd_miso altera_avalon_pio
-#define SD_MISO_BASE 0x81100
+#define SD_MISO_BASE 0x81120
 #define SD_MISO_BIT_CLEARING_EDGE_REGISTER 0
 #define SD_MISO_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define SD_MISO_CAPTURE 0
@@ -726,7 +741,7 @@
  */
 
 #define ALT_MODULE_CLASS_sd_mosi altera_avalon_pio
-#define SD_MOSI_BASE 0x81110
+#define SD_MOSI_BASE 0x81130
 #define SD_MOSI_BIT_CLEARING_EDGE_REGISTER 0
 #define SD_MOSI_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define SD_MOSI_CAPTURE 0
@@ -753,7 +768,7 @@
  */
 
 #define ALT_MODULE_CLASS_sd_wp_n altera_avalon_pio
-#define SD_WP_N_BASE 0x81130
+#define SD_WP_N_BASE 0x81150
 #define SD_WP_N_BIT_CLEARING_EDGE_REGISTER 0
 #define SD_WP_N_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define SD_WP_N_CAPTURE 0

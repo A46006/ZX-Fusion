@@ -32,7 +32,8 @@ obj/default/main.o: main.c file_reader/asm_opcodes.h \
  file_reader/..\SD\..\terasic_lib\terasic_includes.h \
  spectrum_control_IFs/Peripheral_Interfaces/per_hal.h \
  spectrum_control_IFs/Peripheral_Interfaces/../../spectrum_control_IFs/Peripheral_Interfaces/per_hw.h \
- h:\mi13d\tfm\final-repo-actual-46006\zx-fusion\project\software\memory_manipulator\terasic_lib\terasic_includes.h
+ h:\mi13d\tfm\final-repo-actual-46006\zx-fusion\project\software\memory_manipulator\terasic_lib\terasic_includes.h \
+ terasic_lib/LCD.h
 
 file_reader/asm_opcodes.h:
 
@@ -111,3 +112,5 @@ spectrum_control_IFs/Peripheral_Interfaces/per_hal.h:
 spectrum_control_IFs/Peripheral_Interfaces/../../spectrum_control_IFs/Peripheral_Interfaces/per_hw.h:
 
 h:\mi13d\tfm\final-repo-actual-46006\zx-fusion\project\software\memory_manipulator\terasic_lib\terasic_includes.h:
+
+terasic_lib/LCD.h:

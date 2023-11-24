@@ -2,8 +2,8 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>23/nov/2023 18:11:44</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1700763104934</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>24/nov/2023 15:39:24</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1700840364957</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>H:\MI13D\TFM\FINAL-REPO-actual-46006\ZX-Fusion\project\Software\memory_manipulator_bsp</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>..\..\nios_sd_loader.sopcinfo</SopcDesignFile>
@@ -899,12 +899,6 @@
                 <Group xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
         </Setting>
         <MemoryMap>
-                <slaveDescriptor>cpu_int_inf</slaveDescriptor>
-                <addressRange>0x00000000 - 0x0000000F</addressRange>
-                <addressSpan>16</addressSpan>
-                <attributes/>
-        </MemoryMap>
-        <MemoryMap>
                 <slaveDescriptor>onchip_memory</slaveDescriptor>
                 <addressRange>0x00040000 - 0x0007FFFF</addressRange>
                 <addressSpan>262144</addressSpan>
@@ -917,122 +911,134 @@
                 <attributes>timer</attributes>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>sd_cs</slaveDescriptor>
+                <slaveDescriptor>lcd</slaveDescriptor>
                 <addressRange>0x00081020 - 0x0008102F</addressRange>
                 <addressSpan>16</addressSpan>
-                <attributes/>
+                <attributes>printable</attributes>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>cpu_address_direct</slaveDescriptor>
+                <slaveDescriptor>cpu_int_inf</slaveDescriptor>
                 <addressRange>0x00081030 - 0x0008103F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>cpu_cmd_ack</slaveDescriptor>
+                <slaveDescriptor>sd_cs</slaveDescriptor>
                 <addressRange>0x00081040 - 0x0008104F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>cpu_address</slaveDescriptor>
+                <slaveDescriptor>cpu_address_direct</slaveDescriptor>
                 <addressRange>0x00081050 - 0x0008105F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>nmi_n</slaveDescriptor>
+                <slaveDescriptor>cpu_cmd_ack</slaveDescriptor>
                 <addressRange>0x00081060 - 0x0008106F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>bus_ack_n</slaveDescriptor>
+                <slaveDescriptor>cpu_address</slaveDescriptor>
                 <addressRange>0x00081070 - 0x0008107F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>bus_req_n</slaveDescriptor>
+                <slaveDescriptor>nmi_n</slaveDescriptor>
                 <addressRange>0x00081080 - 0x0008108F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>data</slaveDescriptor>
+                <slaveDescriptor>bus_ack_n</slaveDescriptor>
                 <addressRange>0x00081090 - 0x0008109F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>address</slaveDescriptor>
+                <slaveDescriptor>bus_req_n</slaveDescriptor>
                 <addressRange>0x000810A0 - 0x000810AF</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>ctrl_bus</slaveDescriptor>
+                <slaveDescriptor>data</slaveDescriptor>
                 <addressRange>0x000810B0 - 0x000810BF</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>cpu_cmd</slaveDescriptor>
+                <slaveDescriptor>address</slaveDescriptor>
                 <addressRange>0x000810C0 - 0x000810CF</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>cpu_wr_n</slaveDescriptor>
+                <slaveDescriptor>ctrl_bus</slaveDescriptor>
                 <addressRange>0x000810D0 - 0x000810DF</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>cpu_rd_n</slaveDescriptor>
+                <slaveDescriptor>cpu_cmd</slaveDescriptor>
                 <addressRange>0x000810E0 - 0x000810EF</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>cpu_cmd_en</slaveDescriptor>
+                <slaveDescriptor>cpu_wr_n</slaveDescriptor>
                 <addressRange>0x000810F0 - 0x000810FF</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>sd_miso</slaveDescriptor>
+                <slaveDescriptor>cpu_rd_n</slaveDescriptor>
                 <addressRange>0x00081100 - 0x0008110F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>sd_mosi</slaveDescriptor>
+                <slaveDescriptor>cpu_cmd_en</slaveDescriptor>
                 <addressRange>0x00081110 - 0x0008111F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>sd_clk</slaveDescriptor>
+                <slaveDescriptor>sd_miso</slaveDescriptor>
                 <addressRange>0x00081120 - 0x0008112F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>sd_wp_n</slaveDescriptor>
+                <slaveDescriptor>sd_mosi</slaveDescriptor>
                 <addressRange>0x00081130 - 0x0008113F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>ledg_pio</slaveDescriptor>
+                <slaveDescriptor>sd_clk</slaveDescriptor>
                 <addressRange>0x00081140 - 0x0008114F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
+                <slaveDescriptor>sd_wp_n</slaveDescriptor>
+                <addressRange>0x00081150 - 0x0008115F</addressRange>
+                <addressSpan>16</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>ledg_pio</slaveDescriptor>
+                <addressRange>0x00081160 - 0x0008116F</addressRange>
+                <addressSpan>16</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
                 <slaveDescriptor>jtag_uart</slaveDescriptor>
-                <addressRange>0x00081150 - 0x00081157</addressRange>
+                <addressRange>0x00081170 - 0x00081177</addressRange>
                 <addressSpan>8</addressSpan>
                 <attributes>printable</attributes>
         </MemoryMap>

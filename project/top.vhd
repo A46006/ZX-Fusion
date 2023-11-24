@@ -15,36 +15,41 @@ entity top is
 		PS2_CLK, PS2_DAT : inout std_logic;
 		
 		------------- SD -------------
-		SD_CLK : out std_logic;
-		SD_CMD : inout std_logic;
-		SD_DAT : inout std_logic_vector(3 downto 0);
-		SD_WP_N : in std_logic;
+		SD_CLK      : out std_logic;
+		SD_CMD      : inout std_logic;
+		SD_DAT      : inout std_logic_vector(3 downto 0);
+		SD_WP_N     : in std_logic;
 		
 		----------- Audio ------------
-		AUD_ADCDAT : in std_logic;
-		AUD_DACDAT : out std_logic;
-		AUD_XCK : out std_logic;
-		AUD_BCLK : out std_logic;
+		AUD_ADCDAT  : in std_logic;
+		AUD_DACDAT  : out std_logic;
+		AUD_XCK     : out std_logic;
+		AUD_BCLK    : out std_logic;
 		AUD_DACLRCK : out std_logic;
 		AUD_ADCLRCK : out std_logic;
 		
 		--------- EXPANSION ---------
-		KEYB_ADDR : out std_logic_vector(7 downto 0);
-		KEYB_DATA : in std_logic_vector(4 downto 0);
+		KEYB_ADDR   : out std_logic_vector(7 downto 0);
+		KEYB_DATA   : in std_logic_vector(4 downto 0);
 		
-		NES_CLK_1 : out std_logic;
+		NES_CLK_1   : out std_logic;
 		NES_LATCH_1 : out std_logic;
-		NES_DATA_1 : in std_logic;
+		NES_DATA_1  : in std_logic;
 		
-		NES_CLK_2 : out std_logic;
+		NES_CLK_2   : out std_logic;
 		NES_LATCH_2 : out std_logic;
-		NES_DATA_2 : in std_logic;
+		NES_DATA_2  : in std_logic;
 		
 		----------- BOARD ------------
-		SW : in std_logic_vector(17 downto 0);
-		KEY : in std_logic_vector(3 downto 0);
-		LEDR : out std_logic_vector(17 downto 0) := (others => '0');
-		LEDG : out std_logic_vector(7 downto 0) := (others => '0')
+		SW          : in std_logic_vector(17 downto 0);
+		KEY         : in std_logic_vector(3 downto 0);
+		LEDR        : out std_logic_vector(17 downto 0) := (others => '0');
+		LEDG        : out std_logic_vector(7 downto 0) := (others => '0');
+		
+		LCD_DATA    : out std_logic_vector(7 downto 0) := (others => '0');
+		LCD_EN      : out std_logic;
+		LCD_RS      : out std_logic;
+		LCD_RW      : out std_logic
 	);
 end top;
 
@@ -320,9 +325,14 @@ architecture Behavior of top is
 			nmi_n_external_connection_export       : out   std_logic;                                        --  non maskable interrupt
 			reset_reset_n                          : in    std_logic                     := '0';             --  reset
 			
+			-- LCD External
+			lcd_external_data  : out   std_logic_vector(7 downto 0);                                         -- LCD Data
+			lcd_external_E     : out   std_logic;                                                            -- LCD enable
+			lcd_external_RS    : out   std_logic;                                 -- LCD Command/Data select (cmd = 0)
+			lcd_external_RW    : out   std_logic;                                 -- LCD Read/Write (write = 0)
+			
+			
 			sd_clk_external_connection_export      : out   std_logic;                                        --  sd_clk
---			sd_cmd_external_connection_export      : inout std_logic                     := '0';             --  sd_cmd SDIO
---			sd_dat_external_connection_export      : inout std_logic_vector(3 downto 0)  := (others => '0'); --  sd_dat SDIO
 			sd_cs_external_connection_export       : out   std_logic;                                        --  sd SPI Chip Select
 			sd_miso_external_connection_export     : in    std_logic                     := '0';             --  sd SPI Data Out
 			sd_mosi_external_connection_export     : out   std_logic;                                        --  sd SPI Data In
@@ -619,7 +629,14 @@ begin
 			-- NIOS with DMA --
 			ctrl_bus_external_connection_export		=> nios_ctrl_bus,
 			address_external_connection_export		=> nios_address,
-			data_external_connection_export			=> nios_data
+			data_external_connection_export			=> nios_data,
+			
+			-- LCD --
+			lcd_external_data  => LCD_DATA,
+			lcd_external_E     => LCD_EN,
+			lcd_external_RS    => LCD_RS,
+			lcd_external_RW    => LCD_RW
+			
 		);
 			
 			

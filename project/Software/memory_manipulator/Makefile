@@ -155,6 +155,7 @@ C_SRCS += file_reader/file_format_aux.c
 C_SRCS += file_reader/formats.c
 C_SRCS += spectrum_control_IFs/DMA/dma_hal.c
 C_SRCS += spectrum_control_IFs/Peripheral_Interfaces/per_hal.c
+C_SRCS += terasic_lib/LCD.c
 CXX_SRCS :=
 ASM_SRCS :=
 

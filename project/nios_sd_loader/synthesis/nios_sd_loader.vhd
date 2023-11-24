@@ -22,6 +22,10 @@ entity nios_sd_loader is
 		cpu_wr_n_external_connection_export           : in    std_logic                     := '0';             --           cpu_wr_n_external_connection.export
 		ctrl_bus_external_connection_export           : out   std_logic_vector(3 downto 0);                     --           ctrl_bus_external_connection.export
 		data_external_connection_export               : inout std_logic_vector(7 downto 0)  := (others => '0'); --               data_external_connection.export
+		lcd_external_RS                               : out   std_logic;                                        --                           lcd_external.RS
+		lcd_external_RW                               : out   std_logic;                                        --                                       .RW
+		lcd_external_data                             : inout std_logic_vector(7 downto 0)  := (others => '0'); --                                       .data
+		lcd_external_E                                : out   std_logic;                                        --                                       .E
 		ledg_pio_external_connection_export           : out   std_logic_vector(7 downto 0);                     --           ledg_pio_external_connection.export
 		nmi_n_external_connection_export              : out   std_logic;                                        --              nmi_n_external_connection.export
 		reset_reset_n                                 : in    std_logic                     := '0';             --                                  reset.reset_n
@@ -185,6 +189,23 @@ architecture rtl of nios_sd_loader is
 		);
 	end component nios_sd_loader_jtag_uart;
 
+	component nios_sd_loader_lcd is
+		port (
+			reset_n       : in    std_logic                    := 'X';             -- reset_n
+			clk           : in    std_logic                    := 'X';             -- clk
+			begintransfer : in    std_logic                    := 'X';             -- begintransfer
+			read          : in    std_logic                    := 'X';             -- read
+			write         : in    std_logic                    := 'X';             -- write
+			readdata      : out   std_logic_vector(7 downto 0);                    -- readdata
+			writedata     : in    std_logic_vector(7 downto 0) := (others => 'X'); -- writedata
+			address       : in    std_logic_vector(1 downto 0) := (others => 'X'); -- address
+			LCD_RS        : out   std_logic;                                       -- export
+			LCD_RW        : out   std_logic;                                       -- export
+			LCD_data      : inout std_logic_vector(7 downto 0) := (others => 'X'); -- export
+			LCD_E         : out   std_logic                                        -- export
+		);
+	end component nios_sd_loader_lcd;
+
 	component nios_sd_loader_ledg_pio is
 		port (
 			clk        : in  std_logic                     := 'X';             -- clk
@@ -299,6 +320,12 @@ architecture rtl of nios_sd_loader is
 			jtag_uart_avalon_jtag_slave_writedata   : out std_logic_vector(31 downto 0);                    -- writedata
 			jtag_uart_avalon_jtag_slave_waitrequest : in  std_logic                     := 'X';             -- waitrequest
 			jtag_uart_avalon_jtag_slave_chipselect  : out std_logic;                                        -- chipselect
+			lcd_control_slave_address               : out std_logic_vector(1 downto 0);                     -- address
+			lcd_control_slave_write                 : out std_logic;                                        -- write
+			lcd_control_slave_read                  : out std_logic;                                        -- read
+			lcd_control_slave_readdata              : in  std_logic_vector(7 downto 0)  := (others => 'X'); -- readdata
+			lcd_control_slave_writedata             : out std_logic_vector(7 downto 0);                     -- writedata
+			lcd_control_slave_begintransfer         : out std_logic;                                        -- begintransfer
 			ledg_pio_s1_address                     : out std_logic_vector(1 downto 0);                     -- address
 			ledg_pio_s1_write                       : out std_logic;                                        -- write
 			ledg_pio_s1_readdata                    : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
@@ -438,6 +465,12 @@ architecture rtl of nios_sd_loader is
 	signal mm_interconnect_0_jtag_uart_avalon_jtag_slave_read            : std_logic;                     -- mm_interconnect_0:jtag_uart_avalon_jtag_slave_read -> mm_interconnect_0_jtag_uart_avalon_jtag_slave_read:in
 	signal mm_interconnect_0_jtag_uart_avalon_jtag_slave_write           : std_logic;                     -- mm_interconnect_0:jtag_uart_avalon_jtag_slave_write -> mm_interconnect_0_jtag_uart_avalon_jtag_slave_write:in
 	signal mm_interconnect_0_jtag_uart_avalon_jtag_slave_writedata       : std_logic_vector(31 downto 0); -- mm_interconnect_0:jtag_uart_avalon_jtag_slave_writedata -> jtag_uart:av_writedata
+	signal mm_interconnect_0_lcd_control_slave_readdata                  : std_logic_vector(7 downto 0);  -- lcd:readdata -> mm_interconnect_0:lcd_control_slave_readdata
+	signal mm_interconnect_0_lcd_control_slave_address                   : std_logic_vector(1 downto 0);  -- mm_interconnect_0:lcd_control_slave_address -> lcd:address
+	signal mm_interconnect_0_lcd_control_slave_read                      : std_logic;                     -- mm_interconnect_0:lcd_control_slave_read -> lcd:read
+	signal mm_interconnect_0_lcd_control_slave_begintransfer             : std_logic;                     -- mm_interconnect_0:lcd_control_slave_begintransfer -> lcd:begintransfer
+	signal mm_interconnect_0_lcd_control_slave_write                     : std_logic;                     -- mm_interconnect_0:lcd_control_slave_write -> lcd:write
+	signal mm_interconnect_0_lcd_control_slave_writedata                 : std_logic_vector(7 downto 0);  -- mm_interconnect_0:lcd_control_slave_writedata -> lcd:writedata
 	signal mm_interconnect_0_cpu_debug_mem_slave_readdata                : std_logic_vector(31 downto 0); -- cpu:debug_mem_slave_readdata -> mm_interconnect_0:cpu_debug_mem_slave_readdata
 	signal mm_interconnect_0_cpu_debug_mem_slave_waitrequest             : std_logic;                     -- cpu:debug_mem_slave_waitrequest -> mm_interconnect_0:cpu_debug_mem_slave_waitrequest
 	signal mm_interconnect_0_cpu_debug_mem_slave_debugaccess             : std_logic;                     -- mm_interconnect_0:cpu_debug_mem_slave_debugaccess -> cpu:debug_mem_slave_debugaccess
@@ -547,7 +580,7 @@ architecture rtl of nios_sd_loader is
 	signal mm_interconnect_0_nmi_n_s1_write_ports_inv                    : std_logic;                     -- mm_interconnect_0_nmi_n_s1_write:inv -> nmi_n:write_n
 	signal mm_interconnect_0_cpu_cmd_ack_s1_write_ports_inv              : std_logic;                     -- mm_interconnect_0_cpu_cmd_ack_s1_write:inv -> cpu_cmd_ack:write_n
 	signal mm_interconnect_0_sd_cs_s1_write_ports_inv                    : std_logic;                     -- mm_interconnect_0_sd_cs_s1_write:inv -> sd_cs:write_n
-	signal rst_controller_reset_out_reset_ports_inv                      : std_logic;                     -- rst_controller_reset_out_reset:inv -> [address:reset_n, bus_ack_n:reset_n, bus_req_n:reset_n, cpu:reset_n, cpu_address:reset_n, cpu_address_direct:reset_n, cpu_cmd:reset_n, cpu_cmd_ack:reset_n, cpu_cmd_en:reset_n, cpu_int_inf:reset_n, cpu_rd_n:reset_n, cpu_wr_n:reset_n, ctrl_bus:reset_n, data:reset_n, jtag_uart:rst_n, ledg_pio:reset_n, nmi_n:reset_n, sd_clk:reset_n, sd_cs:reset_n, sd_miso:reset_n, sd_mosi:reset_n, sd_wp_n:reset_n, timer:reset_n]
+	signal rst_controller_reset_out_reset_ports_inv                      : std_logic;                     -- rst_controller_reset_out_reset:inv -> [address:reset_n, bus_ack_n:reset_n, bus_req_n:reset_n, cpu:reset_n, cpu_address:reset_n, cpu_address_direct:reset_n, cpu_cmd:reset_n, cpu_cmd_ack:reset_n, cpu_cmd_en:reset_n, cpu_int_inf:reset_n, cpu_rd_n:reset_n, cpu_wr_n:reset_n, ctrl_bus:reset_n, data:reset_n, jtag_uart:rst_n, lcd:reset_n, ledg_pio:reset_n, nmi_n:reset_n, sd_clk:reset_n, sd_cs:reset_n, sd_miso:reset_n, sd_mosi:reset_n, sd_wp_n:reset_n, timer:reset_n]
 
 begin
 
@@ -727,6 +760,22 @@ begin
 			av_irq         => irq_mapper_receiver0_irq                                       --               irq.irq
 		);
 
+	lcd : component nios_sd_loader_lcd
+		port map (
+			reset_n       => rst_controller_reset_out_reset_ports_inv,          --         reset.reset_n
+			clk           => clk_clk,                                           --           clk.clk
+			begintransfer => mm_interconnect_0_lcd_control_slave_begintransfer, -- control_slave.begintransfer
+			read          => mm_interconnect_0_lcd_control_slave_read,          --              .read
+			write         => mm_interconnect_0_lcd_control_slave_write,         --              .write
+			readdata      => mm_interconnect_0_lcd_control_slave_readdata,      --              .readdata
+			writedata     => mm_interconnect_0_lcd_control_slave_writedata,     --              .writedata
+			address       => mm_interconnect_0_lcd_control_slave_address,       --              .address
+			LCD_RS        => lcd_external_RS,                                   --      external.export
+			LCD_RW        => lcd_external_RW,                                   --              .export
+			LCD_data      => lcd_external_data,                                 --              .export
+			LCD_E         => lcd_external_E                                     --              .export
+		);
+
 	ledg_pio : component nios_sd_loader_ledg_pio
 		port map (
 			clk        => clk_clk,                                       --                 clk.clk
@@ -904,6 +953,12 @@ begin
 			jtag_uart_avalon_jtag_slave_writedata   => mm_interconnect_0_jtag_uart_avalon_jtag_slave_writedata,   --                                .writedata
 			jtag_uart_avalon_jtag_slave_waitrequest => mm_interconnect_0_jtag_uart_avalon_jtag_slave_waitrequest, --                                .waitrequest
 			jtag_uart_avalon_jtag_slave_chipselect  => mm_interconnect_0_jtag_uart_avalon_jtag_slave_chipselect,  --                                .chipselect
+			lcd_control_slave_address               => mm_interconnect_0_lcd_control_slave_address,               --               lcd_control_slave.address
+			lcd_control_slave_write                 => mm_interconnect_0_lcd_control_slave_write,                 --                                .write
+			lcd_control_slave_read                  => mm_interconnect_0_lcd_control_slave_read,                  --                                .read
+			lcd_control_slave_readdata              => mm_interconnect_0_lcd_control_slave_readdata,              --                                .readdata
+			lcd_control_slave_writedata             => mm_interconnect_0_lcd_control_slave_writedata,             --                                .writedata
+			lcd_control_slave_begintransfer         => mm_interconnect_0_lcd_control_slave_begintransfer,         --                                .begintransfer
 			ledg_pio_s1_address                     => mm_interconnect_0_ledg_pio_s1_address,                     --                     ledg_pio_s1.address
 			ledg_pio_s1_write                       => mm_interconnect_0_ledg_pio_s1_write,                       --                                .write
 			ledg_pio_s1_readdata                    => mm_interconnect_0_ledg_pio_s1_readdata,                    --                                .readdata
