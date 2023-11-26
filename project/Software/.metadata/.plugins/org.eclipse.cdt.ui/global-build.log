@@ -319,3 +319,75 @@ Info: Building ../memory_manipulator_bsp/
 C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
 [BSP build complete]
 [memory_manip_attempt build complete]
+14:24:36 **** Build of configuration Nios II for project memory_manipulator ****
+make all 
+Info: Building ../memory_manipulator_bsp/
+C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
+[BSP build complete]
+Info: Compiling main.c to obj/default/main.o
+nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_INSTRUCTION_EMULATION -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/main.o main.c
+main.c: In function 'load_page':
+main.c:227:22: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+  write_buf_mem(addr, title, 0, strlen(title));
+                      ^
+In file included from file_reader/formats.h:3:0,
+                 from main.c:5:
+file_reader/../spectrum_control_IFs/DMA/dma_hal.h:20:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:239:24: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+    write_buf_mem(addr, list->filenames + idx, 0, name_len);
+                        ^
+In file included from file_reader/formats.h:3:0,
+                 from main.c:5:
+file_reader/../spectrum_control_IFs/DMA/dma_hal.h:20:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:255:23: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+   write_buf_mem(addr, err_name, 0, name_len);
+                       ^
+In file included from file_reader/formats.h:3:0,
+                 from main.c:5:
+file_reader/../spectrum_control_IFs/DMA/dma_hal.h:20:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c:268:25: warning: pointer targets in passing argument 2 of 'write_buf_mem' differ in signedness [-Wpointer-sign]
+     write_buf_mem(addr, pages_str, 0, str_len); // writes the page string to memory
+                         ^
+In file included from file_reader/formats.h:3:0,
+                 from main.c:5:
+file_reader/../spectrum_control_IFs/DMA/dma_hal.h:20:6: note: expected 'const alt_u8 * {aka const unsigned char *}' but argument is of type 'char *'
+ void write_buf_mem(alt_u16 addr, const alt_u8* data, int start, int len);
+      ^
+main.c: In function 'init_SD_local':
+main.c:344:10: warning: format '%u' expects argument of type 'unsigned int', but argument 2 has type 'clock_t {aka long unsigned int}' [-Wformat=]
+  printf ("It took %u clicks (us?)\r\n",*t);
+          ^
+main.c:344:10: warning: format '%u' expects argument of type 'unsigned int', but argument 2 has type 'clock_t {aka long unsigned int}' [-Wformat=]
+main.c:348:10: warning: format '%d' expects argument of type 'int', but argument 2 has type 'long unsigned int' [-Wformat=]
+   printf("waiting %d us more\r\n", SD_CARD_INIT_TIME - *t);
+          ^
+main.c:348:10: warning: format '%d' expects argument of type 'int', but argument 2 has type 'long unsigned int' [-Wformat=]
+main.c: In function 'main':
+main.c:393:40: warning: passing argument 2 of 'memcpy' makes pointer from integer without a cast [-Wint-conversion]
+  memcpy(curr_page_file_list.filenames, (int)'f', FILES_PER_PAGE * FILENAME_LEN);
+                                        ^
+In file included from c:\intelfpga_lite\18.1\nios2eds\bin\gnu\h-x86_64-mingw32\nios2-elf\include\stdio.h:29:0,
+                 from main.c:1:
+c:\intelfpga_lite\18.1\nios2eds\bin\gnu\h-x86_64-mingw32\nios2-elf\include\string.h:23:8: note: expected 'const void * restrict' but argument is of type 'int'
+ _PTR   _EXFUN(memcpy,(_PTR __restrict, const _PTR __restrict, size_t));
+        ^
+Info: Linking memory_manip_attempt.elf
+nios2-elf-g++  -T'../memory_manipulator_bsp//linker.x' -msys-crt0='../memory_manipulator_bsp//obj/HAL/src/crt0.o' -msys-lib=hal_bsp -L../memory_manipulator_bsp/   -Wl,-Map=memory_manip_attempt.map   -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o memory_manip_attempt.elf obj/default/SD/ff15/diskio.o obj/default/SD/ff15/ff.o obj/default/SD/ff15/ffsystem.o obj/default/SD/ff15/ffunicode.o obj/default/SD/ff15/sdmmc.o obj/default/SD/sd_if.o obj/default/SD/test_sd.o obj/default/file_reader/file_format_aux.o obj/default/file_reader/formats.o obj/default/main.o obj/default/spectrum_control_IFs/DMA/dma_hal.o obj/default/spectrum_control_IFs/Peripheral_Interfaces/per_hal.o obj/default/terasic_lib/LCD.o obj/default/terasic_lib/debug.o -lm -msys-lib=m
+nios2-elf-insert memory_manip_attempt.elf --thread_model hal --cpu_name cpu --qsys true --simulation_enabled false --stderr_dev jtag_uart --stdin_dev jtag_uart --stdout_dev jtag_uart --sopc_system_name nios_sd_loader --jdi H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../DE2_115_GOLDEN_TOP.jdi --sopcinfo H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../nios_sd_loader.sopcinfo
+Info: (memory_manip_attempt.elf) 213 KBytes program size (code + initialized data).
+Info:                            35 KBytes free for stack + heap.
+Info: Creating memory_manip_attempt.objdump
+nios2-elf-objdump --disassemble --syms --all-header memory_manip_attempt.elf >memory_manip_attempt.objdump
+[memory_manip_attempt build complete]
+14:24:45 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+make all 
+Info: Building ../memory_manipulator_bsp/
+C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
+[BSP build complete]
+[memory_manip_attempt build complete]

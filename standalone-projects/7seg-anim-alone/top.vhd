@@ -13,11 +13,6 @@ entity top is
 end top;
 
 architecture Behavior of top is
-	COMPONENT conv_7seg IS
-		PORT ( number : IN STD_LOGIC_VECTOR(7 downto 0);
-			 num1, num0 : OUT STD_LOGIC_VECTOR(0 TO 6));
-	END COMPONENT;
-	
 	COMPONENT double_spin_anim_7seg IS
 		PORT ( 
 				CLOCK_50 : IN STD_LOGIC;

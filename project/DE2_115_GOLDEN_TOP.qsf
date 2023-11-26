@@ -1231,6 +1231,9 @@ set_global_assignment -name QIP_FILE ram/remaining_ram.qip
 set_global_assignment -name QIP_FILE reset_counter.qip
 set_global_assignment -name QIP_FILE ram/pixel_video_ram.qip
 set_global_assignment -name QIP_FILE ram/color_video_ram.qip
+set_global_assignment -name QIP_FILE 7seg/spin_ctr.qip
+set_global_assignment -name VHDL_FILE 7seg/spin_anim_7seg.vhd
+set_global_assignment -name VHDL_FILE 7seg/double_spin_anim_7seg.vhd
 set_global_assignment -name VHDL_FILE primitive_blocks/FallingEdge_TFF_RCE.vhd
 set_global_assignment -name VHDL_FILE primitive_blocks/FallingEdge_DFF.vhd
 set_global_assignment -name QIP_FILE pll/pll.qip
