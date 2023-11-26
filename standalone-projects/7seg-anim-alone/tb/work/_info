@@ -1,0 +1,207 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dH:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/standalone-projects/7seg-anim-alone/tb
+Edouble_spin_anim_7seg
+Z1 w1701002079
+Z2 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z3 DPx4 ieee 14 std_logic_1164 0 22 eNV`TJ_GofJTzYa?f<@Oe1
+R0
+Z4 8../7seg/double_spin_anim_7seg.vhd
+Z5 F../7seg/double_spin_anim_7seg.vhd
+l0
+L4
+V_iR7CSXNcD;;9hUeANTE=3
+!s100 0DD4a[mo:I44m]c=MnE^i2
+Z6 OV;C;10.5b;63
+32
+Z7 !s110 1701002500
+!i10b 1
+Z8 !s108 1701002500.000000
+Z9 !s90 -reportprogress|300|-work|work|../7seg/double_spin_anim_7seg.vhd|
+Z10 !s107 ../7seg/double_spin_anim_7seg.vhd|
+!i113 1
+Z11 o-work work
+Z12 tExplicit 1 CvgOpt 0
+Abehavior
+R2
+R3
+DEx4 work 21 double_spin_anim_7seg 0 22 _iR7CSXNcD;;9hUeANTE=3
+l34
+L13
+V5E1EL1ffBlMHbFfMi?c3>0
+!s100 B<<C?n6fU`dhFmhNUz:^32
+R6
+32
+R7
+!i10b 1
+R8
+R9
+R10
+!i113 1
+R11
+R12
+Espin_anim_7seg
+Z13 w1701002355
+Z14 DPx4 ieee 15 std_logic_arith 0 22 [G314=:2zXJ`VORJe1J@Z1
+R2
+R3
+R0
+Z15 8../7seg/spin_anim_7seg.vhd
+Z16 F../7seg/spin_anim_7seg.vhd
+l0
+L5
+VY_jO_K@YK96E@JaT@m<D=3
+!s100 B1hcRR;I@5IlG>RX_zE:61
+R6
+32
+R7
+!i10b 1
+R8
+Z17 !s90 -reportprogress|300|-work|work|../7seg/spin_anim_7seg.vhd|
+Z18 !s107 ../7seg/spin_anim_7seg.vhd|
+!i113 1
+R11
+R12
+Abehavior
+R14
+R2
+R3
+DEx4 work 14 spin_anim_7seg 0 22 Y_jO_K@YK96E@JaT@m<D=3
+l21
+L14
+Vog_[?DaSG=Vj?;GQl8L9Z1
+!s100 7h^JSXagB9U?olNbKJ==80
+R6
+32
+R7
+!i10b 1
+R8
+R17
+R18
+!i113 1
+R11
+R12
+Espin_ctr
+Z19 w1700999974
+R2
+R3
+R0
+Z20 8../7seg/spin_ctr.vhd
+Z21 F../7seg/spin_ctr.vhd
+l0
+L42
+VhSazXN:lTln>cFmE2zz0Z2
+!s100 W_fhI:b`=YJhn>`0Po79d2
+R6
+32
+Z22 !s110 1701002501
+!i10b 1
+Z23 !s108 1701002501.000000
+Z24 !s90 -reportprogress|300|-work|work|../7seg/spin_ctr.vhd|
+Z25 !s107 ../7seg/spin_ctr.vhd|
+!i113 1
+R11
+R12
+Asyn
+R2
+R3
+DEx4 work 8 spin_ctr 0 22 hSazXN:lTln>cFmE2zz0Z2
+l73
+L52
+VdX]GbBOKQk@5U9VlgeoTc3
+!s100 3i4z^PQ?d];zei9U?]9SN0
+R6
+32
+R22
+!i10b 1
+R23
+R24
+R25
+!i113 1
+R11
+R12
+Etb
+Z26 w1701001595
+R2
+R3
+R0
+Z27 8../tb.vhd
+Z28 F../tb.vhd
+l0
+L5
+VQTo`?`eMWd3D^Kc]ja=I=3
+!s100 2Z@a:`J7Wb?^?ZHk148h=0
+R6
+32
+R22
+!i10b 1
+R23
+Z29 !s90 -reportprogress|300|-work|work|../tb.vhd|
+Z30 !s107 ../tb.vhd|
+!i113 1
+R11
+R12
+Atb_arch
+R2
+R3
+DEx4 work 2 tb 0 22 QTo`?`eMWd3D^Kc]ja=I=3
+l35
+L8
+VI[^ZJghISL@DmDzzzZ_::3
+!s100 K2JWjcJdMSZR:iX1F8zSj2
+R6
+32
+R22
+!i10b 1
+R23
+R29
+R30
+!i113 1
+R11
+R12
+Etop
+Z31 w1701001618
+R2
+R3
+R0
+Z32 8../top.vhd
+Z33 F../top.vhd
+l0
+L4
+VzA@o^kLm6Q^^0>EoLfgj11
+!s100 lGjjf]L:H=WG9W<1BGbfZ2
+R6
+32
+R22
+!i10b 1
+R23
+Z34 !s90 -reportprogress|300|-work|work|../top.vhd|
+Z35 !s107 ../top.vhd|
+!i113 1
+R11
+R12
+Abehavior
+R2
+R3
+DEx4 work 3 top 0 22 zA@o^kLm6Q^^0>EoLfgj11
+l30
+L15
+V`hiGX[1KL@^793:IAOmP_2
+!s100 ;]neNT7iFLi]^oQT0nQd=3
+R6
+32
+R22
+!i10b 1
+R23
+R34
+R35
+!i113 1
+R11
+R12
