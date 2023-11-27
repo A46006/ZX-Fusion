@@ -58,8 +58,8 @@ REGS generate_regs_SNA(alt_u8* data) {
 		.PC = 0, // PC is in the stack
 
 		.IM = data[SNA_OFFSET_INT_MODE],
-		.IFF1 = (data[SNA_OFFSET_IFF2] & 4) >> 2,
-		.IFF2 = (data[SNA_OFFSET_IFF2] & 4) >> 2,
+		.IFF1 = data[SNA_OFFSET_IFF2] & 4,
+		.IFF2 = data[SNA_OFFSET_IFF2] & 4,
 		.border = data[SNA_OFFSET_BORDER]
 
 	};
@@ -196,7 +196,7 @@ int load_SNA(char* filename) {
 
 
 	// Restore data overwritten by routine as soon as the snapshot's PC is detected in z80 address bus
-	// This means the Z80 is about to start executing the loaded code
+	// This means the z80 is about to start executing the loaded code
 	int wait_res = wait_until_routine_ends(1000);
 	printf("wait res: %d\r\n", wait_res);
 	if (!wait_res) {
@@ -617,7 +617,7 @@ alt_u16 load_compressed_data_block_z80(alt_u16 addr, alt_u8* buffer, int data_of
 int load_z80(char* filename) {
 	alt_u16 err = init_file_read(filename);
 	if (err) {
-		printf(OPEN_ERR_STR, filename, err);
+		printf("opening %s failed: 0x%04X\r\n", filename, err);
 		return -1;
 	}
 

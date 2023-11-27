@@ -43,16 +43,14 @@ ENTITY spin_ctr IS
 	PORT
 	(
 		clock		: IN STD_LOGIC ;
-		cout		: OUT STD_LOGIC ;
-		q		: OUT STD_LOGIC_VECTOR (19 DOWNTO 0)
+		q		: OUT STD_LOGIC_VECTOR (21 DOWNTO 0)
 	);
 END spin_ctr;
 
 
 ARCHITECTURE SYN OF spin_ctr IS
 
-	SIGNAL sub_wire0	: STD_LOGIC ;
-	SIGNAL sub_wire1	: STD_LOGIC_VECTOR (19 DOWNTO 0);
+	SIGNAL sub_wire0	: STD_LOGIC_VECTOR (21 DOWNTO 0);
 
 
 
@@ -65,26 +63,23 @@ ARCHITECTURE SYN OF spin_ctr IS
 	);
 	PORT (
 			clock	: IN STD_LOGIC ;
-			cout	: OUT STD_LOGIC ;
-			q	: OUT STD_LOGIC_VECTOR (19 DOWNTO 0)
+			q	: OUT STD_LOGIC_VECTOR (21 DOWNTO 0)
 	);
 	END COMPONENT;
 
 BEGIN
-	cout    <= sub_wire0;
-	q    <= sub_wire1(19 DOWNTO 0);
+	q    <= sub_wire0(21 DOWNTO 0);
 
 	LPM_COUNTER_component : LPM_COUNTER
 	GENERIC MAP (
 		lpm_direction => "UP",
 		lpm_port_updown => "PORT_UNUSED",
 		lpm_type => "LPM_COUNTER",
-		lpm_width => 20
+		lpm_width => 22
 	)
 	PORT MAP (
 		clock => clock,
-		cout => sub_wire0,
-		q => sub_wire1
+		q => sub_wire0
 	);
 
 
@@ -101,7 +96,7 @@ END SYN;
 -- Retrieval info: PRIVATE: CLK_EN NUMERIC "0"
 -- Retrieval info: PRIVATE: CNT_EN NUMERIC "0"
 -- Retrieval info: PRIVATE: CarryIn NUMERIC "0"
--- Retrieval info: PRIVATE: CarryOut NUMERIC "1"
+-- Retrieval info: PRIVATE: CarryOut NUMERIC "0"
 -- Retrieval info: PRIVATE: Direction NUMERIC "0"
 -- Retrieval info: PRIVATE: INTENDED_DEVICE_FAMILY STRING "Cyclone IV E"
 -- Retrieval info: PRIVATE: ModulusCounter NUMERIC "0"
@@ -111,19 +106,17 @@ END SYN;
 -- Retrieval info: PRIVATE: SSET NUMERIC "0"
 -- Retrieval info: PRIVATE: SSET_ALL1 NUMERIC "1"
 -- Retrieval info: PRIVATE: SYNTH_WRAPPER_GEN_POSTFIX STRING "0"
--- Retrieval info: PRIVATE: nBit NUMERIC "20"
+-- Retrieval info: PRIVATE: nBit NUMERIC "22"
 -- Retrieval info: PRIVATE: new_diagram STRING "1"
 -- Retrieval info: LIBRARY: lpm lpm.lpm_components.all
 -- Retrieval info: CONSTANT: LPM_DIRECTION STRING "UP"
 -- Retrieval info: CONSTANT: LPM_PORT_UPDOWN STRING "PORT_UNUSED"
 -- Retrieval info: CONSTANT: LPM_TYPE STRING "LPM_COUNTER"
--- Retrieval info: CONSTANT: LPM_WIDTH NUMERIC "20"
+-- Retrieval info: CONSTANT: LPM_WIDTH NUMERIC "22"
 -- Retrieval info: USED_PORT: clock 0 0 0 0 INPUT NODEFVAL "clock"
--- Retrieval info: USED_PORT: cout 0 0 0 0 OUTPUT NODEFVAL "cout"
--- Retrieval info: USED_PORT: q 0 0 20 0 OUTPUT NODEFVAL "q[19..0]"
+-- Retrieval info: USED_PORT: q 0 0 22 0 OUTPUT NODEFVAL "q[21..0]"
 -- Retrieval info: CONNECT: @clock 0 0 0 0 clock 0 0 0 0
--- Retrieval info: CONNECT: cout 0 0 0 0 @cout 0 0 0 0
--- Retrieval info: CONNECT: q 0 0 20 0 @q 0 0 20 0
+-- Retrieval info: CONNECT: q 0 0 22 0 @q 0 0 22 0
 -- Retrieval info: GEN_FILE: TYPE_NORMAL spin_ctr.vhd TRUE
 -- Retrieval info: GEN_FILE: TYPE_NORMAL spin_ctr.inc FALSE
 -- Retrieval info: GEN_FILE: TYPE_NORMAL spin_ctr.cmp TRUE

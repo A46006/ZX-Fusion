@@ -6,7 +6,7 @@ void listen_for_en() {
 		en = EN_GET;
 	} while (!en);
 
-	int tries = 50;
+	int tries = 500;
 	do {
 		read = CPU_RD_GET;
 		write = CPU_WR_GET;

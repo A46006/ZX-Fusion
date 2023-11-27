@@ -58,8 +58,8 @@ REGS generate_regs_SNA(alt_u8* data) {
 		.PC = 0, // PC is in the stack
 
 		.IM = data[SNA_OFFSET_INT_MODE],
-		.IFF1 = (data[SNA_OFFSET_IFF2] & 4) >> 2,
-		.IFF2 = (data[SNA_OFFSET_IFF2] & 4) >> 2,
+		.IFF1 = data[SNA_OFFSET_IFF2],
+		.IFF2 = data[SNA_OFFSET_IFF2] >> 2,
 		.border = data[SNA_OFFSET_BORDER]
 
 	};
@@ -617,7 +617,7 @@ alt_u16 load_compressed_data_block_z80(alt_u16 addr, alt_u8* buffer, int data_of
 int load_z80(char* filename) {
 	alt_u16 err = init_file_read(filename);
 	if (err) {
-		printf(OPEN_ERR_STR, filename, err);
+		printf("opening %s failed: 0x%04X\r\n", filename, err);
 		return -1;
 	}
 

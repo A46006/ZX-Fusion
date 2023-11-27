@@ -280,7 +280,7 @@ void generate_LOAD_routine(alt_u8* routine, REGS regs, const enum file_type type
 			routine[i++] = IM_1;
 	}
 
-	if (regs.IFF2) {
+	if (regs.IFF1) {
 		routine[i++] = EI;
 	} else {
 		routine[i++] = DI;
@@ -295,10 +295,10 @@ void generate_LOAD_routine(alt_u8* routine, REGS regs, const enum file_type type
 //	printf("|IX: %04X\t\tIY: %04X\r\n", regs.IX, regs.IY);
 //	printf("|I: %02X\t\tR: %02X\r\n", regs.I, regs.R);
 
-//	routine[i++] = DI;
-//	routine[i++] = HALT_ASM;
-	routine[i++] = RETN1;
-	routine[i++] = RETN2;
+	routine[i++] = DI;
+	routine[i++] = HALT_ASM;
+//	routine[i++] = RETN1;
+//	routine[i++] = RETN2;
 }
 
 void generate_SAVE_routine(alt_u8* routine, const enum file_type type) {

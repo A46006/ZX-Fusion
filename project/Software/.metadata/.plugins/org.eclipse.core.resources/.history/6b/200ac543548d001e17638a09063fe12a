@@ -280,7 +280,8 @@ void generate_LOAD_routine(alt_u8* routine, REGS regs, const enum file_type type
 			routine[i++] = IM_1;
 	}
 
-	if (regs.IFF2) {
+	// only bit 2 is set
+	if (regs.IFF2 & 4) {
 		routine[i++] = EI;
 	} else {
 		routine[i++] = DI;

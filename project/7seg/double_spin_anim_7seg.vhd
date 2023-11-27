@@ -24,24 +24,24 @@ ARCHITECTURE Behavior OF double_spin_anim_7seg IS
 	PORT
 	(
 		clock		: IN STD_LOGIC ;
-		cout		: OUT STD_LOGIC ;
-		q			: OUT STD_LOGIC_VECTOR (19 DOWNTO 0)
+		q			: OUT STD_LOGIC_VECTOR (21 DOWNTO 0)
 	);
 	END component;
 
 	signal clk2, clk1 : std_logic := '0';
-	signal count_num : std_logic_vector(19 DOWNTO 0);
+	signal count_num : std_logic_vector(21 DOWNTO 0);
 BEGIN
 	count : spin_ctr port map (
 		clock => CLOCK_50,
-		cout => clk1,
 		q => count_num
 	);
 
-	clk2 <= count_num(19);
+	clk2 <= count_num(21);
+	clk1 <= not clk2;
+
 	-- slower
 	spin2 : spin_anim_7seg port map (
-			CLK => clk1,
+			CLK => clk2,
 			SET => SET,
 			CLR => CLR,
 			D1  => D3,
@@ -50,7 +50,7 @@ BEGIN
 
 	-- faster
 	spin1 : spin_anim_7seg port map (
-			CLK => clk2,
+			CLK => clk1,
 			SET => SET,
 			CLR => CLR,
 			D1  => D1,

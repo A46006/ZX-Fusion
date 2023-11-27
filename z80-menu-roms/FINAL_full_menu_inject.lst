@@ -1,0 +1,1466 @@
+              	; --------------------------------------
+              	; zasm: assemble "FINAL_full_menu_inject.asm"
+              	; date: 2023-11-27 18:57:25
+              	; --------------------------------------
+
+
+              	#target ram
+              	
+              	
+B000:         	#code EPROM, 0xB000, 0x1000
+              	
+B000:         	MAIN:
+B000: FB      		EI					; Enable interrupts again (EI from ROM (0x1234) removed to not interfere with halt)
+              		;LD (IY+$31),$02
+              		;call $0D6B ; CLS 
+B001: FDCB02EE		SET 5, (IY+$02)		; DO I NEED THIS?!?
+              		
+B005: 210000  		LD HL, $0		; clearing junk made by non maskable interrupt routine (NIOS injecting return code)
+B008: 220040  		LD ($4000), HL	;
+              		
+B00B: CD11B0  		CALL	INIT_MENU	; Initialise mode and cursor settings. IX will point at editing settings information.
+B00E: C372B0  		JP	SHOW_MAIN_MENU	; Jump to show the Main Menu.
+              	
+              	; to be called by START after the menu BASIC option was selected, and the code from START run again
+              	;NORMAL_BASIC_MISSING_CODE:
+              	;	;EI					; Enable interrupts again (EI from ROM (0x1234) removed to not interfere with halt)
+              	;	LD (IY+$31),$02
+              	;	call $0D6B ; CLS 
+              	;	XOR A
+              	;	LD DE,$1538
+              	;	CALL $0C0A
+              	;	SET 5,(IY+$02)
+              	;	JP $12A9
+              	
+              	; ------------------------
+              	; Initialise Mode Settings
+              	; ------------------------
+              	; Called before Main menu displayed.
+B011:         	INIT_MENU: 	; WAS L2584
+B011: CD35B0  		CALL RST_CURSOR_POS ; Reset Cursor Position.
+              	
+B014: 210000  		LD   HL,$0000     ; No top line.
+B017: 229AFC  		LD   ($FC9A),HL   ; Line number at top of screen.
+              	
+B01A: 3E82    		LD   A,$82        ; Signal waiting for key press, and menu is displayed.
+B01C: 320DEC  		LD   ($EC0D),A    ; Store the Editor flags.
+              	
+B01F: 210000  		LD   HL,$0000     ; No current line number.
+B022: 22495C  		LD   ($5C49),HL   ; E_PPC. Current line number.
+              	
+B025: CD2CB0  		CALL SET_INDENT_SETTINGS ; Reset indentation settings.
+B028: CDE7B3  		CALL RESET_L_MODE_TOP ; Reset to 'L' Mode
+B02B: C9      		RET               ; [Could have saved one byte by using JP $365E (ROM 0)]
+              	
+              	
+              	; ------------------------
+              	; Set Indentation Settings
+              	; ------------------------
+              	
+B02C:         	SET_INDENT_SETTINGS:  ; WAS L35BC
+B02C: 2188B4  		LD   HL,INDENT_SETTINGS ; HL=Address of the indentation settings data table.
+B02F: 116AFD  		LD   DE,$FD6A     ; Destination address.
+B032: C367B0  		JP   COPY_DATA_BLOCK ; Copy two bytes from $35B9-$35BA (ROM 0) to $FD6A-$FD6B.
+              	
+              	; ---------------------
+              	; Reset Cursor Position
+              	; ---------------------
+B035:         	RST_CURSOR_POS:  ; WAS L28BE
+B035: CD59B0  		CALL RESET_MAIN_SCREEN ; Reset to main screen.
+B038: CD47B0  		CALL SET_MAIN_CURSOR_DETAILS ; Set default main screen editing cursor details.
+B03B: C33EB0  		JP   INIT_MAIN_SCREEN_SETTINGS ; Set default main screen editing settings.
+              	
+              	; ---------------------------------------
+              	; Initialise Main Screen Editing Settings
+              	; ---------------------------------------
+              	; Used when selecting main screen. Copies 6 bytes from $28D2 (ROM 0) to $F6EE.
+              	
+B03E:         	INIT_MAIN_SCREEN_SETTINGS: 	; WAS L28E8 
+B03E: 218BB4  		LD   HL,MAIN_SCREEN_ERROR_CURSOR     ; Default main screen editing information.
+B041: 11EEF6  		LD   DE,$F6EE     ; Editing information stores.
+B044: C367B0  		JP   COPY_DATA_BLOCK ; Copy bytes.
+              	
+              	; --------------------------------------
+              	; Set Main Screen Editing Cursor Details
+              	; --------------------------------------
+              	; Set initial cursor editing settings when using the main screen.
+              	; Copies 8 bytes from $3A6E-$3A75 (ROM 0) to $FD6C-$FD73.
+              	
+B047:         	SET_MAIN_CURSOR_DETAILS:  ; WAS L3A7F
+B047: DD216CFD		LD   IX,$FD6C     ; Point IX at cursor settings in workspace.
+              	
+B04B: 2176B4  		LD   HL,INIT_LOWER_SCREEN_CURSROR ; Initial values table for the lower screen cursor settings.
+B04E: 1803    		JR   SET_EDIT_CURSOR_DETAILS_END  ; Jump ahead.
+              	
+              	
+              	; ---------------------------------------
+              	; Set Lower Screen Editing Cursor Details
+              	; ---------------------------------------
+              	; Set initial cursor editing settings when using the lower screen.
+              	; Copies 8 bytes from $3A77-$3A7E (ROM 0) to $FD6C-$FD73.
+              	
+B050: 217FB4  	SET_LOWER_SCREEN_CURRSOR:  LD   HL,INIT_MAIN_SCREEN_CURSOR ; Initial values table for the main screen cursor settings.
+              	
+B053:         	SET_EDIT_CURSOR_DETAILS_END:  	; WAS L3A8B
+B053: 116CFD  		LD   DE,$FD6C     ; DE=Cursor settings in workspace.
+B056: C367B0  		JP   COPY_DATA_BLOCK ; Jump to copy the settings.
+              			
+              	
+              	; --------------------
+              	; Reset to Main Screen
+              	; --------------------
+              	
+B059:         	RESET_MAIN_SCREEN:  ; WAS L2E1F
+B059: 213C5C  		LD   HL,$5C3C     ; TVFLAG.
+B05C: CB86    		RES  0,(HL)       ; Signal using main screen.
+B05E: 2170B0  		LD   HL,UPPER_SCREEN_ROWS ; Upper screen lines table.
+B061: 1115EC  		LD   DE,$EC15     ; Destination workspace variable. The number of editing rows on screen.
+B064: C367B0  		JP   COPY_DATA_BLOCK ; Copy one byte from $2E1C (ROM 0) to $EC15
+              	
+              	
+              	; ---------------
+              	; Copy Data Block
+              	; ---------------
+              	; This routine is used on 8 occasions to copy a block of default data.
+              	; Entry: DE=Destination address.
+              	;        HL=Address of source data table, which starts with the number of bytes to copy
+              	;           followed by the bytes themselves.
+              	
+B067:         	COPY_DATA_BLOCK:  ; WAS L3FBA
+B067: 46      		LD   B,(HL)       ; Get number of bytes to copy.
+B068: 23      		INC  HL           ; Point to the first byte to copy.
+              	
+B069:         	CPY_BLK_LOOP:  
+B069: 7E      		LD   A,(HL)       ; Fetch the byte from the source
+B06A: 12      		LD   (DE),A       ; and copy it to the destination.
+B06B: 13      		INC  DE           ; Increment destination address.
+B06C: 23      		INC  HL           ; Increment source address.
+B06D: 10FA    		DJNZ CPY_BLK_LOOP ; Repeat for all bytes.
+              	
+B06F: C9      		RET               ;
+              	
+              	
+              	; -----------------------
+              	; Upper Screen Rows Table
+              	; -----------------------
+              	; Copied to $EC15-$EC16.
+              	
+B070:         	UPPER_SCREEN_ROWS:  ; WAS L2E1B
+B070: 01      		DEFB $01          ; Number of bytes to copy.
+B071: 14      		DEFB $14          ; Number of editing rows (20 for upper screen).
+              	
+              	
+              	; --------------
+              	; Show Main Menu
+              	; --------------
+B072:         	SHOW_MAIN_MENU:	; WAS L259F
+B072: 216FB1  		LD HL, MENU_JMP_TBL	; Jump table for Main Menu
+B075: 22EAF6  		LD ($F6EA), HL	; Store current menu jump table address
+B078: 2179B1  		LD HL, MENU_TEXT_TBL	; Main Menu text
+B07B: 22ECF6  		LD ($F6EC), HL	; Store current menu text table address
+              	
+B07E: E5      		PUSH HL
+              		
+B07F: 210DEC  		LD HL, $EC0D	; Editor flags
+B082: CBCE    		SET 1, (HL)		; Indicate 'menu displayed'
+B084: CBA6    		RES 4, (HL)		; Signal return to main menu
+B086: 2B      		DEC HL			; current menu index
+B087: 3600    		LD (HL), $00	; select top entry
+              		
+B089: E1      		pop HL
+              		
+B08A: CDA9B0  		CALL DISPLAY_MENU ; Display menu and highlight first item DISPLAY MENU ROUTINE ADDRESS
+              		
+B08D: C390B0  		JP MAIN_WAITING_LOOP		; Jump ahead to enter the main key waiting and processing
+              	
+              	
+              	; -----------------
+              	; Main Waiting Loop
+              	; -----------------
+              	; Enter a loop to wait for a key press. Handles key presses for menus, the Calculator and the Editor.
+B090:         	MAIN_WAITING_LOOP:	; WAS L2653
+B090: 31FFEB  		LD   SP,$EBFF     ; TSTACK. Use temporary stack.													TSTACK = EBFF now
+              	
+B093: CDF1B3  		CALL RESET_L_MODE ; Reset 'L' mode.
+              	
+B096: CDBEB3  		CALL WAIT_KEY_PRESS ; Wait for a key. [Note that it is possible to change CAPS LOCK mode whilst on a menu]
+B099: F5      		PUSH AF           ; Save key code.
+              	
+B09A: 3A395C  		LD   A,($5C39)    ; PIP. Tone of keyboard click.
+B09D: CDB0B3  		CALL KEY_CLICK_SOUND ; Produce a key click noise.
+              	
+B0A0: F1      		POP  AF           ; Retrieve key code.
+              		
+B0A1: 215CB1  		LD   HL,MENU_KEYS_ACTION_TBL ; Use menu keys lookup table.
+B0A4: CD22B3  		CALL PROCESS_KEY_PRESS ; Process the key press.
+              	
+B0A7: 18E7    		JR   MAIN_WAITING_LOOP ; Wait for another key.
+              	
+              	
+              	
+              	; ------------
+              	; Display Menu
+              	; ------------
+              	; HL=Address of menu text.
+B0A9:         	DISPLAY_MENU:			; WAS L36A8
+              	
+B0A9: 5E      		LD   E,(HL)       ; Fetch number of table entries.
+B0AA: 23      		INC  HL           ; Point to first entry.
+              	
+B0AB: E5      		PUSH HL           ;
+B0AC: 2198B1  		LD   HL,MENU_TITLE_COLORS_TBL ; Set title colours.
+B0AF: CD6EB4  		CALL PRINT_STRING ; Print them.
+B0B2: E1      		POP  HL           ;
+              	
+B0B3: CD6EB4  		CALL PRINT_STRING ; Print menu title pointed to by HL.
+              	
+B0B6: E5      		PUSH HL           ;
+B0B7: CD08B4  		CALL PRINT_STRIPES; Print Sinclair stripes.
+B0BA: 21A6B1  		LD   HL,MENU_TITLE_SPACE_TBL ; Black ' '.
+B0BD: CD6EB4  		CALL PRINT_STRING ; Print it.
+B0C0: E1      		POP  HL           ; HL=Address of first menu item text.
+              	
+B0C1: D5      		PUSH DE           ; Save number of menu items left to print.
+              	
+B0C2: 01090B  		LD   BC,$0B09     ;
+B0C5: CD66B4  		CALL PRINT_AT_B_C ; Perform 'Print AT 11,9;' (this is the top left position of the menu).
+              		
+B0C8:         	ITEM:
+B0C8: C5      		PUSH BC           ; Save row print coordinates.
+              	
+B0C9: 060C    		LD   B,$0C        ; Number of columns in a row of the menu.
+              	
+B0CB: 3E20    		LD   A,$20        ; Print ' '.
+B0CD: D7      		RST  10H          ;
+              		
+B0CE:         	CHAR:  
+B0CE: 7E      		LD   A,(HL)       ; Fetch menu item character.
+B0CF: 23      		INC  HL           ;
+B0D0: FE80    		CP   $80          ; End marker found?
+B0D2: 3003    		JR   NC,CHAR_END     ; Jump if end of text found.
+              	
+B0D4: D7      		RST  10H          ; Print menu item character
+B0D5: 10F7    		DJNZ CHAR         ; Repeat for all characters in menu item text.
+              		
+B0D7:         	CHAR_END:
+B0D7: E67F    		AND  $7F          ; Clear bit 7 to yield a final text character.
+B0D9: D7      		RST  10H          ; Print it.
+              		
+B0DA:         	TRAILING_SPACES:
+B0DA: 3E20    		LD   A,$20        ;
+B0DC: D7      		RST  10H          ; Print trailing spaces
+B0DD: 10FB    		DJNZ TRAILING_SPACES ; Until all columns filled.
+              			
+B0DF: C1      		POP  BC           ; Fetch row print coordinates.
+B0E0: 04      		INC  B            ; Next row.
+B0E1: CD66B4  		CALL PRINT_AT_B_C ; Print AT.
+              	
+B0E4: 1D      		DEC  E            ;
+B0E5: 20E1    		JR   NZ,ITEM      ; Repeat for all menu items.
+              	
+              		;LD   HL,$6F38     ; Coordinates, pixel (111, 56) = end row 13, column 7.				; OLD
+B0E7: 214857  		LD   HL,$5748     ; Coordinates, pixel (87, 72) = end row 13, column 7.
+              	
+B0EA: D1      		POP  DE           ; Fetch number of menu items to E.
+B0EB: CB23    		SLA  E            ;
+B0ED: CB23    		SLA  E            ;
+B0EF: CB23    		SLA  E            ; Determine number of pixels to span all menu items.
+B0F1: 53      		LD   D,E          ;
+B0F2: 15      		DEC  D            ; D=8*Number of menu items - 1.
+              	
+B0F3: 1E6F    		LD   E,$6F        ; Number of pixels in width of menu.
+B0F5: 0100FF  		LD   BC,$FF00     ; B=-1, C=0. Plot a vertical line going up.
+B0F8: 7A      		LD   A,D          ; A=Number of vertical pixels to plot.
+B0F9: CD12B1  		CALL PLOT_LINE    ; Plot line.
+              	
+B0FC: 010100  		LD   BC,$0001     ; B=0, C=1. Plot a horizontal line going to the right.
+B0FF: 7B      		LD   A,E          ; A=Number of horizontal pixels to plot.
+B100: CD12B1  		CALL PLOT_LINE    ; Plot line.
+              	
+B103: 010001  		LD   BC,$0100     ; B=1, C=0. Plot a vertical line going down.
+B106: 7A      		LD   A,D          ; A=Number of vertical pixels to plot.
+B107: 3C      		INC  A            ; Include end pixel.
+B108: CD12B1  		CALL PLOT_LINE    ; Plot line.
+              	
+B10B: AF      		XOR  A            ; A=Index of menu option to highlight.
+B10C: 0E00    		LD   C, $00       ; C for main menu
+B10E: CD37B3  		CALL TOGGLE_MENU_HIGHLIGHT ; Toggle menu option selection so that it is highlight.
+B111: C9      		RET               ; [Could have saved one byte by using JP $37CA (ROM 0)]
+              	
+              	
+              	; -----------
+              	; Plot a Line
+              	; -----------
+              	; Entry: H=Line pixel coordinate.
+              	;        L=Column pixel coordinate.
+              	;        B=Offset to line pixel coordinate ($FF, $00 or $01).
+              	;        C=Offset to column pixel coordinate ($FF, $00 or $01).
+              	;        A=number of pixels to plot.
+B112:         	PLOT_LINE:				; WAS 3C28
+B112: F5      		PUSH AF           ; Save registers.
+B113: E5      		PUSH HL           ;
+B114: D5      		PUSH DE           ;
+B115: C5      		PUSH BC           ;
+              	
+B116: 44      		LD   B,H          ; Coordinates to BC.
+B117: 4D      		LD   C,L          ;
+B118: CDE922  		CALL $22E9        ; PLOT_SUB+4. Plot pixel, 
+              	
+B11B: C1      		POP  BC           ; Restore registers.
+B11C: D1      		POP  DE           ;
+B11D: E1      		POP  HL           ;
+B11E: F1      		POP  AF           ;
+              	
+B11F: 09      		ADD  HL,BC        ; Determine coordinates of next pixel.
+B120: 3D      		DEC  A            ;
+B121: 20EF    		JR   NZ,PLOT_LINE ; Repeat for all pixels.
+              	
+B123: C9      		RET               ;
+              	
+              	; -------------------
+              	; My Options Handlers
+              	; -------------------
+B124:         	SD_HNDLR:
+B124: F3      		DI
+              		
+              		; testing a write (page 2, game 5 selection)
+              		;LD A, $5
+              		;LD BC, $021B
+              		;OUT (C), A
+B125: 3E00    		LD A, $0		; first page
+B127: DB1B    		IN A, ($1B)
+              		
+B129: 76      		HALT
+B12A: FB      		EI
+              		
+B12B: C3AEB1  		JP SHOW_FILE_MENU
+              		;;;DI
+              		;;;LD A, $0
+              		;;;IN A, ($1B)
+              		;;;HALT
+              		;;;EI
+              		;...?
+              		; DMA happens that adds file text table for a new menu
+              		; So this should call functions to write this data, and have a whole other menu 
+              	
+B12E:         	ONLN_HNDLR:
+              	
+B12E:         	BASIC_HNDLR:
+              		;SET 5, (IY+$02)		; lower part required to be cleared
+              		;SJP $12A9
+              		
+              		
+              		
+B12E: 21FFFF  		LD HL, $FFFF		;
+B131: CBC6    		SET 0, (HL)			; setting bit 0 of my menu flag to 1, so BASIC is on instead of menu
+              		
+B133: C3B711  		JP $11B7;$1222;$1219;$122E;$11F0;$11B7
+              	
+              	
+              	; -------------------------------
+              	; Menu Key Press Handler - SELECT
+              	; -------------------------------
+              	
+B136:         	SEL_HNDLR:  
+B136: 210DEC  		LD   HL,$EC0D     ; HL points to Editor flags.
+B139: CB8E    		RES  1,(HL)       ; Clear 'displaying menu' flag.
+              	
+B13B: 2B      		DEC  HL           ; HL=$EC0C.
+B13C: 7E      		LD   A,(HL)       ; A=Current menu option index.
+              	
+B13D: 2AEAF6  		LD   HL,($F6EA)   ; HL points to jump table for current menu.
+              		;PUSH HL           ;
+              		;PUSH AF           ;
+              		;CALL L373E        ; Restore menu screen area.														IS THIS NECESSARY?
+              		;POP  AF           ;
+              		;POP  HL           ;
+              	
+B140: CD8FB3  		CALL CALL_ACTION_HNDLR ; Call the item in the jump table corresponding to the
+              						  ; currently selected menu item.
+              		;JP   SHOW_CURSOR  ; Set attribute at editing position so as to show the cursor, and return.
+B143: C9      		RET
+              		
+              	
+              	
+              	; ----------------------------------
+              	; Menu Key Press Handler - CURSOR UP
+              	; ----------------------------------
+B144:         	UP_HNDLR:  
+B144: 37      		SCF               ; Signal move up.
+B145: 1801    		JR   UP_DN_HNDLR  ; Jump ahead to continue.
+              	
+              	; ------------------------------------
+              	; Menu Key Press Handler - CURSOR DOWN
+              	; ------------------------------------
+B147:         	DN_HNDLR:  
+B147: A7      		AND  A            ; Signal moving down.
+              	
+B148:         	UP_DN_HNDLR:  
+B148: 210CEC  		LD   HL,$EC0C     ;
+B14B: 7E      		LD   A,(HL)       ; Fetch current menu index.
+B14C: E5      		PUSH HL           ; Save it.
+              	
+B14D: 2AECF6  		LD   HL,($F6EC)   ; Address of text for current menu.
+B150: 0E00    		LD   C, $00       ; C for main menu
+B152: DC6CB3  		CALL C,MOVE_UP    ; Call if moving up.
+B155: D47BB3  		CALL NC,MOVE_DN   ; Call if moving down.
+              	
+B158: E1      		POP  HL           ; HL=Address of current menu index store.
+B159: 77      		LD   (HL),A       ; Store the new menu index.
+              	
+              	; Comes here to complete handling of Menu cursor up and down. Also as the handler routines
+              	; for Edit Menu return to 128 BASIC option and Calculator menu return to Calculator option,
+              	; which simply make a return.
+B15A: 37      		SCF               ;
+B15B: C9      		RET               ;
+              			
+              	
+B15C:         	MENU_KEYS_ACTION_TBL:  
+B15C: 06      		DEFB $06          ; Number of entries.
+              		
+B15D: 0B      		DEFB $0B          ; Key code: Cursor up.
+B15E: 44B1    		DEFW UP_HNDLR     ; MENU-UP handler routine.
+              		;DEFB $34          ; Joystick 2 UP
+              		;DEFW UP_HNDLR     ; MENU-UP handler routine.
+B160: 39      		DEFB $39          ; Joystick 1 UP
+B161: 44B1    		DEFW UP_HNDLR     ; MENU-UP handler routine.
+              		
+B163: 0A      		DEFB $0A          ; Key code: Cursor down.
+B164: 47B1    		DEFW DN_HNDLR     ; MENU-DOWN handler routine.
+              		;DEFB $33          ; Joystick 2 DOWN
+              		;DEFW DN_HNDLR     ; MENU-DOWN handler routine.
+B166: 38      		DEFB $38          ; Joystick 1 DOWN
+B167: 47B1    		DEFW DN_HNDLR     ; MENU-DOWN handler routine.
+              		
+              		;DEFB $07          ; Key code: Edit.
+              		;DEFW SEL_HNDLR ; MENU-SELECT handler routine.
+B169: 0D      		DEFB $0D          ; Key code: Enter.
+B16A: 36B1    		DEFW SEL_HNDLR ; MENU-SELECT handler routine.
+              		;DEFB $35          ; Joystick 2 FIRE
+              		;DEFW SEL_HNDLR ; MENU-SELECT handler routine.
+B16C: 30      		DEFB $30          ; Joystick 1 FIRE
+B16D: 36B1    		DEFW SEL_HNDLR ; MENU-SELECT handler routine.
+              	
+              	
+B16F:         	MENU_JMP_TBL:  		 ;; WAS 3CC6
+B16F: 03      		DEFB $03          ; Number of entries.
+B170: 00      		DEFB $00
+B171: 24B1    		DEFW SD_HNDLR     ; SD Loader option handler.
+B173: 01      		DEFB $01
+B174: 2EB1    		DEFW ONLN_HNDLR   ; Online option handler
+B176: 02      		DEFB $02
+B177: 2EB1    		DEFW BASIC_HNDLR  ; BASIC option handler.
+              		
+              		
+B179:         	MENU_TEXT_TBL:		  ; WAS 3CA6
+B179: 04      		DEFB $04          ; Number of entries.
+B17A: 46757369		DEFM "Fusion  "   ; Menu title.
+B17E: 6F6E2020	
+B182: FF      	    DEFB $FF
+B183:         	MENU_TEXT_OPTION_1:  
+B183: 5344204C		DEFM "SD Loade"
+B187: 6F616465	
+B18B: F2      	    DEFB 'r'+$80
+B18C:         	MENU_TEXT_OPTION_2:  
+B18C: 4F6E6C69		DEFM "Onlin"
+B190: 6E      	
+B191: E5      		DEFB 'e'+$80
+B192:         	MENU_TEXT_OPTION_3:  
+B192: 42415349		DEFM "BASI"
+B196: C3      	    DEFB 'C'+$80
+              	
+B197: A0      	    DEFB ' '+$80      ; $A0. End marker.
+              		
+              		
+B198:         	MENU_TITLE_COLORS_TBL:  ; WAS 3C98
+B198: 160A09  		DEFB $16, $0A, $09 ; AT 10,9;  TODO CHANGE?!?!
+B19B: 1500    		DEFB $15, $00      ; OVER 0;
+B19D: 1400    		DEFB $14, $00      ; INVERSE 0;
+B19F: 1007    		DEFB $10, $07      ; INK 7;
+B1A1: 1100    		DEFB $11, 00       ; PAPER 0;
+B1A3: 1301    		DEFB $13, $01      ; BRIGHT 1;
+B1A5: FF      		DEFB $FF           ;
+              		
+B1A6:         	MENU_TITLE_SPACE_TBL:  ; WAS 3C42
+B1A6: 1100    		DEFB $11, $00      ; PAPER 0;
+B1A8: 20      		DEFB ' '           ;
+B1A9: 1107    		DEFB $11, $07      ; PAPER 7;
+B1AB: 1000    		DEFB $10, $00      ; INK 0;
+B1AD: FF      		DEFB $FF           ;
+              	
+              	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+              	; MENU 2
+              	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+              	
+              	; --------------
+              	; Show File Menu
+              	; --------------
+B1AE:         	SHOW_FILE_MENU:	; WAS L259F	
+              		;LD HL, MENU_JMP_TBL	; Jump table for Main Menu
+              		;LD ($F6EA), HL	; Store current menu jump table address
+B1AE: 2100C0  		LD HL, $C000	; File Menu text
+B1B1: 22ECF6  		LD ($F6EC), HL	; Store current menu text table address
+              	
+B1B4: E5      		PUSH HL
+              		
+B1B5: 210DEC  		LD HL, $EC0D	; Editor flags
+B1B8: CBCE    		SET 1, (HL)		; Indicate 'menu displayed'
+B1BA: CBA6    		RES 4, (HL)		; Signal return to main menu
+B1BC: 2B      		DEC HL			; current menu index
+B1BD: 3600    		LD (HL), $00	; select top entry
+              		
+B1BF: 2B      		DEC HL
+B1C0: 3600    		LD (HL), $00	; select page 0
+              		;LD HL, $EC0B
+              		;LD (HL), $00	; select page 0
+              		
+B1C2: 210000  		LD HL, $0		; clearing junk made by non maskable interrupt routine (NIOS injecting return code)
+B1C5: 220040  		LD ($4000), HL	;
+B1C8: E1      		pop HL
+              		
+B1C9:         	DISPLAY_FILE_MENU_CALL:
+B1C9: CD19B2  		CALL DISPLAY_FILE_MENU ; Display menu and highlight first item DISPLAY MENU ROUTINE ADDRESS
+              		
+B1CC: C3CFB1  		JP FILE_MENU_WAITING_LOOP		; Jump ahead to enter the main key waiting and processing
+              	
+              	
+              	; -----------------
+              	; File Menu Waiting Loop
+              	; -----------------
+              	; Enter a loop to wait for a key press. Handles key presses for menus, the Calculator and the Editor.
+B1CF:         	FILE_MENU_WAITING_LOOP:	; WAS L2653
+B1CF: 31FFEB  		LD   SP,$EBFF     ; TSTACK. Use temporary stack.													TSTACK = EBFF now
+              	
+B1D2: CDF1B3  		CALL RESET_L_MODE ; Reset 'L' mode.
+              	
+B1D5: CDBEB3  		CALL WAIT_KEY_PRESS ; Wait for a key. [Note that it is possible to change CAPS LOCK mode whilst on a menu]
+B1D8: F5      		PUSH AF           ; Save key code.
+              	
+B1D9: 3A395C  		LD   A,($5C39)    ; PIP. Tone of keyboard click.
+B1DC: CDB0B3  		CALL KEY_CLICK_SOUND ; Produce a key click noise.
+              	
+B1DF: F1      		POP  AF           ; Retrieve key code.
+B1E0: 21F7B2  		LD   HL, FILE_MENU_KEYS_ACTION_TBL
+B1E3: CD22B3  		CALL PROCESS_KEY_PRESS ; Process the key press.
+              	
+B1E6: 18E7    		JR   FILE_MENU_WAITING_LOOP ; Wait for another key.
+              	
+              	
+              	; ------------
+              	; Print Stripe (NEW)
+              	; ------------
+              	; A=0 if no speccy stripe
+              	; HL=Address of text.
+              	; BC=Coordinates of stripe
+B1E8:         	PRINT_BLACK_STRIPE:
+              	
+B1E8: 57      		LD   D, A
+B1E9: D5      		PUSH DE
+              	
+B1EA: CD66B4  		CALL PRINT_AT_B_C
+              		
+B1ED: E5      		PUSH HL           ;
+B1EE: 2116B3  		LD   HL,FILE_MENU_TITLE_COLORS_TBL ; Set title colours.		
+B1F1: CD6EB4  		CALL PRINT_STRING ; Print them.
+B1F4: E1      		POP  HL           ;
+              		
+B1F5: D1      		POP  DE
+B1F6: 061F    		LD   B, $1F ; num of columns
+B1F8: AF      		XOR A             ; A = 0
+B1F9: BA      		CP  D             ; A - D for flag setting (jump ahead)
+B1FA: D5      		PUSH DE
+B1FB: 2802    		JR   Z, CHAR_STRIPE
+B1FD: 061A    		LD   B, $1A ; num of columns
+B1FF:         	CHAR_STRIPE:
+B1FF: 7E      		LD   A, (HL)
+B200: 23      		INC HL
+B201: FEFF    		CP   $FF ;; end char
+B203: 2803    		JR   Z, TRAILING_SPACES_STRIPE
+              		
+B205: D7      		RST  10H
+B206: 10F7    		DJNZ CHAR_STRIPE
+B208:         	TRAILING_SPACES_STRIPE:
+B208: 3E20    		LD   A, $20
+B20A: D7      		RST  10H
+B20B: 10FB    		DJNZ TRAILING_SPACES_STRIPE
+              		
+B20D: D1      		POP DE
+B20E: AF      		XOR A
+B20F: BA      		CP  D
+B210: 2806    		JR  Z, PRINT_BLACK_STRIPE_END
+B212: CD08B4  		CALL PRINT_STRIPES
+              		
+B215: 3E20    		LD   A, $20
+B217: D7      		RST  10H
+              		
+B218:         	PRINT_BLACK_STRIPE_END:
+B218: C9      		RET
+              	
+              	
+              	; ------------
+              	; Display File Menu
+              	; ------------
+              	; HL=Address of menu text.
+B219:         	DISPLAY_FILE_MENU:			; WAS L36A8
+              	
+B219: 5E      		LD   E,(HL)       ; Fetch number of table entries.
+B21A: 23      		INC  HL           ; Point to first entry.
+              		
+B21B: 1D      		DEC  E
+B21C: 3E10    		LD   A, $10       ; Max number of entries
+B21E: 93      		SUB  E            ; A=number of empty entries
+B21F: 57      		LD   D, A       
+              		
+B220: 010003  		LD   BC, $0300
+B223: 3E01    		LD   A, $1
+B225: D5      		PUSH DE 
+B226: CDE8B1  		CALL PRINT_BLACK_STRIPE ; Prints stripe with title 
+              	
+              	;;;;;;;;;;;;;;;;;;;
+              	
+B229: E5      		PUSH HL           ;
+B22A: 21A6B1  		LD   HL,MENU_TITLE_SPACE_TBL ; setting color for rest of text
+B22D: CD6EB4  		CALL PRINT_STRING ; Print it.
+B230: E1      		POP  HL           ; HL=Address of first menu item text.
+              	
+B231: 010004  		LD   BC,$0400     ;
+B234: CD66B4  		CALL PRINT_AT_B_C ; Perform 'Print AT 4,0;' (this is the top left position of the menu).
+              		
+B237:         	ITEM2:
+B237: C5      		PUSH BC           ; Save row print coordinates.
+              	
+B238: 061F    		LD   B,$1F        ; Number of columns in a row of the menu.
+              		
+B23A:         	CHAR2:  
+B23A: 7E      		LD   A,(HL)       ; Fetch menu item character.
+B23B: 23      		INC  HL           ;
+B23C: FE80    		CP   $80          ; End marker found?
+B23E: 3003    		JR   NC,CHAR_END2  ; Jump if end of text found.
+              	
+B240: D7      		RST  10H          ; Print menu item character
+B241: 10F7    		DJNZ CHAR2         ; Repeat for all characters in menu item text.
+              		
+B243:         	CHAR_END2:
+B243: E67F    		AND  $7F          ; Clear bit 7 to yield a final text character.
+B245: D7      		RST  10H          ; Print it.
+              		
+B246:         	TRAILING_SPACES2:
+B246: 3E20    		LD   A,$20        ;
+B248: D7      		RST  10H          ; Print trailing spaces
+B249: 10FB    		DJNZ TRAILING_SPACES2 ; Until all columns filled.
+              			
+B24B: C1      		POP  BC           ; Fetch row print coordinates.
+B24C: 04      		INC  B            ; Next row.
+B24D: CD66B4  		CALL PRINT_AT_B_C ; Print AT.
+              	
+B250: 1D      		DEC  E            ;
+B251: 20E4    		JR   NZ,ITEM2      ; Repeat for all menu items.
+              		
+B253: D1      		POP  DE
+B254: AF      		XOR  A
+B255: BA      		CP   D
+B256: 2810    		JR   Z, EMPTY_ENTRIES_END
+B258:         	EMPTY_ENTRIES:
+B258: C5      		PUSH BC           ; Save row print coordinates.
+B259: 061F    		LD   B, $1F
+              		
+B25B:         	EMPTY_ENTRIES_TRAILING:
+B25B: 3E20    		LD   A,$20        ;
+B25D: D7      		RST  10H          ; Print trailing spaces
+B25E: 10FB    		DJNZ EMPTY_ENTRIES_TRAILING ; Until all columns filled.
+              		
+B260: C1      		POP  BC           ; Fetch row print coordinates.
+B261: 04      		INC  B            ; Next row.
+B262: CD66B4  		CALL PRINT_AT_B_C ; Print AT.
+              		
+B265: 15      		DEC  D
+B266: 20F0    		JR   NZ, EMPTY_ENTRIES
+              	
+B268:         	EMPTY_ENTRIES_END:	
+              	
+B268: E5      		PUSH HL           ;
+B269: 2116B3  		LD   HL,FILE_MENU_TITLE_COLORS_TBL ; setting color for rest of text
+B26C: CD6EB4  		CALL PRINT_STRING ; Print it.
+B26F: E1      		POP  HL           ; HL=Address of first menu item text.
+              		
+              		;LD HL, FILE_MENU_TITLE_COLORS_TBL ; address of a ' '
+              		
+              		; HL = end of file list text, now at page string 
+B270: 010014  		LD BC, $1400	   ; coordinates
+B273: AF      		XOR A
+B274: CDE8B1  		CALL PRINT_BLACK_STRIPE  ; Prints stripe
+              	
+              	
+B277: AF      		XOR  A            ; A=Index of menu option to highlight.
+B278: 0E01    		LD   C, $01       ; C for not main menu
+B27A: CD37B3  		CALL TOGGLE_MENU_HIGHLIGHT ; Toggle menu option selection so that it is highlight.
+B27D: C9      		RET               ; [Could have saved one byte by using JP $37CA (ROM 0)]
+              	
+              	
+              	; -------------------------------
+              	; Menu Key Press Handler - SELECT
+              	; -------------------------------
+              	
+B27E:         	FILE_SEL_HNDLR:
+B27E: F3      		DI
+              		
+              		;LD   HL,$EC0D     ; HL points to Editor flags.
+              		;RES  1,(HL)       ; Clear 'displaying menu' flag.
+              	
+              		;DEC  HL           ; HL=$EC0C.
+B27F: 210CEC  		LD   HL,$EC0C
+B282: 46      		LD   B,(HL)       ; B=Current menu option index (game number in page)
+B283: 0E1B    		LD   C, $1B		  ; SD interface
+              	
+B285: 3A0AEC  		LD   A, ($EC0A)   ; page menu type
+B288: A7      		AND  A            ; for checking if A is 0
+B289: 2802    		JR   Z, FILE_SEL_HNDLR_CONT
+B28B: 0E1D    		LD   C, $1D		  ; Online interface
+B28D:         	FILE_SEL_HNDLR_CONT:
+B28D: 78      		LD   A, B		  ; A=Current menu option index (game number in page)
+B28E: 2B      		DEC  HL           ; HL=$EC0B.
+B28F: 46      		LD   B, (HL)	  ; B=Current menu page
+              		
+B290: ED79    		OUT (C), A        ; 
+B292: 31FF57  		LD	SP, $57FF     ; moving SP to not mess with real data
+B295: 76      		HALT
+              		; Nothing necessary here, since the next thing that happens is the routine loading values to the regs.
+              		; by the time the file is loaded, this code will no longer be here
+              		
+              		;JP   SHOW_CURSOR  ; Set attribute at editing position so as to show the cursor, and return.
+              		
+              		
+              		
+              	; ---------------------------------------
+              	; File Menu Key Press Handler - CURSOR UP
+              	; ---------------------------------------
+B296:         	FILE_UP_HNDLR:
+B296: 37      		SCF               ; Signal move up.
+B297: 1801    		JR   FILE_UP_DN_HNDLR  ; Jump ahead to continue.
+              	
+              	; -----------------------------------------
+              	; File Menu Key Press Handler - CURSOR DOWN
+              	; -----------------------------------------
+B299:         	FILE_DN_HNDLR:
+B299: A7      		AND  A            ; Signal moving down.
+              	
+B29A:         	FILE_UP_DN_HNDLR:
+B29A: 210CEC  		LD   HL,$EC0C     ;
+B29D: 7E      		LD   A,(HL)       ; Fetch current menu index.
+B29E: E5      		PUSH HL           ; Save it.
+              	
+B29F: 2AECF6  		LD   HL,($F6EC)   ; Address of text for current menu.
+B2A2: 0E01    		LD   C, $01       ; C for not main menu
+B2A4: DC6CB3  		CALL C,MOVE_UP    ; Call if moving up.
+B2A7: D47BB3  		CALL NC,MOVE_DN   ; Call if moving down.
+              	
+B2AA: E1      		POP  HL           ; HL=Address of current menu index store.
+B2AB: 77      		LD   (HL),A       ; Store the new menu index.
+              	
+              	; Comes here to complete handling of Menu cursor up and down. Also as the handler routines
+              	; for Edit Menu return to 128 BASIC option and Calculator menu return to Calculator option,
+              	; which simply make a return.
+B2AC: 37      		SCF               ;
+B2AD: C9      		RET               ;
+              			
+              		
+              	; ----------------------------------
+              	; Menu Key Press Handler - CURSOR RIGHT
+              	; ----------------------------------
+B2AE:         	RT_HNDLR:
+              		;SCF               ; Signal move up.
+B2AE: 2109EC  		LD HL, $EC09     ; address to number of pages left, 0 if last page
+B2B1: 7E      		LD A, (HL)         ; A = number of pages left
+B2B2: C600    		ADD A, $0         ; to affect Z flag
+B2B4: 2808    		JR Z, NO_RT
+              		
+B2B6: 210BEC  		LD   HL, $EC0B    ; 
+B2B9: 7E      		LD   A, (HL)      ; Fetch current page number
+B2BA: 3C      		INC  A            ;
+B2BB: 77      		LD   (HL), A      ; increment page number and store it back 
+B2BC: 180C    		JR   RT_LT_HNDLR  ; Jump ahead to continue.
+B2BE:         	NO_RT:
+B2BE: C9      		RET
+              		
+              	
+              	; ------------------------------------
+              	; Menu Key Press Handler - CURSOR LEFT
+              	; ------------------------------------
+B2BF:         	LT_HNDLR:
+B2BF: 210BEC  		LD   HL, $EC0B    ; 
+B2C2: 7E      		LD   A, (HL)      ; Fetch current page number
+B2C3: FE00    		CP   $0
+B2C5: 2001    		JR   NZ, LT_HNDLR_DEC ; check if it is zero
+B2C7: C9      		RET
+              		
+B2C8:         	LT_HNDLR_DEC:
+B2C8: 3D      		DEC  A            ;
+B2C9: 77      		LD   (HL), A      ; decrement page number and store it back 
+              		
+B2CA:         	RT_LT_HNDLR:
+              	
+B2CA: 77      		LD   (HL),A       ; Store the new page number.
+B2CB: 23      		INC  HL			  ; addr to current menu index
+              		
+B2CC: F5      		PUSH AF
+              		
+B2CD: 7E      		LD   A, (HL)      ; A=old menu index
+              		
+              		
+B2CE: 0E01    		LD   C, $01       ; C for not main menu
+B2D0: CD37B3  		CALL TOGGLE_MENU_HIGHLIGHT ; Toggle old menu item selection to de-highlight it.
+B2D3: 3600    		LD   (HL), $0     ; reset menu index to 0
+B2D5: AF      		XOR A
+B2D6: CD37B3  		CALL TOGGLE_MENU_HIGHLIGHT ; Toggle top menu item selection to highlight it.
+              	
+B2D9: F1      		POP AF 
+              	
+B2DA: 47      		LD   B, A		  ; loading page number to B, to put on top address byte later
+B2DB: 0E1B    		LD   C, 0x1B
+B2DD: 210AEC  		LD   HL, $EC0A    ; menu type addr
+B2E0: CB46    		BIT  0, (HL)
+B2E2: 2802    		JR   Z, RT_LT_PAGE_CONTINUE
+B2E4: 0E1D    		LD   C, 0x1D
+B2E6:         	RT_LT_PAGE_CONTINUE:
+B2E6: F3      		DI
+B2E7: ED78    		IN   A, (C)       ; the A doesn't matter
+B2E9: 76      		HALT
+B2EA: FB      		EI
+B2EB: 210000  		LD HL, $0
+B2EE: 220040  		LD ($4000), HL
+B2F1: 2AECF6  		LD HL, ($F6EC)
+B2F4: C3C9B1  		JP   DISPLAY_FILE_MENU_CALL
+              		
+              		
+B2F7:         	FILE_MENU_KEYS_ACTION_TBL:
+B2F7: 0A      		DEFB $0A          ; Number of entries.
+              		
+B2F8: 0B      		DEFB $0B          ; Key code: Cursor up.
+B2F9: 96B2    		DEFW FILE_UP_HNDLR     ; MENU-UP handler routine.
+              		;DEFB $34          ; Joystick 2 UP
+              		;DEFW FILE_UP_HNDLR     ; MENU-UP handler routine.
+B2FB: 39      		DEFB $39          ; Joystick 1 UP
+B2FC: 96B2    		DEFW FILE_UP_HNDLR     ; MENU-UP handler routine.
+              	
+B2FE: 0A      		DEFB $0A          ; Key code: Cursor down.
+B2FF: 99B2    		DEFW FILE_DN_HNDLR     ; MENU-DOWN handler routine.
+              		;DEFB $33          ; Joystick 2 DOWN
+              		;DEFW FILE_DN_HNDLR     ; MENU-DOWN handler routine.
+B301: 38      		DEFB $38          ; Joystick 1 DOWN
+B302: 99B2    		DEFW FILE_DN_HNDLR     ; MENU-DOWN handler routine.
+              	
+B304: 09      		DEFB $09          ; Key code: Cursor right.
+B305: AEB2    		DEFW RT_HNDLR     ; right handler routine.
+              		;DEFB $32          ; Joystick 2 RIGHT
+              		;DEFW RT_HNDLR     ; right handler routine.
+B307: 37      		DEFB $37          ; Joystick 1 RIGHT
+B308: AEB2    		DEFW RT_HNDLR     ; right handler routine.
+              		
+B30A: 08      		DEFB $08          ; Key code: Cursor left.
+B30B: BFB2    		DEFW LT_HNDLR     ; left handler routine.
+              		;DEFB $31          ; Joystick 2 LEFT
+              		;DEFW LT_HNDLR     ; left handler routine.
+B30D: 36      		DEFB $36          ; Joystick 1 LEFT
+B30E: BFB2    		DEFW LT_HNDLR     ; left handler routine.
+              		
+              		;DEFB $07          ; Key code: Edit.	
+              		;DEFW FILE_SEL_HNDLR ; MENU-SELECT handler routine.
+B310: 0D      		DEFB $0D          ; Key code: Enter.
+B311: 7EB2    		DEFW FILE_SEL_HNDLR ; MENU-SELECT handler routine.
+              		;DEFB $35          ; Joystick 2 FIRE
+              		;DEFW FILE_SEL_HNDLR ; MENU-SELECT handler routine.
+B313: 30      		DEFB $30          ; Joystick 1 FIRE
+B314: 7EB2    		DEFW FILE_SEL_HNDLR ; MENU-SELECT handler routine.
+              		
+              		
+              	;FILE_MENU_TITLE_SPACE_TBL:  ; WAS 3C42
+              	;	DEFB $13, $01      ; BRIGHT 1;
+              	;	DEFB $11, $07      ; PAPER 7;
+              	;	DEFB $10, $00      ; INK 0;
+              	;	DEFB $FF           ;
+              		
+B316:         	FILE_MENU_TITLE_COLORS_TBL:  ; WAS 3C98
+              		;DEFB $16, $04, $00 ; AT 4,0;  CHANGED
+              		;DEFB $16, $02, $00 ; AT 2,0;  CHANGED
+B316: 1500    		DEFB $15, $00      ; OVER 0;
+B318: 1400    		DEFB $14, $00      ; INVERSE 0;
+B31A: 1007    		DEFB $10, $07      ; INK 7;
+B31C: 1100    		DEFB $11, 00       ; PAPER 0;
+B31E: 1301    		DEFB $13, $01      ; BRIGHT 1;
+B320: 20      		DEFB ' '
+B321: FF      		DEFB $FF           ;
+              		
+              	
+              	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+              	; UPDATED MENU 1 ROUTINES:
+              	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+              	
+              	; -----------------
+              	; Process Key Press
+              	; -----------------
+              	; Handle key presses for the menus and the Editor.
+              	; Entry: A=Key code.
+              	;        HL=address to menu keys lookup table
+              	;        Zero flag set if a menu is being displayed.
+B322:         	PROCESS_KEY_PRESS:  																						; CHANGED FOR BOTH TO WORK (parameter)
+B322: E5      		PUSH HL
+B323: 210DEC  		LD   HL,$EC0D     ; Editor flags.
+B326: CB4E    		BIT  1,(HL)       ; Is a menu is displayed?
+B328: E1      		POP  HL
+B329: F5      		PUSH AF           ; Save key code and flags.
+              	
+              		;JR   NZ,PRESS_MENU_DISPLAYED ; Jump if menu is being displayed.
+              	
+              		;LD   HL,L2537     ; Use editing keys lookup table.												NO 128K BASIC HERE, SO THIS IS UNNECESSARY?
+              	
+              	;PRESS_MENU_DISPLAYED:  
+B32A: CD8FB3  		CALL CALL_ACTION_HNDLR ; Find and call the action handler for this key press.
+B32D: 2005    		JR   NZ,PRESS_MENU_NO  ; Jump ahead if no match found.
+              	
+B32F: D436B3  		CALL NC,ERR_BEEP     ; If required then produce error beep.
+              	
+B332: F1      		POP  AF           ; Restore key code.
+B333: C9      		RET               ;
+              	;No action defined for key code
+              	
+B334:         	PRESS_MENU_NO:  
+B334: F1      		POP  AF           ; Restore key code and flags.
+              		;JR   Z,PRESS_MENU_NDISPLAYED ; Jump if menu is not being displayed.							NO EDITOR MENU EXISTS HERE
+              	
+              	;A menu is being displayed, so just ignore key press
+              	
+              		;XOR  A            ; Select 'L' mode.
+              		;LD   ($5C41),A    ; MODE.
+B335: C9      		RET               ;
+              	
+              	;A menu is not being displayed
+              	
+              	;PRESS_MENU_NDISPLAYED:  
+              	;	LD   HL,$EC0D     ; Editor flags.
+              	;	BIT  0,(HL)       ; Is the Screen Line Edit Buffer is full?
+              	;	JR   Z,PRESS_MENU_BUF_NFULL ; Jump if not to process the key code.
+              	
+              	;The buffer is full so ignore the key press
+              	
+              	;	CALL ERR_BEEP        ; Produce error beep.
+              	;	RET               ; [Could have save a byte by using JP $26E7 (ROM 0)]
+              	
+              	;PRESS_MENU_BUF_NFULL: 
+              	;	CP   $A3          ; Was it a supported function key code?
+              	;	JR   NC,FILE_MENU_WAITING_LOOP ; Ignore by jumping back to wait for another key.
+              						  ; [*BUG* - This should be RET NC since it was called from the loop at $2653 (ROM 0). Repeatedly pressing an unsupported
+              						  ; key will result in a stack memory leak and eventual overflow. Credit: John Steven (+3), Paul Farrow (128)]
+              		
+              	
+              	;	JP   KEY_CHAR_CODE_HNDLR ; Jump forward to handle the character key press.
+              		
+              		
+B336:         	ERR_BEEP:
+B336: C9      		RET	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; TODO??
+              		
+              		
+              	; --------------------------------------
+              	; Toggle Menu Option Selection Highlight
+              	; --------------------------------------
+              	; Entry: A=Menu option index to highlight.
+              	;        C=00 if main menu 
+B337:         	TOGGLE_MENU_HIGHLIGHT:	;; WAS 3C06 (L37CA)	
+B337: F5      		PUSH AF           ; Save registers.
+B338: E5      		PUSH HL           ;
+B339: D5      		PUSH DE           ;
+B33A: C5      		PUSH BC
+              	
+B33B: 47      		LD   B, A         ; Saving A to B
+B33C: 218058  		LD   HL,$5880     ; First attribute byte at position (4,0).
+B33F: AF      		XOR  A
+B340: B9      		CP   C
+B341: 78      		LD   A, B         ; Restoring A
+B342: 2003    		JR   NZ, TOGGLE_FILE_MENU_HIGHLIGHT
+B344: 216959  	    LD   HL,$5969     ; First attribute byte at position (12,9).
+              		
+B347:         	TOGGLE_FILE_MENU_HIGHLIGHT:
+B347: 112000  		LD   DE,$0020     ; The increment for each row.
+B34A: A7      		AND  A            ;
+B34B: 2804    		JR   Z,HIGHED     ; Jump ahead if highlighting the first entry.
+              	
+B34D:         	LOOP:  
+B34D: 19      		ADD  HL,DE        ; Otherwise increase HL
+B34E: 3D      		DEC  A            ; for each row.
+B34F: 20FC    		JR   NZ,LOOP      ;
+              	
+B351:         	HIGHED:  
+B351: 3E78    		LD   A,$78        ; Flash 0, Bright 1, Paper 7, Ink 0 = Bright white.
+B353: BE      		CP   (HL)         ; Is the entry already highlighted?
+B354: 2002    		JR   NZ,HIGHLIGHT ; Jump ahead if not.
+              	
+B356: 3E68    		LD   A,$68        ; Flash 0, Bright 1, Paper 5, Ink 0 = Bright cyan.
+              	
+B358:         	HIGHLIGHT:  
+B358: 47      		LD   B, A         ; Saving A to B
+B359: 1620    		LD   D,$20        ; There are 32 columns to set.
+B35B: AF      		XOR  A
+B35C: B9      		CP   C
+B35D: 78      		LD   A, B         ; Restoring A
+B35E: 2002    		JR   NZ, NEXT_COL ; jump if we aren't highlighting something in the MAIN menu
+B360: 160E    		LD   D,$0E        ; There are 14 columns to set.
+              		
+              	
+B362:         	NEXT_COL: 
+B362: 77      		LD   (HL),A       ; Set the attributes for all columns.
+B363: 23      		INC  HL           ;
+B364: 15      		DEC  D            ;
+B365: 20FB    		JR   NZ,NEXT_COL  ;
+              	
+B367: C1      		POP  BC
+B368: D1      		POP  DE           ; Restore registers.
+B369: E1      		POP  HL           ;
+B36A: F1      		POP  AF           ;
+B36B: C9      		RET               ;
+              		
+              		
+              	; ------------
+              	; Move Up Menu
+              	; ------------
+              	; C=00 if main menu
+B36C:         	MOVE_UP:
+B36C: CD37B3  		CALL TOGGLE_MENU_HIGHLIGHT ; Toggle old menu item selection to de-highlight it.
+B36F: 3D      		DEC  A            ; Decrement menu index.
+B370: F276B3  		JP   P,MORE_UP    ; Jump if not exceeded top of menu.
+              	
+B373: 7E      		LD   A,(HL)       ; Fetch number of menu items.
+B374: 3D      		DEC  A            ; Ignore the title.
+B375: 3D      		DEC  A            ; Make it indexed from 0.
+              	
+B376:         	MORE_UP:
+B376: CD37B3  		CALL TOGGLE_MENU_HIGHLIGHT ; Toggle new menu item selection to highlight it.
+B379: 37      		SCF               ; Ensure carry flag is set to prevent immediately
+B37A: C9      		RET               ; calling menu down routine upon return.
+              	
+              	; --------------
+              	; Move Down Menu
+              	; --------------
+              	; C=00 if main menu
+B37B:         	MOVE_DN:
+B37B: D5      		PUSH DE           ; Save DE.
+              	
+B37C: CD37B3  		CALL TOGGLE_MENU_HIGHLIGHT ; Toggle old menu item selection to de-highlight it.
+              	
+B37F: 3C      		INC  A            ; Increment menu index.
+B380: 57      		LD   D,A          ; Save menu index.
+              	
+B381: 7E      		LD   A,(HL)       ; fetch number of menu items.
+B382: 3D      		DEC  A            ; Ignore the title.
+B383: 3D      		DEC  A            ; Make it indexed from 0.
+B384: BA      		CP   D            ; Has bottom of menu been exceeded?
+B385: 7A      		LD   A,D          ; Fetch menu index.
+B386: F28AB3  		JP   P,MORE_DN    ; Jump if bottom menu not exceeded.
+              	
+B389: AF      		XOR  A            ; Select top menu item.
+              	
+B38A:         	MORE_DN:
+B38A: CD37B3  		CALL TOGGLE_MENU_HIGHLIGHT ; Toggle new menu item selection to highlight it.
+              	
+B38D: D1      		POP  DE           ; Restore DE.
+B38E: C9      		RET               ;
+              		
+              		
+              	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+              	; COMMON
+              	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+              	
+              	; ---------------------------
+              	; Call Action Handler Routine
+              	; ---------------------------
+              	; If the code in A matches an entry in the table pointed to by HL
+              	; then execute the action specified by the entry's routine address.
+              	; Entry: A=Code.
+              	;        HL=Address of action table.
+              	; Exit : Zero flag reset if no match found.
+              	;        Carry flag reset if an error beep is required, or to signal no suitable action handler found.
+              	;        HL=Address of next table entry if a match was found.
+B38F:         	CALL_ACTION_HNDLR:  ; WAS L3FCE
+B38F: C5      		PUSH BC           ; Save registers.
+B390: D5      		PUSH DE           ;
+              	
+B391: 46      		LD   B,(HL)       ; Fetch number of table entries.
+B392: 23      		INC  HL           ; Point to first entry.
+              	
+B393:         	CALL_ACTION_NEXT_ENTRY:  
+B393: BE      		CP   (HL)         ; Possible match for A?
+B394: 23      		INC  HL           ;
+B395: 5E      		LD   E,(HL)       ;
+B396: 23      		INC  HL           ;
+B397: 56      		LD   D,(HL)       ; DE=Address to call if a match.
+B398: 2808    		JR   Z,CALL_ACTION_MATCH ; Jump if a match.
+              	
+B39A: 23      		INC  HL           ; Next table entry.
+B39B: 10F6    		DJNZ CALL_ACTION_NEXT_ENTRY ; Repeat for next table entry.
+              	
+              	;No match found
+              	
+B39D: 37      	        SCF               ; Return with carry flag reset to signal an error beep is required
+B39E: 3F      	        CCF               ; and with the zero flag reset to signal a match was not found.
+              	
+B39F: D1      	        POP  DE           ; Restore registers.
+B3A0: C1      	        POP  BC           ;
+B3A1: C9      	        RET               ;
+              	
+              	;Found a match
+              	
+B3A2: EB      	CALL_ACTION_MATCH:  EX   DE,HL        ; HL=Action routine to call.
+              	
+B3A3: D1      	        POP  DE           ;
+B3A4: C1      	        POP  BC           ;
+              	
+B3A5: CDAFB3  	        CALL CALL_ACTION ; Indirectly call the action handler routine.
+B3A8: 3802    	        JR   C,CALL_ACTION_NO_ERR ; Jump if no error beep is required.
+              	
+B3AA: BF      	        CP   A            ; Set zero flag to indicate a match was found.
+B3AB: C9      	        RET               ; Exit with carry flag reset to indicate error beep required.
+              	
+B3AC: BF      	CALL_ACTION_NO_ERR:  CP   A            ; Set zero flag to indicate a match was found.
+B3AD: 37      	        SCF               ; Signal no error beep required.
+B3AE: C9      	        RET               ;
+              	
+B3AF: E9      	CALL_ACTION:  JP   (HL)         ; Jump to the action handler routine.
+              	
+              	
+              	; ---------------------------
+              	; Key Click Sound
+              	; ---------------------------
+              	
+B3B0:         	KEY_CLICK_SOUND:		; WAS 3B47
+B3B0: DDE5    		PUSH IX           ;
+              	
+B3B2: 1600    		LD   D,$00        ; Pitch.
+B3B4: 5F      		LD   E,A          ;
+B3B5: 21800C  		LD   HL,$0C80     ; Duration.
+              	
+B3B8: CDB503  		CALL $03B5        ; BEEPER. Produce a tone.
+              		;RST  28H          ;																		OLD
+              		;DEFW $03B5       ; BEEPER. Produce a tone.
+              	
+B3BB: DDE1    		POP  IX           ;
+B3BD: C9      		RET               ;
+              	
+              	
+              	; --------------------
+              	; Wait for a Key Press
+              	; --------------------
+              	; Exit: A holds key code.
+B3BE:         	WAIT_KEY_PRESS:			; WAS 3B55
+B3BE: E5      		PUSH HL           ; Preserve contents of HL.
+              	
+B3BF:         	WAIT_KEY:  
+B3BF: 213B5C  		LD   HL,$5C3B     ; FLAGS.
+              	
+B3C2:         	KEY_WAIT_LOOP:  
+B3C2: CB6E    		BIT  5,(HL)       ;
+B3C4: 28FC    		JR   Z,KEY_WAIT_LOOP ; Wait for a key press.
+              	
+B3C6: CBAE    		RES  5,(HL)       ; Clear the new key indicator flag.
+              	
+B3C8: 3A085C  		LD   A,($5C08)    ; Fetch the key pressed from LAST_K.
+B3CB: 21415C  		LD   HL,$5C41     ; MODE.
+B3CE: CB86    		RES  0,(HL)       ; Remove extended mode.
+              	
+B3D0: FE20    		CP   $20          ; Is it a control code?
+B3D2: 300D    		JR   NC,NCTRL_KEY ; Jump if not to accept all characters and token codes (used for the keypad).
+              	
+B3D4: FE10    		CP   $10          ; Is it a cursor key?
+B3D6: 30E7    		JR   NC,WAIT_KEY  ; Jump back if not to wait for another key.
+              	
+B3D8: FE06    		CP   $06          ; Is it a cursor key?
+B3DA: 38E3    		JR   C,WAIT_KEY   ; Jump back if not to wait for another key.
+              	
+              	;Control code or cursor key
+              	
+B3DC: CDE3B3  		CALL CAPS_MODE_HNDLR  ; Handle CAPS LOCK code and 'mode' codes.
+B3DF: 30DE    		JR   NC,WAIT_KEY     ; Jump back if mode might have changed.
+              	
+B3E1:         	NCTRL_KEY: 
+B3E1: E1      		POP  HL           ; Restore contents of HL.
+B3E2: C9      		RET               ;
+              	
+B3E3:         	CAPS_MODE_HNDLR:  
+B3E3: CDDB10  		CALL $10DB          ; KEY_M_CL. Handle CAPS LOCK code and 'mode' codes via ROM 1.
+              		; RST  28H          ; 																			OLD
+              		; DEFW $10DB        ; KEY_M_CL. Handle CAPS LOCK code and 'mode' codes via ROM 1.
+B3E6: C9      		RET               ;
+              		
+              		
+              	
+B3E7:         	RESET_L_MODE_TOP:		;; WAS 3B7E (L365E)
+B3E7: 3E00    		LD   A,$00        ; Select 'L' mode.
+B3E9: 32415C  		LD   ($5C41),A    ; MODE.
+              	
+B3EC: 3E02    		LD   A,$02        ; Reset repeat key duration.
+B3EE: 320A5C  		LD   ($5C0A),A    ; REPPER
+              	
+B3F1:         	RESET_L_MODE:    ;; WAS 3B88
+B3F1: 213B5C  		LD   HL,$5C3B     ; FLAGS.
+B3F4: 7E      		LD   A,(HL)       ;
+B3F5: F60C    		OR   $0C          ; Select L-Mode and Print in L-Mode.
+B3F7: 77      		LD   (HL),A       ;
+              	
+B3F8: 210DEC  		LD   HL,$EC0D     ; Editor flags.
+B3FB: CB66    		BIT  4,(HL)       ; Return to the calculator?
+B3FD: 21667B  		LD   HL,$7B66     ; FLAGS3.
+B400: 2003    		JR   NZ,CALC      ; Jump ahead if so.
+              	
+B402: CB86    		RES  0,(HL)       ; Select Editor/Menu mode.
+B404: C9      		RET               ;
+              	
+B405:         	CALC:  
+B405: CBC6    		SET  0,(HL)       ; Select BASIC/Calculator mode.
+B407: C9      		RET               ;
+              	
+              	
+              	; --------------------------------------
+              	; Print the Sinclair stripes on the menu
+              	; --------------------------------------
+              	
+B408:         	PRINT_STRIPES:
+B408: C5      		PUSH BC           ; Save registers.
+B409: D5      		PUSH DE           ;
+B40A: E5      		PUSH HL           ;
+              	
+B40B: 212EB4  		LD   HL,SINCLAIR_STRIPES ; Graphics bit-patterns
+B40E: 11985B  		LD   DE,$5B98     ; STRIP1.									; CHANGE THIS
+B411: 011000  		LD   BC,$0010     ; Copy two characters.
+B414: EDB0    		LDIR              ;
+              	
+B416: 2A365C  		LD   HL,($5C36)   ; Save CHARS.
+B419: E5      		PUSH HL           ;
+              	
+B41A: 21985A  		LD   HL,$5A98 	  ; $STRIP1-$0100.									; CHANGE THIS
+B41D: 22365C  		LD   ($5C36),HL   ; Set CHARS to point to new graphics.
+              	
+B420: 213EB4  		LD   HL,SINCLAIR_STRIP_TEXT ; Point to the strip string.
+B423: CD6EB4  		CALL PRINT_STRING ; Print it.
+              	
+B426: E1      		POP  HL           ; Restore CHARS.
+B427: 22365C  		LD   ($5C36),HL   ;
+              	
+B42A: E1      		POP  HL           ; Restore registers.
+B42B: D1      		POP  DE           ;
+B42C: C1      		POP  BC           ;
+B42D: C9      		RET               ;
+              	
+B42E:         	SINCLAIR_STRIPES:
+B42E: 01      		DEFB $01          ; 0 0 0 0 0 0 0 1           X
+B42F: 03      		DEFB $03          ; 0 0 0 0 0 0 1 1          XX
+B430: 07      		DEFB $07          ; 0 0 0 0 0 1 1 1         XXX
+B431: 0F      		DEFB $0F          ; 0 0 0 0 1 1 1 1        XXXX
+B432: 1F      		DEFB $1F          ; 0 0 0 1 1 1 1 1       XXXXX
+B433: 3F      		DEFB $3F          ; 0 0 1 1 1 1 1 1      XXXXXX
+B434: 7F      		DEFB $7F          ; 0 1 1 1 1 1 1 1     XXXXXXX
+B435: FF      		DEFB $FF          ; 1 1 1 1 1 1 1 1    XXXXXXXX
+              	
+B436: FE      		DEFB $FE          ; 1 1 1 1 1 1 1 0    XXXXXXX
+B437: FC      		DEFB $FC          ; 1 1 1 1 1 1 0 0    XXXXXX
+B438: F8      		DEFB $F8          ; 1 1 1 1 1 0 0 0    XXXXX
+B439: F0      		DEFB $F0          ; 1 1 1 1 0 0 0 0    XXXX
+B43A: E0      		DEFB $E0          ; 1 1 1 0 0 0 0 0    XXX
+B43B: C0      		DEFB $C0          ; 1 1 0 0 0 0 0 0    XX
+B43C: 80      		DEFB $80          ; 1 0 0 0 0 0 0 0    X
+B43D: 00      		DEFB $00          ; 0 0 0 0 0 0 0 0
+              		
+B43E:         	SINCLAIR_STRIP_TEXT:
+B43E: 100220  		DEFB $10, $02, ' ' ; INK 2;
+B441: 110621  		DEFB $11, $06, '!' ; PAPER 6;
+B444: 100420  		DEFB $10, $04, ' ' ; INK 4;
+B447: 110521  		DEFB $11, $05, '!' ; PAPER 5;
+B44A: 100020  		DEFB $10, $00, ' ' ; INK 0;
+B44D: FF      		DEFB $FF           ;
+              		
+              		
+              		
+              	; -----------
+              	; Show Cursor
+              	; -----------
+              	; Set editing cursor colour at current position.
+              	; Exit: C=row number.
+              	;       B=Column number.
+              	;SHOW_CURSOR:	;WAS L29F2
+              	;	CALL FETCH_CURSOR_POS ; Get current cursor position (C=row, B=column, A=preferred column).												IDK IF I NEED THIS
+              	;	JP   SET_CURSOR_COLOR ; Set editing position character square to cursor colour to show it.
+              						  ; [Could have saved 1 byte by using a JR instruction to join the end of the routine below]
+              	
+              	; ---------------------																														OR THIS
+              	; Fetch Cursor Position
+              	; ---------------------
+              	; Returns the three bytes of the cursor position.
+              	; Exit : C=Row number.
+              	;        B=Column number
+              	;        A=Preferred column number.
+              	
+              	;FETCH_CURSOR_POS:  	; WAS L2A07
+              	;	LD   HL,$F6EE     ; Editing info.
+              	;	LD   C,(HL)       ; Row number.
+              	;	INC  HL           ;
+              	;	LD   B,(HL)       ; Column number.
+              	;	INC  HL           ;
+              	;	LD   A,(HL)       ; Preferred column number.
+              	;	INC  HL           ;
+              	;	RET               ;
+              	
+              	
+              	; ---------------------------																												OR THIS
+              	; Set Cursor Attribute Colour
+              	; ---------------------------
+              	; Entry: C=Row number, B=Column number.
+              	
+              	;SET_CURSOR_COLOR:  ; WAS L3640
+              	;	PUSH AF           ; Save registers.
+              	;	PUSH BC           ;
+              	;	PUSH DE           ;
+              	;	PUSH HL           ;
+              	
+              	;	LD   A,B          ; Swap B with C.
+              	;	LD   B,C          ;
+              	;	LD   C,A          ;
+              	;	CALL SET_CURSOR_POS ; Set cursor position attribute.
+              	
+              	;	POP  HL           ; Restore registers.
+              	;	POP  DE           ;
+              	;	POP  BC           ;
+              	;	POP  AF           ;
+              	;	RET               ;
+              	
+              	; -----------------------------																												OR THIS
+              	; Set Cursor Position Attribute
+              	; -----------------------------
+              	; Entry: B=Row number
+              	;        C=Column number.
+              	;        IX=Address of the cursor settings information.
+              	
+              	;SET_CURSOR_POS:  	; WAS L3A9D
+              	;	LD   A,(IX+$01)   ; A=Rows above the editing area ($16 when using the lower screen, $00 when using the main screen).
+              	;	ADD  A,B          ; B=Row number within editing area.
+              	;	LD   B,A          ; B=Screen row number.
+              	;	CALL GET_ATT_ADDR ; Get address of attribute byte into HL.
+              	;
+              	;	LD   A,(HL)       ; Fetch current attribute byte.
+              	;	LD   (IX+$07),A   ; Store the current attribute byte.
+              	;	CPL               ; Invert colours.
+              	;	AND  $C0          ; Mask off flash and bright bits.
+              	;	OR   (IX+$06)     ; Get cursor colour.
+              	;	LD   (HL),A       ; Store new attribute value to screen.
+              	;
+              	;	SCF               ; [Redundant since calling routine preserves AF]
+              	;	RET               ;
+              	
+              	
+              	; ---------------------																													OR THIS
+              	; Get Attribute Address
+              	; ---------------------
+              	; Get the address of the attribute byte for the character position (B,C).
+              	; Entry: B=Row number.
+              	;        C=Column number.
+              	; Exit : HL=Address of attribute byte.
+              	
+B44E:         	GET_ATT_ADDR: 	;WAS L3BA0
+B44E: C5      		PUSH BC           ; Save BC.
+              	
+B44F: AF      		XOR  A            ; A=0.
+B450: 50      		LD   D,B          ;
+B451: 5F      		LD   E,A          ; DE=B*256.
+B452: CB1A    		RR   D            ;
+B454: CB1B    		RR   E            ;
+B456: CB1A    		RR   D            ;
+B458: CB1B    		RR   E            ;
+B45A: CB1A    		RR   D            ;
+B45C: CB1B    		RR   E            ; DE=B*32.
+B45E: 210058  		LD   HL,$5800     ; Start of attributes file.																					DONT THINK 48K HAS THIS
+B461: 47      		LD   B,A          ; B=0.
+B462: 09      		ADD  HL,BC        ; Add column offset.
+B463: 19      		ADD  HL,DE        ; Add row offset.
+              	
+B464: C1      		POP  BC           ; Restore BC.
+B465: C9      		RET               ;
+              	
+B466:         	PRINT_AT_B_C:		; WAS 3C3A
+B466: 3E16    		LD   A,$16        ; 'AT'.
+B468: D7      		RST  10H          ; Print.
+B469: 78      		LD   A,B          ; B=Row number.
+B46A: D7      		RST  10H          ; Print.
+B46B: 79      		LD   A,C          ; C=Column number.
+B46C: D7      		RST  10H          ; Print.
+B46D: C9      		RET               ;
+              	
+              	; ------------
+              	; Print String
+              	; ------------
+              	; Print characters pointed to by HL until $FF found.
+B46E:         	PRINT_STRING:		  ; WAS 3C90
+B46E: 7E      		LD   A,(HL)       ; Fetch a character.
+B46F: 23      		INC  HL           ; Advance to next character.
+B470: FEFF    		CP   $FF          ; Reach end of string?
+B472: C8      		RET  Z            ; Return if so.
+              	
+B473: D7      		RST  $10          ; Print the character.
+B474: 18F8    		JR   PRINT_STRING ; Back for the next character.
+              		
+              		
+              	; ------------------------------------
+              	; Initial Lower Screen Cursor Settings
+              	; ------------------------------------
+              	; Copied to $FD6C-$FD73.
+              	
+B476:         	INIT_LOWER_SCREEN_CURSROR:  ; WAS L3A6D
+B476: 08      		DEFB $08          ; Number of bytes in table.
+B477: 00      		DEFB $00          ; $FD6C. [Setting never used]
+B478: 00      		DEFB $00          ; $FD6D = Rows above the editing area.
+B479: 14      		DEFB $14          ; $FD6E. [Setting never used]
+B47A: 00      		DEFB $00          ; $FD6F. [Setting never used]
+B47B: 00      		DEFB $00          ; $FD70. [Setting never used]
+B47C: 00      		DEFB $00          ; $FD71. [Setting never used]
+B47D: 0F      		DEFB $0F          ; $FD72 = Cursor attribute colour (blue paper, white ink).
+B47E: 00      		DEFB $00          ; $FD73 = Stored cursor position screen attribute colour (None = black paper, black ink).
+              	
+              	; -----------------------------------
+              	; Initial Main Screen Cursor Settings
+              	; -----------------------------------
+              	; Copied to $FD6C-$FD73.
+              	
+B47F:         	INIT_MAIN_SCREEN_CURSOR:  	; WAS L3A76
+B47F: 08      		DEFB $08          ; Number of bytes in table.
+B480: 00      		DEFB $00          ; $FD6C. [Setting never used]
+B481: 16      		DEFB $16          ; $FD6D = Rows above the editing area.
+B482: 01      		DEFB $01          ; $FD6E. [Setting never used]
+B483: 00      		DEFB $00          ; $FD6F. [Setting never used]
+B484: 00      		DEFB $00          ; $FD70. [Setting never used]
+B485: 00      		DEFB $00          ; $FD71. [Setting never used]
+B486: 0F      		DEFB $0F          ; $FD72 = Cursor attribute colour (blue paper, white ink).
+B487: 00      		DEFB $00          ; $FD73 = Stored cursor position screen attribute colour (None = black paper, black ink).
+              		
+              	; --------------------
+              	; Indentation Settings
+              	; --------------------
+              	; Copied to $FD6A-$FD6B.
+              	
+B488:         	INDENT_SETTINGS:  ; WAS L35B9
+B488: 02      		DEFB $02          ; Number of bytes in table.
+B489: 01      		DEFB $01          ; Flag never subsequently used. Possibly intended to indicate the start of a new BASIC line and hence whether indentation required.
+B48A: 05      		DEFB $05          ; Number of characters to indent by.
+              	
+              	; ---------------------------------
+              	; Main Screen Error Cursor Settings
+              	; ---------------------------------
+              	; Main screen editing cursor settings.
+              	; Gets copied to $F6EE.
+              	
+B48B:         	MAIN_SCREEN_ERROR_CURSOR:  ; WAS L28D1
+B48B: 06      		DEFB $06          ; Number of bytes in table.
+B48C: 00      		DEFB $00          ; $F6EE = Cursor position - row 0.
+B48D: 00      		DEFB $00          ; $F6EF = Cursor position - column 0.
+B48E: 00      		DEFB $00          ; $F6F0 = Cursor position - column 0 preferred.
+B48F: 04      		DEFB $04          ; $F6F1 = Top row before scrolling up.
+B490: 10      		DEFB $10          ; $F6F2 = Bottom row before scrolling down.
+B491: 14      		DEFB $14          ; $F6F3 = Number of rows in the editing area.
+              	
+
+
+total time: 0.0148 sec.
+no errors

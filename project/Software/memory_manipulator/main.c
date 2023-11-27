@@ -407,7 +407,7 @@ int main(int argc, char *argv[]) {
 	while (1) {
 		printf("\r\nListening...\r\n");
 		listen_for_en();
-		printf("cmd\r\n");
+		printf("cmd 0x%02X\r\n", CPU_ADDR_GET & 0xFF);
 
 		// Initializing here. Save states could be requested without loading a game with SD Loader
 		// and initializing it at that time makes the save state command take 3 seconds to start.
@@ -437,8 +437,7 @@ int main(int argc, char *argv[]) {
 					// load a game
 					if (!no_sd && !sd_empty) load_game(&curr_page_file_list);
 //					printf("SLEEEEEEEP\r\n");
-//					//usleep(10000000);
-//					usleep(1000000);
+//					usleep(100000);
 //					save_state(&curr_page_file_list);
 				}
 				break;

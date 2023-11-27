@@ -200,8 +200,8 @@ int DMA_stop(int tries) {
 void DMA_stop_w_interrupt() {
 	NMI_SET;
 	BUS_REQ_CLR;
-	usleep(1); // NMI must be on for 80 ns minimum
-	//usleep(5000000); // 5 seconds
+	//usleep(1); // NMI must be on for 80 ns minimum
+	usleep(10000000); // 10 seconds
 
 	if (BUS_ACK_GET != 0) {
 		while (BUS_ACK_GET != 0);
