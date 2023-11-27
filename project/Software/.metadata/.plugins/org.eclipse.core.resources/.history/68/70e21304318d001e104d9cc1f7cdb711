@@ -79,7 +79,7 @@ void LCD_Line2()
 void LCD_Test()
 {
   char Text1[16] = " Altera DE2-115 ";
-  char Text2[16] = "LCD Test ";
+  char Text2[16] = "USB Device Test ";
   //  Initial LCD
   LCD_Init();
   //  Show Text to LCD

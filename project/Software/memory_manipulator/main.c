@@ -361,22 +361,19 @@ void init_SD_local(clock_t* t) {
 	curr_page = 0;
 }
 
-void lcd_open(void){
-#ifdef LCD_DISPLAY
-    bool res = LCD_Open();
-    printf("lcd open %d\r\n", res);
-#endif
-}
-
-void lcd_display(char *pText){
-#ifdef LCD_DISPLAY
-    LCD_Clear();
-    LCD_TextOut(pText);
-#endif
-}
-
 void display_opening_text(void) {
-	lcd_display("\rZX-Fusion MsC23\nISEL Gustavo\n");
+#ifdef LCD_DISPLAY
+	char Text1[16] = "ZX-Fusion MsC23 ";
+	char Text2[16] = "  ISEL Gustavo  ";
+	//  Initial LCD
+	LCD_Init();
+	//  Show Text to LCD
+	LCD_Show_Text(Text1);
+	//  Change Line2
+	LCD_Line2();
+	//  Show Text to LCD
+	LCD_Show_Text(Text2);
+#endif
 }
 
 
@@ -384,7 +381,6 @@ int main(int argc, char *argv[]) {
 	clock_t t;
 
 	t = clock();
-	lcd_open();
 	display_opening_text();
 	no_sd = -1;
 

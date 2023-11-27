@@ -30,9 +30,6 @@
 //
 // --------------------------------------------------------------------
 
-#include <unistd.h>
-#include <string.h>
-#include <io.h>
 #include "./terasic_includes.h"
 #include "./LCD.h"
 
@@ -40,53 +37,32 @@
 // (\r): Move the cursor to the start of the current line
 // (\n): Move the cursor to the start of the line and move it donw one line
 
-//-------------------------------------------------------------------------
-void LCD_Init()
-{
-  lcd_write_cmd(LCD_BASE,0x38);
-  usleep(2000);
-  lcd_write_cmd(LCD_BASE,0x0C);
-  usleep(2000);
-  lcd_write_cmd(LCD_BASE,0x01);
-  usleep(2000);
-  lcd_write_cmd(LCD_BASE,0x06);
-  usleep(2000);
-  lcd_write_cmd(LCD_BASE,0x80);
-  usleep(2000);
+static FILE *fp=0;
+
+bool LCD_Open(void){
+    fp = fopen(LCD_NAME, "w");
+    if (fp)
+        return TRUE;
+    return FALSE;        
 }
-//-------------------------------------------------------------------------
-void LCD_Show_Text(char* Text)
-{
-  int i;
-  for(i=0;i<strlen(Text);i++)
-  {
-    lcd_write_data(LCD_BASE,Text[i]);
-    usleep(2000);
-  }
+bool LCD_TextOut(char *pText){
+    if (!fp)
+        return FALSE;
+    fwrite(pText, strlen(pText), 1, fp);        
+    return TRUE;        
 }
-//-------------------------------------------------------------------------
-void LCD_Line1()
-{
-  lcd_write_cmd(LCD_BASE,0x80);
-  usleep(2000);
+
+bool LCD_Clear(void){
+    char szText[32]="\n\n";
+    if (!fp)
+        return FALSE;
+    fwrite(szText, strlen(szText), 1, fp);        
+    return TRUE;        
 }
-void LCD_Line2()
-{
-  lcd_write_cmd(LCD_BASE,0xC0);
-  usleep(2000);
+
+
+void LCD_Close(void){
+    if (fp)
+        fclose(fp);
+    fp = 0;        
 }
-//-------------------------------------------------------------------------
-void LCD_Test()
-{
-  char Text1[16] = " Altera DE2-115 ";
-  char Text2[16] = "LCD Test ";
-  //  Initial LCD
-  LCD_Init();
-  //  Show Text to LCD
-  LCD_Show_Text(Text1);
-  //  Change Line2
-  LCD_Line2();
-  //  Show Text to LCD
-  LCD_Show_Text(Text2);
-}
-//-------------------------------------------------------------------------

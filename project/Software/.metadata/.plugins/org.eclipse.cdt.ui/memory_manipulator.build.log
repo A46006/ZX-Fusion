@@ -1,9 +1,9 @@
-14:24:45 **** Incremental Build of configuration Nios II for project memory_manipulator ****
+14:34:36 **** Incremental Build of configuration Nios II for project memory_manipulator ****
 make all 
 Info: Building ../memory_manipulator_bsp/
 C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
 [BSP build complete]
 [memory_manip_attempt build complete]
 
-14:24:46 Build Finished (took 1s.17ms)
+14:34:37 Build Finished (took 957ms)
 

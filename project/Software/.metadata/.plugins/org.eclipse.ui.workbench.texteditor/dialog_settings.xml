@@ -2,12 +2,13 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="LCD_NAME" key="selection"/>
+		<item value="lcd_" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="lcd_"/>
 			<item value="LCD_NAME"/>
 			<item value="ldc conf"/>
 			<item value="lcd conf"/>
@@ -15,7 +16,6 @@
 			<item value="inject_menu"/>
 			<item value="LD_SP_NN"/>
 			<item value="SP"/>
-			<item value="init_file_write"/>
 		</list>
 		<list key="replacehistory">
 			<item value="50"/>

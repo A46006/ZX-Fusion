@@ -1378,6 +1378,18 @@
 			</provider>
 			<provider id="altera.tool.Nios2GCCBuildCommandParser">
 				<language id="org.eclipse.cdt.core.gcc">
+					<resource project-relative-path="drivers/src/altera_avalon_lcd_16207.c">
+						<entry kind="includePath" name="/memory_manipulator_bsp/HAL/inc">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="C:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp"/>
+						<entry kind="includePath" name="/memory_manipulator_bsp/drivers/inc">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="macro" name="ALT_NO_INSTRUCTION_EMULATION" value=""/>
+						<entry kind="macro" name="ALT_SINGLE_THREADED" value=""/>
+						<entry kind="macro" name="__hal__" value=""/>
+					</resource>
 					<resource project-relative-path="HAL/src/alt_uncached_free.c">
 						<entry kind="includePath" name="/memory_manipulator_bsp/HAL/inc">
 							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
@@ -1609,6 +1621,18 @@
 						<entry kind="macro" name="__hal__" value=""/>
 					</resource>
 					<resource project-relative-path="HAL/src/alt_putchar.c">
+						<entry kind="includePath" name="/memory_manipulator_bsp/HAL/inc">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="C:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp"/>
+						<entry kind="includePath" name="/memory_manipulator_bsp/drivers/inc">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="macro" name="ALT_NO_INSTRUCTION_EMULATION" value=""/>
+						<entry kind="macro" name="ALT_SINGLE_THREADED" value=""/>
+						<entry kind="macro" name="__hal__" value=""/>
+					</resource>
+					<resource project-relative-path="drivers/src/altera_avalon_lcd_16207_fd.c">
 						<entry kind="includePath" name="/memory_manipulator_bsp/HAL/inc">
 							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
 						</entry>
