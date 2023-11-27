@@ -354,6 +354,8 @@ architecture Behavior of top is
 	component nios_per_reg IS 
 		PORT 
 		( 
+			clk						: in std_logic;
+
 			address_in				: in std_logic_vector(15 downto 0);
 			data_in					: in std_logic_vector(7 downto 0);
 			rd_n_in, wr_n_in		: in std_logic;
@@ -567,7 +569,7 @@ begin
 
 	double_spin : double_spin_anim_7seg port map (
 			CLOCK_50 => CLOCK_50,
-			SET      => SW(3),
+			SET      => not nios_en_reg_out,
 			CLR      => SW(2),
 			D3       => HEX7, 
 			D2       => HEX6, 
@@ -679,6 +681,7 @@ begin
 	nios_reg_wr_n_in <= cpu_wr_n when save_state = '0' else '0';			-- forcing a write for save state command
 
 	nios_reg : nios_per_reg port map (
+			clk			=> CLOCK_50,
 			address_in	=> nios_reg_addr_in,
 			data_in		=> nios_reg_data_in,
 			rd_n_in		=> nios_reg_rd_n_in,
