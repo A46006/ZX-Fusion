@@ -49,11 +49,21 @@ entity top is
 		LCD_DATA    : out std_logic_vector(7 downto 0) := (others => '0');
 		LCD_EN      : out std_logic;
 		LCD_RS      : out std_logic;
-		LCD_RW      : out std_logic
+		LCD_RW      : out std_logic;
+		HEX7, HEX6, HEX5, HEX4, HEX3, HEX2, HEX1, HEX0 : out std_logic_vector(0 to 6)
 	);
 end top;
 
 architecture Behavior of top is
+	component double_spin_anim_7seg IS
+		PORT ( 
+				CLOCK_50       : IN STD_LOGIC;
+				SET            : IN STD_LOGIC;
+				CLR            : IN STD_LOGIC;
+				D3, D2, D1, D0 : OUT STD_LOGIC_VECTOR(0 TO 6)
+				);
+	END component;
+
 	---------
 	-- PLL --
 	---------
@@ -554,6 +564,20 @@ begin
 	
 --	LEDR(17 downto 10) <= nios_data;
 
+
+	double_spin : double_spin_anim_7seg port map (
+			CLOCK_50 => CLOCK_50,
+			SET      => SW(3),
+			CLR      => SW(2),
+			D3       => HEX7, 
+			D2       => HEX6, 
+			D1       => HEX5, 
+			D0       => HEX4
+		);
+	HEX3 <= (others => '1');
+	HEX2 <= (others => '1');
+	HEX1 <= (others => '1');
+	HEX0 <= (others => '1');
 	---------
 	-- PLL --
 	---------
