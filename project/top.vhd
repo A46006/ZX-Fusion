@@ -681,7 +681,7 @@ begin
 	nios_reg_wr_n_in <= cpu_wr_n when save_state = '0' else '0';			-- forcing a write for save state command
 
 	nios_reg : nios_per_reg port map (
-			clk			=> CLOCK_50,
+			clk			=> ula_clock,
 			address_in	=> nios_reg_addr_in,
 			data_in		=> nios_reg_data_in,
 			rd_n_in		=> nios_reg_rd_n_in,

@@ -18,6 +18,12 @@
 
 #define MENU_CODE_LEN 1170
 
+#define LCD_DISPLAY
+
+#ifdef LCD_DISPLAY
+    #include "./terasic_lib/LCD.h"
+#endif
+
 
 const alt_u8 menu_code[MENU_CODE_LEN] = {
 	0xFB, 0xFD, 0xCB, 0x02, 0xEE, 0x21, 0x00, 0x00, 0x22, 0x00, 0x40, 0xCD,
@@ -126,6 +132,7 @@ int curr_game_filename_len;
 int curr_game_idx;
 bool sd_empty = FALSE;
 bool no_sd = -1;
+global clock_t t0, t1;
 
 int max_page; // holds the number of pages based on the number of supported files in the SD Card
 int curr_page;
@@ -323,7 +330,7 @@ void load_game(FILENAMES* list) {
 	printf("LOAD COMPLETE!\r\n");
 }
 
-void init_SD_local(clock_t* t) {
+void init_SD_local() {
 	printf("Initializing SD...\r\n");
 	int err = init_SD();
 	if (err) {
@@ -333,13 +340,15 @@ void init_SD_local(clock_t* t) {
 		no_sd = TRUE;
 	}
 
-	*t = clock() - *t;
+	t1 = clock() - t0;
 
-	printf ("It took %ld us\r\n",*t);
+	printf ("It took %u clicks (us?)\r\n", t1);
 	//printf ("It took me %u clicks (%x seconds).\n",t,((float)t)/1000000);
 
-	if (*t < )
-	usleep(3000000 - *t);
+	if (t1 < SD_CARD_INIT_TIME) {
+		printf("waiting %d us more\r\n", SD_CARD_INIT_TIME - t1);
+		usleep(SD_CARD_INIT_TIME - t1);
+	}
 	// Calculating maximum amount of pages
 	max_page = num_of_pages();
 	printf("NUM OF PAGES: %d\r\n", max_page);
@@ -353,11 +362,25 @@ void init_SD_local(clock_t* t) {
 	curr_page = 0;
 }
 
+void display_opening_text(void) {
+#ifdef LCD_DISPLAY
+	char Text1[16] = "ZX-Fusion MsC23 ";
+	char Text2[16] = "  ISEL Gustavo  ";
+	//  Initial LCD
+	LCD_Init();
+	//  Show Text to LCD
+	LCD_Show_Text(Text1);
+	//  Change Line2
+	LCD_Line2();
+	//  Show Text to LCD
+	LCD_Show_Text(Text2);
+#endif
+}
+
 
 int main(int argc, char *argv[]) {
-	clock_t t;
-
-	t = clock();
+	t0 = clock();
+	display_opening_text();
 	no_sd = -1;
 
 	curr_page_file_list.size = 0;
@@ -383,7 +406,11 @@ int main(int argc, char *argv[]) {
 	while (1) {
 		printf("\r\nListening...\r\n");
 		listen_for_en();
-		printf("cmd\r\n");
+		printf("cmd 0x%02X\r\n", CPU_ADDR_GET & 0xFF);
+
+		// Initializing here. Save states could be requested without loading a game with SD Loader
+		// and initializing it at that time makes the save state command take 3 seconds to start.
+		if (no_sd == -1) init_SD_local();
 
 		enum per_if_type type = get_if_type();
 
@@ -392,7 +419,7 @@ int main(int argc, char *argv[]) {
 				printf("NONE\r\n");
 				break;
 			case STATE:
-				if (no_sd == -1) init_SD_local(&t);
+				//if (no_sd == -1) init_SD_local(&t);
 				if (is_write()) {
 					save_state(&curr_page_file_list);
 				} else {
@@ -401,7 +428,7 @@ int main(int argc, char *argv[]) {
 				}
 				break;
 			case SD:
-				if (no_sd == -1) init_SD_local(&t);
+				//if (no_sd == -1) init_SD_local(&t);
 				if (is_read()) {
 					// get new list
 					load_page(&curr_page_file_list);
@@ -409,8 +436,7 @@ int main(int argc, char *argv[]) {
 					// load a game
 					if (!no_sd && !sd_empty) load_game(&curr_page_file_list);
 //					printf("SLEEEEEEEP\r\n");
-//					//usleep(10000000);
-//					usleep(1000000);
+//					usleep(100000);
 //					save_state(&curr_page_file_list);
 				}
 				break;

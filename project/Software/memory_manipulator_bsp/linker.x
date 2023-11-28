@@ -4,7 +4,7 @@
  * Machine generated for CPU 'cpu' in SOPC Builder design 'nios_sd_loader'
  * SOPC Builder design path: ../../nios_sd_loader.sopcinfo
  *
- * Generated: Tue Nov 14 11:27:49 GMT 2023
+ * Generated: Mon Nov 27 23:07:11 GMT 2023
  */
 
 /*

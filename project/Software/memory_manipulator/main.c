@@ -14,7 +14,7 @@
 #define MENU_IDX_ADDR 0xEC0C
 #define EDITOR_FLAGS_ADDR 0xEC0D
 
-#define SD_CARD_INIT_TIME 3000000
+#define SD_CARD_INIT_TIME 3000
 
 #define MENU_CODE_LEN 1170
 
@@ -132,6 +132,7 @@ int curr_game_filename_len;
 int curr_game_idx;
 bool sd_empty = FALSE;
 bool no_sd = -1;
+clock_t t0, t1;
 
 int max_page; // holds the number of pages based on the number of supported files in the SD Card
 int curr_page;
@@ -329,7 +330,7 @@ void load_game(FILENAMES* list) {
 	printf("LOAD COMPLETE!\r\n");
 }
 
-void init_SD_local(clock_t* t) {
+void init_SD_local() {
 	printf("Initializing SD...\r\n");
 	int err = init_SD();
 	if (err) {
@@ -339,14 +340,14 @@ void init_SD_local(clock_t* t) {
 		no_sd = TRUE;
 	}
 
-	*t = clock() - *t;
+	t1 = clock() - t0;
 
-	printf ("It took %u clicks (us?)\r\n",*t);
+	printf ("It took %u clicks (ms)\r\n", t1);
 	//printf ("It took me %u clicks (%x seconds).\n",t,((float)t)/1000000);
 
-	if (*t < SD_CARD_INIT_TIME) {
-		printf("waiting %d us more\r\n", SD_CARD_INIT_TIME - *t);
-		usleep(SD_CARD_INIT_TIME - *t);
+	if (t1 < SD_CARD_INIT_TIME) {
+		printf("waiting %d ms more\r\n", SD_CARD_INIT_TIME - t1);
+		usleep(SD_CARD_INIT_TIME - t1);
 	}
 	// Calculating maximum amount of pages
 	max_page = num_of_pages();
@@ -378,9 +379,7 @@ void display_opening_text(void) {
 
 
 int main(int argc, char *argv[]) {
-	clock_t t;
-
-	t = clock();
+	t0 = clock();
 	display_opening_text();
 	no_sd = -1;
 
@@ -411,7 +410,7 @@ int main(int argc, char *argv[]) {
 
 		// Initializing here. Save states could be requested without loading a game with SD Loader
 		// and initializing it at that time makes the save state command take 3 seconds to start.
-		if (no_sd == -1) init_SD_local(&t);
+		if (no_sd == -1) init_SD_local();
 
 		enum per_if_type type = get_if_type();
 
