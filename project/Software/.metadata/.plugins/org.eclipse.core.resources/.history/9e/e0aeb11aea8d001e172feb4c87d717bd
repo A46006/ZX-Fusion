@@ -237,7 +237,7 @@ void fill_sna_header(alt_u8* buffer, REGS* regs) {
 	buffer[SNA_OFFSET_IX] = regs->IX >> 8; // low byte
 	buffer[SNA_OFFSET_IX+1] = regs->IX & 0xFF; // high byte
 
-	printf("SNA header fill: 0x%02X", regs->IFF2);
+	printf("SNA header fill: 0x%02X");
 	buffer[SNA_OFFSET_IFF2] = regs->IFF2 << 2;
 	buffer[SNA_OFFSET_R] = regs->R;
 

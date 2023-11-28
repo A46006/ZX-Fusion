@@ -522,6 +522,9 @@ architecture Behavior of top is
 	signal save_state : std_logic;
 	
 	signal ula_c, ula_v : std_logic_vector(8 downto 0);
+	
+	signal nmi_ff_reset, nmi_ff_set : std_logic := '0';
+	signal nios_nmi_n_out : std_logic := '1';
 begin
 	
 	------------
@@ -625,6 +628,25 @@ begin
 	sd_do <= SD_DAT(0);
 	SD_CMD <= sd_di;
 	
+	
+	nmi_ff_reset <= not cpu_m1_n;
+	nmi_ff_set <= not nios_nmi_n_out;
+	
+	process(nmi_ff_reset, nmi_ff_set)
+	begin
+		--if (rising_edge(CLOCK_50)) then
+			if (nmi_ff_reset = '1' and nmi_ff_set = '0') then
+				cpu_nmi_n <= '1';
+			elsif (nmi_ff_reset = '0' and nmi_ff_set = '1') then
+				cpu_nmi_n <= '0';
+--			elsif (nmi_ff_reset = '0' and nmi_ff_set = '0') then
+--				cpu_nmi_n <= '1';
+--			elsif (nmi_ff_reset = '1' and nmi_ff_set = '1') then
+--				cpu_nmi_n <= '1';
+			end if;
+		--end if;
+	end process;
+	
 	sd_loader : nios_sd_loader port map(
 			clk_clk											=> CLOCK_50,
 			reset_reset_n									=> nios_reset_n,
@@ -649,7 +671,7 @@ begin
 			-- NIOS to CPU --
 			bus_req_n_external_connection_export	=> cpu_busrq_n,
 			bus_ack_n_external_connection_export	=> cpu_busak_n,
-			nmi_n_external_connection_export			=> cpu_nmi_n,
+			nmi_n_external_connection_export			=> nios_nmi_n_out,
 			cpu_address_direct_external_connection_export => address,
 			
 			-- NIOS with DMA --
