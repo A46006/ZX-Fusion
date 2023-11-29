@@ -240,6 +240,13 @@ altera_avalon_timer_driver_C_LIB_SRCS := \
 	$(altera_avalon_timer_driver_SRCS_ROOT)/src/altera_avalon_timer_ts.c \
 	$(altera_avalon_timer_driver_SRCS_ROOT)/src/altera_avalon_timer_vars.c
 
+# altera_epcq_controller_driver sources root 
+altera_epcq_controller_driver_SRCS_ROOT := drivers
+
+# altera_epcq_controller_driver sources 
+altera_epcq_controller_driver_C_LIB_SRCS := \
+	$(altera_epcq_controller_driver_SRCS_ROOT)/src/altera_epcq_controller.c
+
 # altera_nios2_gen2_hal_driver sources root 
 altera_nios2_gen2_hal_driver_SRCS_ROOT := HAL
 
@@ -342,6 +349,7 @@ COMPONENT_C_LIB_SRCS += \
 	$(altera_avalon_jtag_uart_driver_C_LIB_SRCS) \
 	$(altera_avalon_lcd_16207_driver_C_LIB_SRCS) \
 	$(altera_avalon_timer_driver_C_LIB_SRCS) \
+	$(altera_epcq_controller_driver_C_LIB_SRCS) \
 	$(altera_nios2_gen2_hal_driver_C_LIB_SRCS) \
 	$(hal_C_LIB_SRCS)
 

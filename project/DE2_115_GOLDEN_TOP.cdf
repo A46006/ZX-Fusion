@@ -4,10 +4,10 @@ JedecChain;
 	DefaultMfr(6E);
 
 	P ActionCode(Cfg)
-		Device PartName(EP4CE115F29) Path("./") File("DE2_115_GOLDEN_TOP.sof") MfrSpec(OpMask(1));
+		Device PartName(EPCS64) Path("C:/Users/pepsu/Documents/MI13D/TFM/FINAL_REPO/ZX-Fusion/project/") File("DE2_115_GOLDEN_TOP.pof") MfrSpec(OpMask(3) Child_OpMask(1 3));
 
 ChainEnd;
 
 AlteraBegin;
-	ChainType(JTAG);
+	ChainType(asc);
 AlteraEnd;

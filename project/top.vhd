@@ -75,6 +75,7 @@ architecture Behavior of top is
 		c0		: OUT STD_LOGIC ; -- 7 MHz
 		c1		: OUT STD_LOGIC ; -- 18 MHz
 		c2		: OUT STD_LOGIC ; -- 65 MHz
+		c3		: OUT STD_LOGIC ; -- 22,5 MHz
 		locked		: OUT STD_LOGIC 
 	);
 	END component;
@@ -413,6 +414,7 @@ architecture Behavior of top is
 	signal nios_rd_n, nios_wr_n, nios_mreq_n, nios_iorq_n : std_logic;
 	signal nios_data, nios_data_in, nios_data_out : std_logic_vector(7 downto 0);
 	signal nios_address : std_logic_vector(15 downto 0);
+	signal nios_clock : std_logic := '0';
 	
 	signal nios_reg_en : std_logic := '0';
 	
@@ -592,6 +594,7 @@ begin
 			c0			=> ula_clock,	      -- 7 MHz
 			c1			=> audio_ctrl_clk,	-- 18 MHz
 			c2			=> video_clock,		-- 65 MHz
+			c3			=> nios_clock,
 			locked	=> pll_locked
 		);
 		
@@ -648,7 +651,7 @@ begin
 	end process;
 	
 	sd_loader : nios_sd_loader port map(
-			clk_clk											=> CLOCK_50,
+			clk_clk											=> nios_clock,
 			reset_reset_n									=> nios_reset_n,
 			ledg_pio_external_connection_export		=> LEDG,
 			
@@ -853,7 +856,7 @@ begin
 	audio_codec_in <= AUD_ADCDAT;
 	AUD_DACDAT <= audio_codec_out;
 	
-	audio_codec_out <= ula_speaker_out; -- dunno what to do with ula_mic_out, but should be here somehow
+	audio_codec_out <= ula_speaker_out xor ula_mic_out; -- dunno what to do with ula_mic_out, but should be here somehow
 
 	audio : audio_codec port map(
 		CLK			=> audio_ctrl_clk,

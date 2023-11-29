@@ -20,12 +20,12 @@ module nios_sd_loader (
 	lcd_external_E,
 	ledg_pio_external_connection_export,
 	nmi_n_external_connection_export,
-	reset_reset_n,
 	sd_clk_external_connection_export,
 	sd_cs_external_connection_export,
 	sd_miso_external_connection_export,
 	sd_mosi_external_connection_export,
-	sd_wp_n_external_connection_export);	
+	sd_wp_n_external_connection_export,
+	reset_reset_n);	
 
 	output	[15:0]	address_external_connection_export;
 	input		bus_ack_n_external_connection_export;
@@ -47,10 +47,10 @@ module nios_sd_loader (
 	output		lcd_external_E;
 	output	[7:0]	ledg_pio_external_connection_export;
 	output		nmi_n_external_connection_export;
-	input		reset_reset_n;
 	output		sd_clk_external_connection_export;
 	output		sd_cs_external_connection_export;
 	input		sd_miso_external_connection_export;
 	output		sd_mosi_external_connection_export;
 	input		sd_wp_n_external_connection_export;
+	input		reset_reset_n;
 endmodule

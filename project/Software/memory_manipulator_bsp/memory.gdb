@@ -3,7 +3,7 @@
 # Machine generated for CPU 'cpu' in SOPC Builder design 'nios_sd_loader'
 # SOPC Builder design path: ../../nios_sd_loader.sopcinfo
 #
-# Generated: Mon Nov 27 23:07:11 GMT 2023
+# Generated: Wed Nov 29 17:34:59 GMT 2023
 
 # DO NOT MODIFY THIS FILE
 #
@@ -46,5 +46,8 @@
 # The cache attribute is specified which improves GDB performance
 # by allowing GDB to cache memory contents on the host.
 
+# epcq_controller_0_avl_mem
+memory 0x800000 0x1000000 cache
+
 # onchip_memory
-memory 0x40000 0x80000 cache
+memory 0x1040000 0x1080000 cache

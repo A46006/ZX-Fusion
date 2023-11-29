@@ -4,7 +4,7 @@
  * Machine generated for CPU 'cpu' in SOPC Builder design 'nios_sd_loader'
  * SOPC Builder design path: ../../nios_sd_loader.sopcinfo
  *
- * Generated: Mon Nov 27 23:07:11 GMT 2023
+ * Generated: Wed Nov 29 17:34:59 GMT 2023
  */
 
 /*
@@ -50,12 +50,16 @@
 
 MEMORY
 {
-    reset : ORIGIN = 0x40000, LENGTH = 32
-    onchip_memory : ORIGIN = 0x40020, LENGTH = 262112
+    epcq_controller_0_avl_mem_BEFORE_RESET : ORIGIN = 0x800000, LENGTH = 4194304
+    reset : ORIGIN = 0xc00000, LENGTH = 32
+    epcq_controller_0_avl_mem : ORIGIN = 0xc00020, LENGTH = 4194272
+    onchip_memory_BEFORE_EXCEPTION : ORIGIN = 0x1040000, LENGTH = 32
+    onchip_memory : ORIGIN = 0x1040020, LENGTH = 262112
 }
 
 /* Define symbols for each memory base-address */
-__alt_mem_onchip_memory = 0x40000;
+__alt_mem_epcq_controller_0_avl_mem = 0x800000;
+__alt_mem_onchip_memory = 0x1040000;
 
 OUTPUT_FORMAT( "elf32-littlenios2",
                "elf32-littlenios2",
@@ -84,7 +88,14 @@ SECTIONS
         KEEP (*(.entry))
     } > reset
 
-    .exceptions :
+    /*
+     *
+     * This section's LMA is set to the .text region.
+     * crt0 will copy to this section's specified mapped region virtual memory address (VMA)
+     *
+     */
+
+    .exceptions : AT ( 0xc00020 )
     {
         PROVIDE (__ram_exceptions_start = ABSOLUTE(.));
         . = ALIGN(0x20);
@@ -115,7 +126,14 @@ SECTIONS
 
     PROVIDE (__flash_exceptions_start = LOADADDR(.exceptions));
 
-    .text :
+    /*
+     *
+     * This section's LMA is set to the .text region.
+     * crt0 will copy to this section's specified mapped region virtual memory address (VMA)
+     *
+     */
+
+    .text LOADADDR (.exceptions) + SIZEOF (.exceptions) : AT ( LOADADDR (.exceptions) + SIZEOF (.exceptions) )
     {
         /*
          * All code sections are merged into the text output section, along with
@@ -207,9 +225,16 @@ SECTIONS
         PROVIDE (__DTOR_END__ = ABSOLUTE(.));
         KEEP (*(.jcr))
         . = ALIGN(4);
-    } > onchip_memory = 0x3a880100 /* NOP instruction (always in big-endian byte ordering) */
+    } > epcq_controller_0_avl_mem = 0x3a880100 /* NOP instruction (always in big-endian byte ordering) */
 
-    .rodata :
+    /*
+     *
+     * This section's LMA is set to the .text region.
+     * crt0 will copy to this section's specified mapped region virtual memory address (VMA)
+     *
+     */
+
+    .rodata : AT ( LOADADDR (.text) + SIZEOF (.text) )
     {
         PROVIDE (__ram_rodata_start = ABSOLUTE(.));
         . = ALIGN(4);
@@ -226,13 +251,9 @@ SECTIONS
      * This section's LMA is set to the .text region.
      * crt0 will copy to this section's specified mapped region virtual memory address (VMA)
      *
-     * .rwdata region equals the .text region, and is set to be loaded into .text region.
-     * This requires two copies of .rwdata in the .text region. One read writable at VMA.
-     * and one read-only at LMA. crt0 will copy from LMA to VMA on reset
-     *
      */
 
-    .rwdata LOADADDR (.rodata) + SIZEOF (.rodata) : AT ( LOADADDR (.rodata) + SIZEOF (.rodata)+ SIZEOF (.rwdata) )
+    .rwdata : AT ( LOADADDR (.rodata) + SIZEOF (.rodata) )
     {
         PROVIDE (__ram_rwdata_start = ABSOLUTE(.));
         . = ALIGN(4);
@@ -255,14 +276,7 @@ SECTIONS
 
     PROVIDE (__flash_rwdata_start = LOADADDR(.rwdata));
 
-    /*
-     *
-     * This section's LMA is set to the .text region.
-     * crt0 will copy to this section's specified mapped region virtual memory address (VMA)
-     *
-     */
-
-    .bss LOADADDR (.rwdata) + SIZEOF (.rwdata) : AT ( LOADADDR (.rwdata) + SIZEOF (.rwdata) )
+    .bss :
     {
         __bss_start = ABSOLUTE(.);
         PROVIDE (__sbss_start = ABSOLUTE(.));
@@ -307,7 +321,24 @@ SECTIONS
      *
      */
 
-    .onchip_memory LOADADDR (.bss) + SIZEOF (.bss) : AT ( LOADADDR (.bss) + SIZEOF (.bss) )
+    .epcq_controller_0_avl_mem LOADADDR (.rwdata) + SIZEOF (.rwdata) : AT ( LOADADDR (.rwdata) + SIZEOF (.rwdata) )
+    {
+        PROVIDE (_alt_partition_epcq_controller_0_avl_mem_start = ABSOLUTE(.));
+        *(.epcq_controller_0_avl_mem .epcq_controller_0_avl_mem. epcq_controller_0_avl_mem.*)
+        . = ALIGN(4);
+        PROVIDE (_alt_partition_epcq_controller_0_avl_mem_end = ABSOLUTE(.));
+    } > epcq_controller_0_avl_mem
+
+    PROVIDE (_alt_partition_epcq_controller_0_avl_mem_load_addr = LOADADDR(.epcq_controller_0_avl_mem));
+
+    /*
+     *
+     * This section's LMA is set to the .text region.
+     * crt0 will copy to this section's specified mapped region virtual memory address (VMA)
+     *
+     */
+
+    .onchip_memory : AT ( LOADADDR (.epcq_controller_0_avl_mem) + SIZEOF (.epcq_controller_0_avl_mem) )
     {
         PROVIDE (_alt_partition_onchip_memory_start = ABSOLUTE(.));
         *(.onchip_memory .onchip_memory. onchip_memory.*)
@@ -367,7 +398,7 @@ SECTIONS
 /*
  * Don't override this, override the __alt_stack_* symbols instead.
  */
-__alt_data_end = 0x80000;
+__alt_data_end = 0x1080000;
 
 /*
  * The next two symbols define the location of the default stack.  You can
@@ -383,4 +414,4 @@ PROVIDE( __alt_stack_limit   = __alt_stack_base );
  * Override this symbol to put the heap in a different memory.
  */
 PROVIDE( __alt_heap_start    = end );
-PROVIDE( __alt_heap_limit    = 0x80000 );
+PROVIDE( __alt_heap_limit    = 0x1080000 );
