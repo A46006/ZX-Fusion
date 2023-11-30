@@ -31,7 +31,7 @@
 //   ST_DATA_W:           117
 //   ST_CHANNEL_W:        27
 //   NUM_OUTPUTS:         3
-//   VALID_WIDTH:         1
+//   VALID_WIDTH:         27
 // ------------------------------------------
 
 //------------------------------------------
@@ -45,7 +45,7 @@ module nios_sd_loader_mm_interconnect_0_cmd_demux_001
     // -------------------
     // Sink
     // -------------------
-    input  [1-1      : 0]   sink_valid,
+    input  [27-1      : 0]   sink_valid,
     input  [117-1    : 0]   sink_data, // ST_DATA_W=117
     input  [27-1 : 0]   sink_channel, // ST_CHANNEL_W=27
     input                         sink_startofpacket,
@@ -99,21 +99,21 @@ module nios_sd_loader_mm_interconnect_0_cmd_demux_001
         src0_endofpacket   = sink_endofpacket;
         src0_channel       = sink_channel >> NUM_OUTPUTS;
 
-        src0_valid         = sink_channel[0] && sink_valid;
+        src0_valid         = sink_channel[0] && sink_valid[0];
 
         src1_data          = sink_data;
         src1_startofpacket = sink_startofpacket;
         src1_endofpacket   = sink_endofpacket;
         src1_channel       = sink_channel >> NUM_OUTPUTS;
 
-        src1_valid         = sink_channel[1] && sink_valid;
+        src1_valid         = sink_channel[1] && sink_valid[1];
 
         src2_data          = sink_data;
         src2_startofpacket = sink_startofpacket;
         src2_endofpacket   = sink_endofpacket;
         src2_channel       = sink_channel >> NUM_OUTPUTS;
 
-        src2_valid         = sink_channel[2] && sink_valid;
+        src2_valid         = sink_channel[2] && sink_valid[2];
 
     end
 

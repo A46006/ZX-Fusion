@@ -45,7 +45,7 @@
           <tags>persp.newWizSC:com.altera.sbtgui.ui.newLibrary</tags>
           <tags>persp.perspSC:com.altera.sbtgui.ui.debugPerspective</tags>
           <tags>persp.viewSC:com.altera.sbtgui.launch.hardware.ByteStreamConsoleView</tags>
-          <children xsi:type="basic:PartSashContainer" xmi:id="_F_unNYonEe6zmqLK03ZZ7g" selectedElement="_F_unNoonEe6zmqLK03ZZ7g" horizontal="true">
+          <children xsi:type="basic:PartSashContainer" xmi:id="_F_unNYonEe6zmqLK03ZZ7g" selectedElement="_F_unO4onEe6zmqLK03ZZ7g" horizontal="true">
             <children xsi:type="basic:PartStack" xmi:id="_F_unNoonEe6zmqLK03ZZ7g" elementId="topLeft" containerData="2496" selectedElement="_F_unN4onEe6zmqLK03ZZ7g">
               <tags>active</tags>
               <children xsi:type="advanced:Placeholder" xmi:id="_F_unN4onEe6zmqLK03ZZ7g" elementId="org.eclipse.ui.navigator.ProjectExplorer" ref="_F_vPXIonEe6zmqLK03ZZ7g"/>
@@ -62,6 +62,7 @@
               </children>
               <children xsi:type="basic:PartStack" xmi:id="_F_unQIonEe6zmqLK03ZZ7g" elementId="bottom" containerData="3095" selectedElement="_F_unQ4onEe6zmqLK03ZZ7g">
                 <tags>General</tags>
+                <tags>noFocus</tags>
                 <children xsi:type="advanced:Placeholder" xmi:id="_F_unQYonEe6zmqLK03ZZ7g" elementId="org.eclipse.ui.views.ProblemView" ref="_F_vPv4onEe6zmqLK03ZZ7g"/>
                 <children xsi:type="advanced:Placeholder" xmi:id="_F_unQoonEe6zmqLK03ZZ7g" elementId="org.eclipse.ui.views.TaskList" ref="_F_vPzoonEe6zmqLK03ZZ7g"/>
                 <children xsi:type="advanced:Placeholder" xmi:id="_F_unQ4onEe6zmqLK03ZZ7g" elementId="org.eclipse.ui.console.ConsoleView" ref="_F_vP0oonEe6zmqLK03ZZ7g"/>
@@ -1189,7 +1190,7 @@
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_F_vQz4onEe6zmqLK03ZZ7g" elementId="org.eclipse.ui.workbench.file">
         <tags>Draggable</tags>
-        <children xsi:type="menu:HandledToolItem" xmi:id="_asr_QI7ZEe6TOZUxcwtrdA" elementId="print" visible="false" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/print_edit.png" tooltip="Print" command="_F_xDloonEe6zmqLK03ZZ7g"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_yU81UI9uEe6_hJHrPKBKqg" elementId="print" visible="false" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/print_edit.png" tooltip="Print" command="_F_xDloonEe6zmqLK03ZZ7g"/>
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_F_v1VoonEe6zmqLK03ZZ7g" elementId="additions" toBeRendered="false">
         <tags>toolbarSeparator</tags>
@@ -1213,7 +1214,7 @@
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_F_v1k4onEe6zmqLK03ZZ7g" elementId="org.eclipse.ui.workbench.navigate">
         <tags>Draggable</tags>
-        <children xsi:type="menu:HandledToolItem" xmi:id="_ast0cI7ZEe6TOZUxcwtrdA" elementId="org.eclipse.ui.window.pinEditor" visible="false" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/pin_editor.png" tooltip="Pin Editor" type="Check" command="_F_wgh4onEe6zmqLK03ZZ7g"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_yU-qgY9uEe6_hJHrPKBKqg" elementId="org.eclipse.ui.window.pinEditor" visible="false" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/pin_editor.png" tooltip="Pin Editor" type="Check" command="_F_wgh4onEe6zmqLK03ZZ7g"/>
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_F_v1noonEe6zmqLK03ZZ7g" elementId="group.editor" toBeRendered="false">
         <tags>toolbarSeparator</tags>

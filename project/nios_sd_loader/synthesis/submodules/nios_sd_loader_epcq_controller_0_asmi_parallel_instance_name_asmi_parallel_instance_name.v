@@ -1,4 +1,4 @@
-//altasmi_parallel CBX_AUTO_BLACKBOX="ALL" CBX_SINGLE_OUTPUT_FILE="ON" DATA_WIDTH="STANDARD" DEVICE_FAMILY="Cyclone IV E" ENABLE_SIM="FALSE" EPCS_TYPE="EPCQ64" FLASH_RSTPIN="FALSE" PAGE_SIZE=256 PORT_BULK_ERASE="PORT_USED" PORT_DIE_ERASE="PORT_UNUSED" PORT_EN4B_ADDR="PORT_UNUSED" PORT_EX4B_ADDR="PORT_UNUSED" PORT_FAST_READ="PORT_USED" PORT_ILLEGAL_ERASE="PORT_USED" PORT_ILLEGAL_WRITE="PORT_USED" PORT_RDID_OUT="PORT_USED" PORT_READ_ADDRESS="PORT_UNUSED" PORT_READ_DUMMYCLK="PORT_USED" PORT_READ_RDID="PORT_USED" PORT_READ_SID="PORT_UNUSED" PORT_READ_STATUS="PORT_USED" PORT_SECTOR_ERASE="PORT_USED" PORT_SECTOR_PROTECT="PORT_USED" PORT_SHIFT_BYTES="PORT_USED" PORT_WREN="PORT_USED" PORT_WRITE="PORT_USED" USE_ASMIBLOCK="ON" USE_EAB="ON" WRITE_DUMMY_CLK=0 addr bulk_erase busy clkin data_valid datain dataout fast_read illegal_erase illegal_write rden rdid_out read_dummyclk read_rdid read_status reset sector_erase sector_protect shift_bytes status_out wren write INTENDED_DEVICE_FAMILY=""" ALTERA_INTERNAL_OPTIONS=SUPPRESS_DA_RULE_INTERNAL=C106
+//altasmi_parallel CBX_AUTO_BLACKBOX="ALL" CBX_SINGLE_OUTPUT_FILE="ON" DATA_WIDTH="STANDARD" DEVICE_FAMILY="Cyclone IV E" ENABLE_SIM="FALSE" EPCS_TYPE="EPCS64" FLASH_RSTPIN="FALSE" PAGE_SIZE=256 PORT_BULK_ERASE="PORT_USED" PORT_DIE_ERASE="PORT_UNUSED" PORT_EN4B_ADDR="PORT_UNUSED" PORT_EX4B_ADDR="PORT_UNUSED" PORT_FAST_READ="PORT_USED" PORT_ILLEGAL_ERASE="PORT_USED" PORT_ILLEGAL_WRITE="PORT_USED" PORT_RDID_OUT="PORT_USED" PORT_READ_ADDRESS="PORT_UNUSED" PORT_READ_DUMMYCLK="PORT_UNUSED" PORT_READ_RDID="PORT_USED" PORT_READ_SID="PORT_USED" PORT_READ_STATUS="PORT_USED" PORT_SECTOR_ERASE="PORT_USED" PORT_SECTOR_PROTECT="PORT_USED" PORT_SHIFT_BYTES="PORT_USED" PORT_WREN="PORT_USED" PORT_WRITE="PORT_USED" USE_ASMIBLOCK="ON" USE_EAB="ON" WRITE_DUMMY_CLK=0 addr bulk_erase busy clkin data_valid datain dataout epcs_id fast_read illegal_erase illegal_write rden rdid_out read_rdid read_sid read_status reset sector_erase sector_protect shift_bytes status_out wren write INTENDED_DEVICE_FAMILY=""" ALTERA_INTERNAL_OPTIONS=SUPPRESS_DA_RULE_INTERNAL=C106
 //VERSION_BEGIN 18.1 cbx_a_gray2bin 2018:09:12:13:04:24:SJ cbx_a_graycounter 2018:09:12:13:04:24:SJ cbx_altasmi_parallel 2018:09:12:13:04:24:SJ cbx_altdpram 2018:09:12:13:04:24:SJ cbx_altera_counter 2018:09:12:13:04:24:SJ cbx_altera_syncram 2018:09:12:13:04:24:SJ cbx_altera_syncram_nd_impl 2018:09:12:13:04:24:SJ cbx_altsyncram 2018:09:12:13:04:24:SJ cbx_arriav 2018:09:12:13:04:23:SJ cbx_cyclone 2018:09:12:13:04:24:SJ cbx_cycloneii 2018:09:12:13:04:24:SJ cbx_fifo_common 2018:09:12:13:04:24:SJ cbx_lpm_add_sub 2018:09:12:13:04:24:SJ cbx_lpm_compare 2018:09:12:13:04:24:SJ cbx_lpm_counter 2018:09:12:13:04:24:SJ cbx_lpm_decode 2018:09:12:13:04:24:SJ cbx_lpm_mux 2018:09:12:13:04:24:SJ cbx_mgl 2018:09:12:13:10:36:SJ cbx_nadder 2018:09:12:13:04:24:SJ cbx_nightfury 2018:09:12:13:04:24:SJ cbx_scfifo 2018:09:12:13:04:24:SJ cbx_stratix 2018:09:12:13:04:24:SJ cbx_stratixii 2018:09:12:13:04:24:SJ cbx_stratixiii 2018:09:12:13:04:24:SJ cbx_stratixv 2018:09:12:13:04:24:SJ cbx_util_mgl 2018:09:12:13:04:24:SJ cbx_zippleback 2018:09:12:13:04:24:SJ  VERSION_END
 // synthesis VERILOG_INPUT_VERSION VERILOG_2001
 // altera message_off 10463
@@ -21,7 +21,7 @@
 
 
 
-//synthesis_resources = a_graycounter 6 cycloneive_asmiblock 1 lpm_compare 3 lpm_counter 3 lut 70 mux21 2 reg 158 
+//synthesis_resources = a_graycounter 6 cycloneive_asmiblock 1 lpm_compare 2 lpm_counter 2 lut 76 mux21 2 reg 153 
 //synopsys translate_off
 `timescale 1 ps / 1 ps
 //synopsys translate_on
@@ -35,13 +35,14 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 	data_valid,
 	datain,
 	dataout,
+	epcs_id,
 	fast_read,
 	illegal_erase,
 	illegal_write,
 	rden,
 	rdid_out,
-	read_dummyclk,
 	read_rdid,
+	read_sid,
 	read_status,
 	reset,
 	sector_erase,
@@ -57,13 +58,14 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 	output   data_valid;
 	input   [7:0]  datain;
 	output   [7:0]  dataout;
+	output   [7:0]  epcs_id;
 	input   fast_read;
 	output   illegal_erase;
 	output   illegal_write;
 	input   rden;
 	output   [7:0]  rdid_out;
-	input   read_dummyclk;
 	input   read_rdid;
+	input   read_sid;
 	input   read_status;
 	input   reset;
 	input   sector_erase;
@@ -78,8 +80,8 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 	tri0   bulk_erase;
 	tri0   [7:0]  datain;
 	tri0   fast_read;
-	tri0   read_dummyclk;
 	tri0   read_rdid;
+	tri0   read_sid;
 	tri0   read_status;
 	tri0   reset;
 	tri0   sector_erase;
@@ -117,11 +119,11 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 	reg	clr_rstat_reg;
 	reg	clr_secprot_reg;
 	reg	clr_secprot_reg1;
+	reg	clr_sid_reg;
 	reg	clr_write_reg;
 	reg	clr_write_reg2;
 	reg	cnt_bfend_reg;
 	reg	do_wrmemadd_reg;
-	reg	[3:0]	dummyclk_reg;
 	reg	dvalid_reg;
 	wire	wire_dvalid_reg_ena;
 	wire	wire_dvalid_reg_sclr;
@@ -136,6 +138,7 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 	wire	wire_end_rbyte_reg_ena;
 	wire	wire_end_rbyte_reg_sclr;
 	reg	end_read_reg;
+	reg	[7:0]	epcs_id_reg2;
 	reg	fast_read_reg;
 	wire	wire_fast_read_reg_ena;
 	reg	ill_erase_reg;
@@ -160,12 +163,10 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 	wire	[7:0]	wire_read_dout_reg_d;
 	reg	[7:0]	read_dout_reg;
 	wire	[7:0]	wire_read_dout_reg_ena;
-	reg	read_dummyclk_reg;
-	wire	wire_read_dummyclk_reg_ena;
-	reg	read_nonvdummyclk_reg;
-	wire	wire_read_nonvdummyclk_reg_ena;
 	reg	read_rdid_reg;
 	wire	wire_read_rdid_reg_ena;
+	reg	read_sid_reg;
+	wire	wire_read_sid_reg_ena;
 	reg	read_status_reg;
 	wire	wire_read_status_reg_ena;
 	reg	sec_erase_reg;
@@ -179,9 +180,6 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 	reg	stage3_dly_reg;
 	reg	stage3_reg;
 	reg	stage4_reg;
-	reg	start_dummyclk_reg;
-	wire	wire_start_dummyclk_reg_ena;
-	wire	wire_start_dummyclk_reg_sclr;
 	reg	start_sppoll_reg;
 	wire	wire_start_sppoll_reg_ena;
 	reg	start_sppoll_reg2;
@@ -196,9 +194,6 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 	wire	[7:0]	wire_statreg_out_ena;
 	reg	streg_datain_reg;
 	wire	wire_streg_datain_reg_ena;
-	wire	[7:0]	wire_volatile_reg_d;
-	reg	[7:0]	volatile_reg;
-	wire	[7:0]	wire_volatile_reg_ena;
 	reg	write_prot_reg;
 	wire	wire_write_prot_reg_ena;
 	reg	write_reg;
@@ -207,15 +202,13 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 	wire	[7:0]	wire_wrstat_dreg_d;
 	reg	[7:0]	wrstat_dreg;
 	wire	[7:0]	wire_wrstat_dreg_ena;
-	wire  wire_cmpr10_aeb;
-	wire  wire_cmpr7_aeb;
-	wire  wire_cmpr9_aeb;
-	wire  [3:0]   wire_dummyclk_cntr_q;
+	wire  wire_cmpr5_aeb;
+	wire  wire_cmpr6_aeb;
 	wire  [8:0]   wire_pgwr_data_cntr_q;
 	wire  [8:0]   wire_pgwr_read_cntr_q;
 	wire	wire_mux211_dataout;
 	wire	wire_mux212_dataout;
-	wire  [7:0]   wire_scfifo8_q;
+	wire  [7:0]   wire_scfifo4_q;
 	wire  addr_overdie;
 	wire  addr_overdie_pos;
 	wire  [23:0]  addr_reg_overdie;
@@ -232,7 +225,6 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 	wire  clkin_wire;
 	wire  clr_addmsb_wire;
 	wire  clr_endrbyte_wire;
-	wire  clr_freadepcq_wire;
 	wire  clr_rdid_wire;
 	wire  clr_read_wire;
 	wire  clr_read_wire2;
@@ -248,9 +240,7 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 	wire  [3:0]  datain_wire;
 	wire  [3:0]  dataout_wire;
 	wire  [7:0]  derase_opcode;
-	wire  die_erase_wire;
 	wire  do_4baddr;
-	wire  do_addr_overdie;
 	wire  do_bulk_erase;
 	wire  do_die_erase;
 	wire  do_ex4baddr;
@@ -297,7 +287,6 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 	wire  end_read_byte;
 	wire  end_read_flag_status;
 	wire  end_wrstage;
-	wire  ex4b_addr_wire;
 	wire  [7:0]  exb4addr_opcode;
 	wire  [7:0]  fast_read_opcode;
 	wire  fast_read_wire;
@@ -308,18 +297,18 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 	wire  illegal_write_b4out_wire;
 	wire  in_operation;
 	wire  load_opcode;
-	wire  [6:0]  mask_prot;
-	wire  [6:0]  mask_prot_add;
-	wire  [6:0]  mask_prot_check;
-	wire  [6:0]  mask_prot_comp_ntb;
-	wire  [6:0]  mask_prot_comp_tb;
+	wire  [5:0]  mask_prot;
+	wire  [5:0]  mask_prot_add;
+	wire  [5:0]  mask_prot_check;
+	wire  [5:0]  mask_prot_comp_ntb;
+	wire  [5:0]  mask_prot_comp_tb;
 	wire  memadd_sdoin;
 	wire  ncs_reg_ena_wire;
 	wire  not_busy;
 	wire  oe_wire;
 	wire  [8:0]  page_size_wire;
 	wire  [8:0]  pagewr_buf_not_empty;
-	wire  [15:0]  prot_wire;
+	wire  [7:0]  prot_wire;
 	wire  rden_wire;
 	wire  rdid_load;
 	wire  [7:0]  rdid_opcode;
@@ -328,14 +317,11 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 	wire  read_buf;
 	wire  read_bufdly;
 	wire  [7:0]  read_data_reg_in_wire;
-	wire  read_dummyclk_wire;
-	wire  read_nonvolatile;
 	wire  [7:0]  read_opcode;
 	wire  read_rdid_wire;
 	wire  read_sid_wire;
 	wire  read_status_wire;
 	wire  read_wire;
-	wire  reset_addren_wire;
 	wire  [7:0]  rflagstat_opcode;
 	wire  [7:0]  rnvdummyclk_opcode;
 	wire  [7:0]  rsid_opcode;
@@ -352,6 +338,7 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 	wire  shift_opcode;
 	wire  shift_opdata;
 	wire  shift_pgwr_data;
+	wire  sid_load;
 	wire  st_busy_wire;
 	wire  stage2_wire;
 	wire  stage3_wire;
@@ -360,9 +347,7 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 	wire  start_poll;
 	wire  start_sppoll;
 	wire  start_wrpoll;
-	wire  tb_wire;
-	wire  volatile_default_wire;
-	wire  volatile_empty_wire;
+	wire  to_sdoin_wire;
 	wire  [7:0]  wren_opcode;
 	wire  wren_wire;
 	wire  [7:0]  write_opcode;
@@ -686,7 +671,7 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 	assign
 		wire_addr_reg_d = {((({23{not_busy}} & addr[23:1]) | ({23{stage3_wire}} & addr_reg[22:0])) | ({23{addr_overdie}} & addr_reg_overdie[23:1])), ((not_busy & addr[0]) | (addr_overdie & addr_reg_overdie[0]))};
 	assign
-		wire_addr_reg_ena = {24{((((rden_wire | wren_wire) & not_busy) | (stage4_wire & addr_overdie)) | (stage3_wire & ((((do_write | do_sec_erase) | do_die_erase) & do_memadd) | (do_fast_read & (~ end_ophdly)))))}};
+		wire_addr_reg_ena = {24{((((rden_wire | wren_wire) & not_busy) | (stage4_wire & addr_overdie)) | (stage3_wire & ((((do_write | do_sec_erase) | do_die_erase) & do_memadd) | (do_read | do_fast_read))))}};
 	// synopsys translate_off
 	initial
 		asmi_opcode_reg[0:0] = 0;
@@ -754,7 +739,7 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 	// synopsys translate_on
 	always @ ( negedge clkin_wire or  posedge reset)
 		if (reset == 1'b1) buf_empty_reg <= 1'b0;
-		else  buf_empty_reg <= wire_cmpr10_aeb;
+		else  buf_empty_reg <= wire_cmpr6_aeb;
 	// synopsys translate_off
 	initial
 		bulk_erase_reg = 0;
@@ -824,6 +809,13 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 		else  clr_secprot_reg1 <= clr_secprot_reg;
 	// synopsys translate_off
 	initial
+		clr_sid_reg = 0;
+	// synopsys translate_on
+	always @ ( negedge clkin_wire or  posedge reset)
+		if (reset == 1'b1) clr_sid_reg <= 1'b0;
+		else  clr_sid_reg <= end_ophdly;
+	// synopsys translate_off
+	initial
 		clr_write_reg = 0;
 	// synopsys translate_on
 	always @ ( negedge clkin_wire or  posedge reset)
@@ -850,13 +842,6 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 	always @ ( negedge clkin_wire or  posedge reset)
 		if (reset == 1'b1) do_wrmemadd_reg <= 1'b0;
 		else  do_wrmemadd_reg <= (wire_wrstage_cntr_q[1] & wire_wrstage_cntr_q[0]);
-	// synopsys translate_off
-	initial
-		dummyclk_reg = 0;
-	// synopsys translate_on
-	always @ ( posedge clkin_wire or  posedge reset)
-		if (reset == 1'b1) dummyclk_reg <= 4'b0;
-		else  dummyclk_reg <= {volatile_reg[7], (volatile_reg[6] & (~ volatile_default_wire)), (volatile_reg[5] & (~ volatile_default_wire)), (volatile_reg[4] & (~ volatile_default_wire))};
 	// synopsys translate_off
 	initial
 		dvalid_reg = 0;
@@ -936,6 +921,13 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 		else  end_read_reg <= ((((~ rden_wire) & (do_read | do_fast_read)) & data_valid_wire) & end_read_byte);
 	// synopsys translate_off
 	initial
+		epcs_id_reg2 = 0;
+	// synopsys translate_on
+	always @ ( negedge clkin_wire or  posedge reset)
+		if (reset == 1'b1) epcs_id_reg2 <= 8'b0;
+		else if  (sid_load == 1'b1)   epcs_id_reg2 <= {read_dout_reg[7:0]};
+	// synopsys translate_off
+	initial
 		fast_read_reg = 0;
 	// synopsys translate_on
 	always @ ( posedge clkin_wire or  posedge reset)
@@ -986,7 +978,7 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 	// synopsys translate_on
 	always @ ( negedge clkin_wire or  posedge reset)
 		if (reset == 1'b1) max_cnt_reg <= 1'b0;
-		else  max_cnt_reg <= wire_cmpr9_aeb;
+		else  max_cnt_reg <= wire_cmpr5_aeb;
 	// synopsys translate_off
 	initial
 		maxcnt_shift_reg = 0;
@@ -1085,7 +1077,7 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 			if (clr_write_wire == 1'b1) pgwrbuf_dataout[7:7] <= 1'b0;
 			else  pgwrbuf_dataout[7:7] <= wire_pgwrbuf_dataout_d[7:7];
 	assign
-		wire_pgwrbuf_dataout_d = {(({7{read_bufdly}} & wire_scfifo8_q[7:1]) | ({7{(~ read_bufdly)}} & pgwrbuf_dataout[6:0])), (read_bufdly & wire_scfifo8_q[0])};
+		wire_pgwrbuf_dataout_d = {(({7{read_bufdly}} & wire_scfifo4_q[7:1]) | ({7{(~ read_bufdly)}} & pgwrbuf_dataout[6:0])), (read_bufdly & wire_scfifo4_q[0])};
 	assign
 		wire_pgwrbuf_dataout_ena = {8{((read_bufdly | shift_pgwr_data) | clr_write_wire)}};
 	// synopsys translate_off
@@ -1231,28 +1223,6 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 		wire_read_dout_reg_ena = {8{((stage4_wire & ((do_read | do_fast_read) | do_read_sid)) | (stage3_wire & (((do_read_stat | do_read_rdid) | do_read_volatile) | do_read_nonvolatile)))}};
 	// synopsys translate_off
 	initial
-		read_dummyclk_reg = 0;
-	// synopsys translate_on
-	always @ ( posedge clkin_wire or  posedge reset)
-		if (reset == 1'b1) read_dummyclk_reg <= 1'b0;
-		else if  (wire_read_dummyclk_reg_ena == 1'b1) 
-			if (clr_freadepcq_wire == 1'b1) read_dummyclk_reg <= 1'b0;
-			else  read_dummyclk_reg <= read_dummyclk;
-	assign
-		wire_read_dummyclk_reg_ena = ((~ busy_wire) | clr_freadepcq_wire);
-	// synopsys translate_off
-	initial
-		read_nonvdummyclk_reg = 0;
-	// synopsys translate_on
-	always @ ( posedge clkin_wire or  posedge reset)
-		if (reset == 1'b1) read_nonvdummyclk_reg <= 1'b0;
-		else if  (wire_read_nonvdummyclk_reg_ena == 1'b1) 
-			if (clr_freadepcq_wire == 1'b1) read_nonvdummyclk_reg <= 1'b0;
-			else  read_nonvdummyclk_reg <= ((~ read_dummyclk_wire) & volatile_empty_wire);
-	assign
-		wire_read_nonvdummyclk_reg_ena = ((~ busy_wire) | clr_freadepcq_wire);
-	// synopsys translate_off
-	initial
 		read_rdid_reg = 0;
 	// synopsys translate_on
 	always @ ( posedge clkin_wire or  posedge reset)
@@ -1262,6 +1232,17 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 			else  read_rdid_reg <= read_rdid;
 	assign
 		wire_read_rdid_reg_ena = ((~ busy_wire) | clr_rdid_wire);
+	// synopsys translate_off
+	initial
+		read_sid_reg = 0;
+	// synopsys translate_on
+	always @ ( posedge clkin_wire or  posedge reset)
+		if (reset == 1'b1) read_sid_reg <= 1'b0;
+		else if  (wire_read_sid_reg_ena == 1'b1) 
+			if (clr_sid_wire == 1'b1) read_sid_reg <= 1'b0;
+			else  read_sid_reg <= read_sid;
+	assign
+		wire_read_sid_reg_ena = ((~ busy_wire) | clr_sid_wire);
 	// synopsys translate_off
 	initial
 		read_status_reg = 0;
@@ -1348,18 +1329,6 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 	always @ ( negedge clkin_wire or  posedge reset)
 		if (reset == 1'b1) stage4_reg <= 1'b0;
 		else  stage4_reg <= (wire_stage_cntr_q[1] & (~ wire_stage_cntr_q[0]));
-	// synopsys translate_off
-	initial
-		start_dummyclk_reg = 0;
-	// synopsys translate_on
-	always @ ( posedge clkin_wire or  posedge reset)
-		if (reset == 1'b1) start_dummyclk_reg <= 1'b0;
-		else if  (wire_start_dummyclk_reg_ena == 1'b1) 
-			if (wire_start_dummyclk_reg_sclr == 1'b1) start_dummyclk_reg <= 1'b0;
-			else  start_dummyclk_reg <= (do_read | do_fast_read);
-	assign
-		wire_start_dummyclk_reg_ena = (((end_one_cycle & wire_addbyte_cntr_q[1]) & (~ wire_addbyte_cntr_q[0])) | (clr_read_wire | addr_overdie)),
-		wire_start_dummyclk_reg_sclr = (clr_read_wire | addr_overdie);
 	// synopsys translate_off
 	initial
 		start_sppoll_reg = 0;
@@ -1549,73 +1518,13 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 		wire_streg_datain_reg_ena = (((do_sec_prot & (~ wire_spstage_cntr_q[1])) & wire_spstage_cntr_q[0]) | end_operation);
 	// synopsys translate_off
 	initial
-		volatile_reg[0:0] = 0;
-	// synopsys translate_on
-	always @ ( posedge clkin_wire or  posedge reset)
-		if (reset == 1'b1) volatile_reg[0:0] <= 1'b0;
-		else if  (wire_volatile_reg_ena[0:0] == 1'b1)   volatile_reg[0:0] <= wire_volatile_reg_d[0:0];
-	// synopsys translate_off
-	initial
-		volatile_reg[1:1] = 0;
-	// synopsys translate_on
-	always @ ( posedge clkin_wire or  posedge reset)
-		if (reset == 1'b1) volatile_reg[1:1] <= 1'b0;
-		else if  (wire_volatile_reg_ena[1:1] == 1'b1)   volatile_reg[1:1] <= wire_volatile_reg_d[1:1];
-	// synopsys translate_off
-	initial
-		volatile_reg[2:2] = 0;
-	// synopsys translate_on
-	always @ ( posedge clkin_wire or  posedge reset)
-		if (reset == 1'b1) volatile_reg[2:2] <= 1'b0;
-		else if  (wire_volatile_reg_ena[2:2] == 1'b1)   volatile_reg[2:2] <= wire_volatile_reg_d[2:2];
-	// synopsys translate_off
-	initial
-		volatile_reg[3:3] = 0;
-	// synopsys translate_on
-	always @ ( posedge clkin_wire or  posedge reset)
-		if (reset == 1'b1) volatile_reg[3:3] <= 1'b0;
-		else if  (wire_volatile_reg_ena[3:3] == 1'b1)   volatile_reg[3:3] <= wire_volatile_reg_d[3:3];
-	// synopsys translate_off
-	initial
-		volatile_reg[4:4] = 0;
-	// synopsys translate_on
-	always @ ( posedge clkin_wire or  posedge reset)
-		if (reset == 1'b1) volatile_reg[4:4] <= 1'b0;
-		else if  (wire_volatile_reg_ena[4:4] == 1'b1)   volatile_reg[4:4] <= wire_volatile_reg_d[4:4];
-	// synopsys translate_off
-	initial
-		volatile_reg[5:5] = 0;
-	// synopsys translate_on
-	always @ ( posedge clkin_wire or  posedge reset)
-		if (reset == 1'b1) volatile_reg[5:5] <= 1'b0;
-		else if  (wire_volatile_reg_ena[5:5] == 1'b1)   volatile_reg[5:5] <= wire_volatile_reg_d[5:5];
-	// synopsys translate_off
-	initial
-		volatile_reg[6:6] = 0;
-	// synopsys translate_on
-	always @ ( posedge clkin_wire or  posedge reset)
-		if (reset == 1'b1) volatile_reg[6:6] <= 1'b0;
-		else if  (wire_volatile_reg_ena[6:6] == 1'b1)   volatile_reg[6:6] <= wire_volatile_reg_d[6:6];
-	// synopsys translate_off
-	initial
-		volatile_reg[7:7] = 0;
-	// synopsys translate_on
-	always @ ( posedge clkin_wire or  posedge reset)
-		if (reset == 1'b1) volatile_reg[7:7] <= 1'b0;
-		else if  (wire_volatile_reg_ena[7:7] == 1'b1)   volatile_reg[7:7] <= wire_volatile_reg_d[7:7];
-	assign
-		wire_volatile_reg_d = {({8{(do_read_volatile | do_read_nonvolatile)}} & read_dout_reg[7:0])};
-	assign
-		wire_volatile_reg_ena = {8{(((do_read_volatile | do_read_nonvolatile) & stage3_dly_reg) & (~ do_addr_overdie))}};
-	// synopsys translate_off
-	initial
 		write_prot_reg = 0;
 	// synopsys translate_on
 	always @ ( negedge clkin_wire or  posedge reset)
 		if (reset == 1'b1) write_prot_reg <= 1'b0;
 		else if  (wire_write_prot_reg_ena == 1'b1) 
 			if (clr_write_wire == 1'b1) write_prot_reg <= 1'b0;
-			else  write_prot_reg <= ((((do_write | do_sec_erase) & (~ prot_wire[0])) & (((~ mask_prot_comp_ntb[6]) & (~ tb_wire)) | ((~ mask_prot_comp_tb[6]) & tb_wire))) | be_write_prot);
+			else  write_prot_reg <= ((((do_write | do_sec_erase) & (~ mask_prot_comp_ntb[5])) & (~ prot_wire[0])) | be_write_prot);
 	assign
 		wire_write_prot_reg_ena = (((((((do_sec_erase | do_write) | do_bulk_erase) | do_die_erase) & (~ wire_wrstage_cntr_q[1])) & wire_wrstage_cntr_q[0]) & end_ophdly) | clr_write_wire);
 	// synopsys translate_off
@@ -1714,57 +1623,9 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 		wire_wrstat_dreg_d = {(({7{not_busy}} & datain[7:1]) | ({7{stage3_wire}} & wrstat_dreg[6:0])), (not_busy & datain[0])};
 	assign
 		wire_wrstat_dreg_ena = {8{(((wren_wire & not_busy) | (((do_sec_prot & stage3_wire) & (~ wire_spstage_cntr_q[1])) & wire_spstage_cntr_q[0])) | clr_secprot_wire)}};
-	lpm_compare   cmpr10
+	lpm_compare   cmpr5
 	( 
-	.aeb(wire_cmpr10_aeb),
-	.agb(),
-	.ageb(),
-	.alb(),
-	.aleb(),
-	.aneb(),
-	.dataa({wire_pgwr_data_cntr_q[8:0]}),
-	.datab({wire_pgwr_read_cntr_q[8:0]})
-	`ifndef FORMAL_VERIFICATION
-	// synopsys translate_off
-	`endif
-	,
-	.aclr(1'b0),
-	.clken(1'b1),
-	.clock(1'b0)
-	`ifndef FORMAL_VERIFICATION
-	// synopsys translate_on
-	`endif
-	);
-	defparam
-		cmpr10.lpm_width = 9,
-		cmpr10.lpm_type = "lpm_compare";
-	lpm_compare   cmpr7
-	( 
-	.aeb(wire_cmpr7_aeb),
-	.agb(),
-	.ageb(),
-	.alb(),
-	.aleb(),
-	.aneb(),
-	.dataa({wire_dummyclk_cntr_q}),
-	.datab({dummyclk_reg[3:0]})
-	`ifndef FORMAL_VERIFICATION
-	// synopsys translate_off
-	`endif
-	,
-	.aclr(1'b0),
-	.clken(1'b1),
-	.clock(1'b0)
-	`ifndef FORMAL_VERIFICATION
-	// synopsys translate_on
-	`endif
-	);
-	defparam
-		cmpr7.lpm_width = 4,
-		cmpr7.lpm_type = "lpm_compare";
-	lpm_compare   cmpr9
-	( 
-	.aeb(wire_cmpr9_aeb),
+	.aeb(wire_cmpr5_aeb),
 	.agb(),
 	.ageb(),
 	.alb(),
@@ -1784,38 +1645,32 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 	`endif
 	);
 	defparam
-		cmpr9.lpm_width = 9,
-		cmpr9.lpm_type = "lpm_compare";
-	lpm_counter   dummyclk_cntr
+		cmpr5.lpm_width = 9,
+		cmpr5.lpm_type = "lpm_compare";
+	lpm_compare   cmpr6
 	( 
-	.aclr(reset),
-	.clk_en(((do_fast_read & start_dummyclk_reg) | (clr_read_wire | addr_overdie))),
-	.clock((~ clkin_wire)),
-	.cout(),
-	.eq(),
-	.q(wire_dummyclk_cntr_q),
-	.sclr((clr_read_wire | addr_overdie))
+	.aeb(wire_cmpr6_aeb),
+	.agb(),
+	.ageb(),
+	.alb(),
+	.aleb(),
+	.aneb(),
+	.dataa({wire_pgwr_data_cntr_q[8:0]}),
+	.datab({wire_pgwr_read_cntr_q[8:0]})
 	`ifndef FORMAL_VERIFICATION
 	// synopsys translate_off
 	`endif
 	,
-	.aload(1'b0),
-	.aset(1'b0),
-	.cin(1'b1),
-	.cnt_en(1'b1),
-	.data({4{1'b0}}),
-	.sload(1'b0),
-	.sset(1'b0),
-	.updown(1'b1)
+	.aclr(1'b0),
+	.clken(1'b1),
+	.clock(1'b0)
 	`ifndef FORMAL_VERIFICATION
 	// synopsys translate_on
 	`endif
 	);
 	defparam
-		dummyclk_cntr.lpm_direction = "UP",
-		dummyclk_cntr.lpm_port_updown = "PORT_UNUSED",
-		dummyclk_cntr.lpm_width = 4,
-		dummyclk_cntr.lpm_type = "lpm_counter";
+		cmpr6.lpm_width = 9,
+		cmpr6.lpm_type = "lpm_compare";
 	lpm_counter   pgwr_data_cntr
 	( 
 	.aclr(reset),
@@ -1878,7 +1733,7 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 		pgwr_read_cntr.lpm_type = "lpm_counter";
 	assign		wire_mux211_dataout = (((((do_write | do_sec_prot) | do_sec_erase) | do_bulk_erase) | do_die_erase) === 1'b1) ? end1_cyc_dlyncs_in_wire : end1_cyc_normal_in_wire;
 	assign		wire_mux212_dataout = (do_fast_read === 1'b1) ? end_add_cycle_mux_datab_wire : (wire_addbyte_cntr_q[1] & (~ wire_addbyte_cntr_q[0]));
-	scfifo   scfifo8
+	scfifo   scfifo4
 	( 
 	.aclr(reset),
 	.almost_empty(),
@@ -1888,17 +1743,17 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 	.eccstatus(),
 	.empty(),
 	.full(),
-	.q(wire_scfifo8_q),
+	.q(wire_scfifo4_q),
 	.rdreq((read_buf | dummy_read_buf)),
 	.sclr(clr_write_wire2),
 	.usedw(),
 	.wrreq(((shift_bytes_wire & wren_wire) & (~ do_write))));
 	defparam
-		scfifo8.lpm_numwords = 258,
-		scfifo8.lpm_width = 8,
-		scfifo8.lpm_widthu = 9,
-		scfifo8.use_eab = "ON",
-		scfifo8.lpm_type = "scfifo";
+		scfifo4.lpm_numwords = 258,
+		scfifo4.lpm_width = 8,
+		scfifo4.lpm_widthu = 9,
+		scfifo4.use_eab = "ON",
+		scfifo4.lpm_type = "scfifo";
 	assign
 		addr_overdie = 1'b0,
 		addr_overdie_pos = 1'b0,
@@ -1917,27 +1772,24 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 		clkin_wire = clkin,
 		clr_addmsb_wire = (((((wire_stage_cntr_q[1] & (~ wire_stage_cntr_q[0])) & end_add_cycle) & end_one_cyc_pos) | (((~ do_read) & (~ do_fast_read)) & clr_write_wire2)) | ((((do_sec_erase | do_die_erase) & (~ do_wren)) & (~ do_read_stat)) & end_operation)),
 		clr_endrbyte_wire = (((((do_read | do_fast_read) & (~ wire_gen_cntr_q[2])) & wire_gen_cntr_q[1]) & wire_gen_cntr_q[0]) | clr_read_wire2),
-		clr_freadepcq_wire = end_operation,
 		clr_rdid_wire = clr_rdid_reg,
 		clr_read_wire = clr_read_reg,
 		clr_read_wire2 = clr_read_reg2,
 		clr_rstat_wire = clr_rstat_reg,
 		clr_secprot_wire = clr_secprot_reg,
 		clr_secprot_wire1 = clr_secprot_reg1,
-		clr_sid_wire = 1'b0,
+		clr_sid_wire = clr_sid_reg,
 		clr_write_wire = clr_write_reg,
 		clr_write_wire2 = clr_write_reg2,
 		cnt_bfend_wire_in = ((wire_gen_cntr_q[2] & (~ wire_gen_cntr_q[1])) & wire_gen_cntr_q[0]),
 		data0out_wire = wire_sd3_data0out,
 		data_valid = data_valid_wire,
 		data_valid_wire = dvalid_reg2,
-		datain_wire = {{2{1'b1}}, 1'b0, ((((((shift_opdata & asmi_opcode_reg[7]) | rsid_sdoin) | memadd_sdoin) | write_sdoin) | secprot_sdoin) | freadwrv_sdoin)},
+		datain_wire = {{4{1'b0}}},
 		dataout = {read_data_reg[7:0]},
 		dataout_wire = {{4{1'b0}}},
 		derase_opcode = {8{1'b0}},
-		die_erase_wire = 1'b0,
 		do_4baddr = 1'b0,
-		do_addr_overdie = 1'b0,
 		do_bulk_erase = (((((((((~ do_read_nonvolatile) & (~ read_rdid_wire)) & (~ read_sid_wire)) & (~ sec_protect_wire)) & (~ (read_wire | fast_read_wire))) & (~ write_wire)) & (~ read_status_wire)) & (~ sec_erase_wire)) & bulk_erase_wire),
 		do_die_erase = 1'b0,
 		do_ex4baddr = 1'b0,
@@ -1947,17 +1799,17 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 		do_memadd = do_wrmemadd_reg,
 		do_polling = ((do_write_polling | do_sprot_polling) | do_freadwrv_polling),
 		do_read = 1'b0,
-		do_read_nonvolatile = read_nonvolatile,
+		do_read_nonvolatile = 1'b0,
 		do_read_rdid = ((~ do_read_nonvolatile) & read_rdid_wire),
-		do_read_sid = 1'b0,
+		do_read_sid = (((~ do_read_nonvolatile) & (~ read_rdid_wire)) & read_sid_wire),
 		do_read_stat = ((((((((((~ do_read_nonvolatile) & (~ read_rdid_wire)) & (~ read_sid_wire)) & (~ sec_protect_wire)) & (~ (read_wire | fast_read_wire))) & (~ write_wire)) & read_status_wire) | do_write_rstat) | do_sprot_rstat) | do_write_volatile_rstat),
-		do_read_volatile = ((((((((((((~ do_read_nonvolatile) & (~ read_rdid_wire)) & (~ read_sid_wire)) & (~ sec_protect_wire)) & (~ (read_wire | fast_read_wire))) & (~ write_wire)) & (~ read_status_wire)) & (~ sec_erase_wire)) & (~ (bulk_erase_wire | die_erase_wire))) & (~ reset_addren_wire)) & (~ ex4b_addr_wire)) & read_dummyclk_wire),
+		do_read_volatile = 1'b0,
 		do_sec_erase = ((((((((~ do_read_nonvolatile) & (~ read_rdid_wire)) & (~ read_sid_wire)) & (~ sec_protect_wire)) & (~ (read_wire | fast_read_wire))) & (~ write_wire)) & (~ read_status_wire)) & sec_erase_wire),
 		do_sec_prot = ((((~ do_read_nonvolatile) & (~ read_rdid_wire)) & (~ read_sid_wire)) & sec_protect_wire),
 		do_secprot_wren = ((do_sec_prot & (~ wire_spstage_cntr_q[1])) & (~ wire_spstage_cntr_q[0])),
 		do_sprot_polling = ((do_sec_prot & wire_spstage_cntr_q[1]) & wire_spstage_cntr_q[0]),
 		do_sprot_rstat = sprot_rstat_reg,
-		do_wait_dummyclk = (do_fast_read & wire_cmpr7_aeb),
+		do_wait_dummyclk = 1'b0,
 		do_wren = ((do_write_wren | do_secprot_wren) | do_write_volatile_wren),
 		do_write = ((((((~ do_read_nonvolatile) & (~ read_rdid_wire)) & (~ read_sid_wire)) & (~ sec_protect_wire)) & (~ (read_wire | fast_read_wire))) & write_wire),
 		do_write_polling = (((((((do_write | do_sec_erase) | do_bulk_erase) | do_die_erase) | do_4baddr) | do_ex4baddr) & wire_wrstage_cntr_q[1]) & (~ wire_wrstage_cntr_q[0])),
@@ -1972,7 +1824,7 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 		end1_cyc_normal_in_wire = ((((((((((((~ wire_stage_cntr_q[0]) & (~ wire_stage_cntr_q[1])) & (~ wire_gen_cntr_q[2])) & wire_gen_cntr_q[1]) & wire_gen_cntr_q[0]) | ((~ ((~ wire_stage_cntr_q[0]) & (~ wire_stage_cntr_q[1]))) & end1_cyc_gen_cntr_wire)) | (do_read & end_read)) | (do_fast_read & end_fast_read)) | ((((do_write | do_sec_erase) | do_bulk_erase) | do_die_erase) & write_prot_true)) | (do_write & (~ pagewr_buf_not_empty[8]))) | ((do_read_stat & start_poll) & (~ st_busy_wire))) | (do_read_rdid & end_op_wire)),
 		end1_cyc_reg_in_wire = wire_mux211_dataout,
 		end_add_cycle = wire_mux212_dataout,
-		end_add_cycle_mux_datab_wire = do_wait_dummyclk,
+		end_add_cycle_mux_datab_wire = (wire_addbyte_cntr_q[2] & wire_addbyte_cntr_q[1]),
 		end_fast_read = end_read_reg,
 		end_one_cyc_pos = end1_cyc_reg2,
 		end_one_cycle = end1_cyc_reg,
@@ -1984,7 +1836,7 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 		end_read_byte = (end_rbyte_reg & (~ addr_overdie)),
 		end_read_flag_status = wire_read_flag_status_cntr_q[0],
 		end_wrstage = end_operation,
-		ex4b_addr_wire = 1'b0,
+		epcs_id = {epcs_id_reg2[7:0]},
 		exb4addr_opcode = {8{1'b0}},
 		fast_read_opcode = 8'b00001011,
 		fast_read_wire = fast_read_reg,
@@ -1997,42 +1849,39 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 		illegal_write_b4out_wire = ((do_write & write_prot_true) | (do_write & (~ pagewr_buf_not_empty[8]))),
 		in_operation = busy_wire,
 		load_opcode = (((((~ wire_stage_cntr_q[1]) & (~ wire_stage_cntr_q[0])) & (~ wire_gen_cntr_q[2])) & (~ wire_gen_cntr_q[1])) & wire_gen_cntr_q[0]),
-		mask_prot = {((((((prot_wire[1] | prot_wire[2]) | prot_wire[3]) | prot_wire[4]) | prot_wire[5]) | prot_wire[6]) | prot_wire[7]), (((((prot_wire[1] | prot_wire[2]) | prot_wire[3]) | prot_wire[4]) | prot_wire[5]) | prot_wire[6]), ((((prot_wire[1] | prot_wire[2]) | prot_wire[3]) | prot_wire[4]) | prot_wire[5]), (((prot_wire[1] | prot_wire[2]) | prot_wire[3]) | prot_wire[4]), ((prot_wire[1] | prot_wire[2]) | prot_wire[3]), (prot_wire[1] | prot_wire[2]), prot_wire[1]},
-		mask_prot_add = {(mask_prot[6] & addr_reg[22]), (mask_prot[5] & addr_reg[21]), (mask_prot[4] & addr_reg[20]), (mask_prot[3] & addr_reg[19]), (mask_prot[2] & addr_reg[18]), (mask_prot[1] & addr_reg[17]), (mask_prot[0] & addr_reg[16])},
-		mask_prot_check = {(mask_prot[6] ^ mask_prot_add[6]), (mask_prot[5] ^ mask_prot_add[5]), (mask_prot[4] ^ mask_prot_add[4]), (mask_prot[3] ^ mask_prot_add[3]), (mask_prot[2] ^ mask_prot_add[2]), (mask_prot[1] ^ mask_prot_add[1]), (mask_prot[0] ^ mask_prot_add[0])},
-		mask_prot_comp_ntb = {(mask_prot_check[6] | mask_prot_comp_ntb[5]), (mask_prot_check[5] | mask_prot_comp_ntb[4]), (mask_prot_check[4] | mask_prot_comp_ntb[3]), (mask_prot_check[3] | mask_prot_comp_ntb[2]), (mask_prot_check[2] | mask_prot_comp_ntb[1]), (mask_prot_check[1] | mask_prot_comp_ntb[0]), mask_prot_check[0]},
-		mask_prot_comp_tb = {(mask_prot_add[6] | mask_prot_comp_tb[5]), (mask_prot_add[5] | mask_prot_comp_tb[4]), (mask_prot_add[4] | mask_prot_comp_tb[3]), (mask_prot_add[3] | mask_prot_comp_tb[2]), (mask_prot_add[2] | mask_prot_comp_tb[1]), (mask_prot_add[1] | mask_prot_comp_tb[0]), mask_prot_add[0]},
+		mask_prot = {(((((prot_wire[1] | prot_wire[2]) | prot_wire[3]) | prot_wire[4]) | prot_wire[5]) | prot_wire[6]), ((((prot_wire[1] | prot_wire[2]) | prot_wire[3]) | prot_wire[4]) | prot_wire[5]), (((prot_wire[1] | prot_wire[2]) | prot_wire[3]) | prot_wire[4]), ((prot_wire[1] | prot_wire[2]) | prot_wire[3]), (prot_wire[1] | prot_wire[2]), prot_wire[1]},
+		mask_prot_add = {(mask_prot[5] & addr_reg[22]), (mask_prot[4] & addr_reg[21]), (mask_prot[3] & addr_reg[20]), (mask_prot[2] & addr_reg[19]), (mask_prot[1] & addr_reg[18]), (mask_prot[0] & addr_reg[17])},
+		mask_prot_check = {(mask_prot[5] ^ mask_prot_add[5]), (mask_prot[4] ^ mask_prot_add[4]), (mask_prot[3] ^ mask_prot_add[3]), (mask_prot[2] ^ mask_prot_add[2]), (mask_prot[1] ^ mask_prot_add[1]), (mask_prot[0] ^ mask_prot_add[0])},
+		mask_prot_comp_ntb = {(mask_prot_check[5] | mask_prot_comp_ntb[4]), (mask_prot_check[4] | mask_prot_comp_ntb[3]), (mask_prot_check[3] | mask_prot_comp_ntb[2]), (mask_prot_check[2] | mask_prot_comp_ntb[1]), (mask_prot_check[1] | mask_prot_comp_ntb[0]), mask_prot_check[0]},
+		mask_prot_comp_tb = {(mask_prot_add[5] | mask_prot_comp_tb[4]), (mask_prot_add[4] | mask_prot_comp_tb[3]), (mask_prot_add[3] | mask_prot_comp_tb[2]), (mask_prot_add[2] | mask_prot_comp_tb[1]), (mask_prot_add[1] | mask_prot_comp_tb[0]), mask_prot_add[0]},
 		memadd_sdoin = add_msb_reg,
 		ncs_reg_ena_wire = (((((~ wire_stage_cntr_q[1]) & wire_stage_cntr_q[0]) & end_one_cyc_pos) | addr_overdie_pos) | end_operation),
 		not_busy = busy_det_reg,
 		oe_wire = 1'b0,
 		page_size_wire = 9'b100000000,
 		pagewr_buf_not_empty = {(pagewr_buf_not_empty[7] | wire_pgwr_data_cntr_q[8]), (pagewr_buf_not_empty[6] | wire_pgwr_data_cntr_q[7]), (pagewr_buf_not_empty[5] | wire_pgwr_data_cntr_q[6]), (pagewr_buf_not_empty[4] | wire_pgwr_data_cntr_q[5]), (pagewr_buf_not_empty[3] | wire_pgwr_data_cntr_q[4]), (pagewr_buf_not_empty[2] | wire_pgwr_data_cntr_q[3]), (pagewr_buf_not_empty[1] | wire_pgwr_data_cntr_q[2]), (pagewr_buf_not_empty[0] | wire_pgwr_data_cntr_q[1]), wire_pgwr_data_cntr_q[0]},
-		prot_wire = {(((bp3_wire & bp2_wire) & bp1_wire) & bp0_wire), (((bp3_wire & bp2_wire) & bp1_wire) & (~ bp0_wire)), (((bp3_wire & bp2_wire) & (~ bp1_wire)) & bp0_wire), (((bp3_wire & bp2_wire) & (~ bp1_wire)) & (~ bp0_wire)), (((bp3_wire & (~ bp2_wire)) & bp1_wire) & bp0_wire), (((bp3_wire & (~ bp2_wire)) & bp1_wire) & (~ bp0_wire)), (((bp3_wire & (~ bp2_wire)) & (~ bp1_wire)) & bp0_wire), (((bp3_wire & (~ bp2_wire)) & (~ bp1_wire)) & (~ bp0_wire)), ((((~ bp3_wire) & bp2_wire) & bp1_wire) & bp0_wire), ((((~ bp3_wire) & bp2_wire) & bp1_wire) & (~ bp0_wire)), ((((~ bp3_wire) & bp2_wire) & (~ bp1_wire)) & bp0_wire), ((((~ bp3_wire) & bp2_wire) & (~ bp1_wire)) & (~ bp0_wire)), ((((~ bp3_wire) & (~ bp2_wire)) & bp1_wire) & bp0_wire), ((((~ bp3_wire) & (~ bp2_wire)) & bp1_wire) & (~ bp0_wire)), ((((~ bp3_wire) & (~ bp2_wire)) & (~ bp1_wire)) & bp0_wire), ((((~ bp3_wire) & (~ bp2_wire)) & (~ bp1_wire)) & (~ bp0_wire))},
+		prot_wire = {((bp2_wire & bp1_wire) & bp0_wire), ((bp2_wire & bp1_wire) & (~ bp0_wire)), ((bp2_wire & (~ bp1_wire)) & bp0_wire), ((bp2_wire & (~ bp1_wire)) & (~ bp0_wire)), (((~ bp2_wire) & bp1_wire) & bp0_wire), (((~ bp2_wire) & bp1_wire) & (~ bp0_wire)), (((~ bp2_wire) & (~ bp1_wire)) & bp0_wire), (((~ bp2_wire) & (~ bp1_wire)) & (~ bp0_wire))},
 		rden_wire = rden,
 		rdid_load = (end_operation & do_read_rdid),
 		rdid_opcode = 8'b10011111,
 		rdid_out = {rdid_out_reg[7:0]},
-		rdummyclk_opcode = 8'b10000101,
+		rdummyclk_opcode = {8{1'b0}},
 		reach_max_cnt = max_cnt_reg,
 		read_buf = (((((end_one_cycle & do_write) & (~ do_read_stat)) & (~ do_wren)) & ((wire_stage_cntr_q[1] & (~ wire_stage_cntr_q[0])) | (wire_addbyte_cntr_q[1] & (~ wire_addbyte_cntr_q[0])))) & (~ buf_empty)),
 		read_bufdly = read_bufdly_reg,
 		read_data_reg_in_wire = {read_dout_reg[7:0]},
-		read_dummyclk_wire = read_dummyclk_reg,
-		read_nonvolatile = read_nonvdummyclk_reg,
 		read_opcode = {8{1'b0}},
 		read_rdid_wire = read_rdid_reg,
-		read_sid_wire = 1'b0,
+		read_sid_wire = read_sid_reg,
 		read_status_wire = read_status_reg,
 		read_wire = 1'b0,
-		reset_addren_wire = 1'b0,
 		rflagstat_opcode = 8'b00000101,
-		rnvdummyclk_opcode = 8'b10110101,
-		rsid_opcode = {8{1'b0}},
-		rsid_sdoin = 1'b0,
+		rnvdummyclk_opcode = {8{1'b0}},
+		rsid_opcode = 8'b10101011,
+		rsid_sdoin = (do_read_sid & stage3_wire),
 		rstat_opcode = 8'b00000101,
 		scein_wire = (~ ncs_reg),
-		sdoin_wire = 1'b0,
+		sdoin_wire = to_sdoin_wire,
 		sec_erase_wire = sec_erase_reg,
 		sec_protect_wire = sec_prot_reg,
 		secprot_opcode = 8'b00000001,
@@ -2042,6 +1891,7 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 		shift_opcode = shift_op_reg,
 		shift_opdata = stage2_wire,
 		shift_pgwr_data = shftpgwr_data_reg,
+		sid_load = (end_ophdly & do_read_sid),
 		st_busy_wire = statreg_int[0],
 		stage2_wire = stage2_reg,
 		stage3_wire = stage3_reg,
@@ -2051,9 +1901,7 @@ module  nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name_asmi_parall
 		start_sppoll = start_sppoll_reg2,
 		start_wrpoll = start_wrpoll_reg2,
 		status_out = {statreg_out[7:0]},
-		tb_wire = statreg_int[5],
-		volatile_default_wire = (((volatile_reg[7] & volatile_reg[6]) & volatile_reg[5]) & volatile_reg[4]),
-		volatile_empty_wire = ((((~ volatile_reg[7]) & (~ volatile_reg[6])) & (~ volatile_reg[5])) & (~ volatile_reg[4])),
+		to_sdoin_wire = ((((((shift_opdata & asmi_opcode_reg[7]) | rsid_sdoin) | memadd_sdoin) | write_sdoin) | secprot_sdoin) | freadwrv_sdoin),
 		wren_opcode = 8'b00000110,
 		wren_wire = wren,
 		write_opcode = 8'b00000010,

@@ -670,7 +670,7 @@
   <parameter name="icache_ramBlockType" value="Automatic" />
   <parameter name="icache_size" value="4096" />
   <parameter name="icache_tagramBlockType" value="Automatic" />
-  <parameter name="impl" value="Tiny" />
+  <parameter name="impl" value="Fast" />
   <parameter name="instAddrWidth" value="25" />
   <parameter name="instSlaveMapParam"><![CDATA[<address-map><slave name='epcq_controller_0.avl_mem' start='0x800000' end='0x1000000' type='altera_epcq_controller.avl_mem' /><slave name='onchip_memory.s1' start='0x1040000' end='0x1080000' type='altera_avalon_onchip_memory2.s1' /><slave name='cpu.debug_mem_slave' start='0x1080800' end='0x1081000' type='altera_nios2_gen2.debug_mem_slave' /></address-map>]]></parameter>
   <parameter name="instructionMasterHighPerformanceAddrWidth" value="1" />
@@ -955,7 +955,7 @@
   <parameter name="CHIP_SELS" value="1" />
   <parameter name="DDASI" value="0" />
   <parameter name="DEVICE_FAMILY" value="Cyclone IV E" />
-  <parameter name="FLASH_TYPE" value="EPCQ64" />
+  <parameter name="FLASH_TYPE" value="EPCS64" />
   <parameter name="IO_MODE" value="STANDARD" />
   <parameter name="UNIQUE_ID">$${FILENAME}_epcq_controller_0</parameter>
   <parameter name="clkFreq" value="22500000" />
@@ -1487,6 +1487,11 @@
    version="18.1"
    start="cpu.debug_reset_request"
    end="epcq_controller_0.reset" />
+ <connection
+   kind="reset"
+   version="18.1"
+   start="cpu.debug_reset_request"
+   end="cpu.reset" />
  <interconnectRequirement for="$system" name="qsys_mm.clockCrossingAdapter" value="HANDSHAKE" />
  <interconnectRequirement for="$system" name="qsys_mm.enableEccProtection" value="FALSE" />
  <interconnectRequirement for="$system" name="qsys_mm.insertDefaultSlave" value="FALSE" />

@@ -12,6 +12,7 @@ entity nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name is
 		fast_read      : in  std_logic                     := '0';             --      fast_read.fast_read
 		rden           : in  std_logic                     := '0';             --           rden.rden
 		addr           : in  std_logic_vector(23 downto 0) := (others => '0'); --           addr.addr
+		read_sid       : in  std_logic                     := '0';             --       read_sid.read_sid
 		read_status    : in  std_logic                     := '0';             --    read_status.read_status
 		write          : in  std_logic                     := '0';             --          write.write
 		datain         : in  std_logic_vector(7 downto 0)  := (others => '0'); --         datain.datain
@@ -22,10 +23,10 @@ entity nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name is
 		wren           : in  std_logic                     := '0';             --           wren.wren
 		read_rdid      : in  std_logic                     := '0';             --      read_rdid.read_rdid
 		reset          : in  std_logic                     := '0';             --          reset.reset
-		read_dummyclk  : in  std_logic                     := '0';             --  read_dummyclk.read_dummyclk
 		dataout        : out std_logic_vector(7 downto 0);                     --        dataout.dataout
 		busy           : out std_logic;                                        --           busy.busy
 		data_valid     : out std_logic;                                        --     data_valid.data_valid
+		epcs_id        : out std_logic_vector(7 downto 0);                     --        epcs_id.epcs_id
 		status_out     : out std_logic_vector(7 downto 0);                     --     status_out.status_out
 		illegal_write  : out std_logic;                                        --  illegal_write.illegal_write
 		illegal_erase  : out std_logic;                                        --  illegal_erase.illegal_erase
@@ -40,6 +41,7 @@ architecture rtl of nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name
 			fast_read      : in  std_logic                     := 'X';             -- fast_read
 			rden           : in  std_logic                     := 'X';             -- rden
 			addr           : in  std_logic_vector(23 downto 0) := (others => 'X'); -- addr
+			read_sid       : in  std_logic                     := 'X';             -- read_sid
 			read_status    : in  std_logic                     := 'X';             -- read_status
 			write          : in  std_logic                     := 'X';             -- write
 			datain         : in  std_logic_vector(7 downto 0)  := (others => 'X'); -- datain
@@ -50,10 +52,10 @@ architecture rtl of nios_sd_loader_epcq_controller_0_asmi_parallel_instance_name
 			wren           : in  std_logic                     := 'X';             -- wren
 			read_rdid      : in  std_logic                     := 'X';             -- read_rdid
 			reset          : in  std_logic                     := 'X';             -- reset
-			read_dummyclk  : in  std_logic                     := 'X';             -- read_dummyclk
 			dataout        : out std_logic_vector(7 downto 0);                     -- dataout
 			busy           : out std_logic;                                        -- busy
 			data_valid     : out std_logic;                                        -- data_valid
+			epcs_id        : out std_logic_vector(7 downto 0);                     -- epcs_id
 			status_out     : out std_logic_vector(7 downto 0);                     -- status_out
 			illegal_write  : out std_logic;                                        -- illegal_write
 			illegal_erase  : out std_logic;                                        -- illegal_erase
@@ -69,6 +71,7 @@ begin
 			fast_read      => fast_read,      --      fast_read.fast_read
 			rden           => rden,           --           rden.rden
 			addr           => addr,           --           addr.addr
+			read_sid       => read_sid,       --       read_sid.read_sid
 			read_status    => read_status,    --    read_status.read_status
 			write          => write,          --          write.write
 			datain         => datain,         --         datain.datain
@@ -79,10 +82,10 @@ begin
 			wren           => wren,           --           wren.wren
 			read_rdid      => read_rdid,      --      read_rdid.read_rdid
 			reset          => reset,          --          reset.reset
-			read_dummyclk  => read_dummyclk,  --  read_dummyclk.read_dummyclk
 			dataout        => dataout,        --        dataout.dataout
 			busy           => busy,           --           busy.busy
 			data_valid     => data_valid,     --     data_valid.data_valid
+			epcs_id        => epcs_id,        --        epcs_id.epcs_id
 			status_out     => status_out,     --     status_out.status_out
 			illegal_write  => illegal_write,  --  illegal_write.illegal_write
 			illegal_erase  => illegal_erase,  --  illegal_erase.illegal_erase

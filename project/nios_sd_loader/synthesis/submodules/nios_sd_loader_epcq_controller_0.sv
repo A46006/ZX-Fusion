@@ -68,6 +68,7 @@ module nios_sd_loader_epcq_controller_0 #(
 	wire									asmi_illegal_write;
 	wire	[7:0]  								asmi_rdid_out;
 	wire	[7:0]  								asmi_status_out;
+	wire	[7:0]  								asmi_epcs_id;
 	wire									asmi_read_rdid;
 	wire									asmi_read_status;
 	wire									asmi_read_sid;
@@ -130,8 +131,8 @@ module nios_sd_loader_epcq_controller_0 #(
 		.asmi_illegal_write          (asmi_illegal_write     ),
 		.asmi_rdid_out               (asmi_rdid_out          ),
 		.asmi_status_out             (asmi_status_out        ),
-		.asmi_epcs_id                ({8{1'b0}}		     ),
-		.asmi_read_sid               (			     ),
+		.asmi_epcs_id                (asmi_epcs_id	     ),
+		.asmi_read_sid               (asmi_read_sid	     ),
 		.asmi_read_rdid              (asmi_read_rdid         ),
 		.asmi_read_status            (asmi_read_status       ),
 		.asmi_en4b_addr              (			     ),
@@ -156,9 +157,8 @@ module nios_sd_loader_epcq_controller_0 #(
 		.illegal_erase          (asmi_illegal_erase     ),
 		.illegal_write          (asmi_illegal_write     ),
 		.status_out             (asmi_status_out        ),
-                .read_dummyclk		(1'b0                   ),
-                .read_rdid              (asmi_read_rdid         ),
-                .rdid_out               (asmi_rdid_out          ),
+		.epcs_id                (asmi_epcs_id           ),
+		.read_sid               (asmi_read_sid          ),
 		.read_status            (asmi_read_status       ),
 		.bulk_erase             (asmi_bulk_erase        ),
 		.sector_erase           (asmi_sector_erase      ),

@@ -19,11 +19,11 @@
 		.lcd_external_E                                (<connected-to-lcd_external_E>),                                //                                       .E
 		.ledg_pio_external_connection_export           (<connected-to-ledg_pio_external_connection_export>),           //           ledg_pio_external_connection.export
 		.nmi_n_external_connection_export              (<connected-to-nmi_n_external_connection_export>),              //              nmi_n_external_connection.export
+		.reset_reset_n                                 (<connected-to-reset_reset_n>),                                 //                                  reset.reset_n
 		.sd_clk_external_connection_export             (<connected-to-sd_clk_external_connection_export>),             //             sd_clk_external_connection.export
 		.sd_cs_external_connection_export              (<connected-to-sd_cs_external_connection_export>),              //              sd_cs_external_connection.export
 		.sd_miso_external_connection_export            (<connected-to-sd_miso_external_connection_export>),            //            sd_miso_external_connection.export
 		.sd_mosi_external_connection_export            (<connected-to-sd_mosi_external_connection_export>),            //            sd_mosi_external_connection.export
-		.sd_wp_n_external_connection_export            (<connected-to-sd_wp_n_external_connection_export>),            //            sd_wp_n_external_connection.export
-		.reset_reset_n                                 (<connected-to-reset_reset_n>)                                  //                                  reset.reset_n
+		.sd_wp_n_external_connection_export            (<connected-to-sd_wp_n_external_connection_export>)             //            sd_wp_n_external_connection.export
 	);
 
