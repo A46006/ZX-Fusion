@@ -67,9 +67,9 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
  24 .sopc_system_name 0000000e  00000000  00000000  000b3240  2**0
                   CONTENTS, READONLY
- 25 .jdi          00008982  00000000  00000000  000b324e  2**0
+ 25 .jdi          00008979  00000000  00000000  000b324e  2**0
                   CONTENTS, READONLY
- 26 .sopcinfo     000b2bdf  00000000  00000000  000bbbd0  2**0
+ 26 .sopcinfo     000b2bdf  00000000  00000000  000bbbc7  2**0
                   CONTENTS, READONLY
 SYMBOL TABLE:
 00040000 l    d  .entry	00000000 .entry
@@ -11634,7 +11634,7 @@ Disassembly of section .text:
    4a6b0:	1000683a 	jmp	r2
    4a6b4:	0004a6c8 	cmpgei	zero,zero,4763
    4a6b8:	0004a720 	cmpeqi	zero,zero,4764
-   4a6bc:	0004a780 	call	4a78 <__reset-0x3b588>
+   4a6bc:	0004a780 	call	4a78 <__alt_mem_onchip_memory-0x3b588>
    4a6c0:	0004a804 	movi	zero,4768
    4a6c4:	0004a860 	cmpeqi	zero,zero,4769
    4a6c8:	e0bffb03 	ldbu	r2,-20(fp)
@@ -13929,7 +13929,7 @@ Disassembly of section .text:
    4c9ec:	00800234 	movhi	r2,8
    4c9f0:	10843404 	addi	r2,r2,4304
    4c9f4:	10c00035 	stwio	r3,0(r2)
-   4c9f8:	01001904 	movi	r4,100
+   4c9f8:	01000044 	movi	r4,1
    4c9fc:	005f9d80 	call	5f9d8 <usleep>
    4ca00:	00800234 	movhi	r2,8
    4ca04:	10842c04 	addi	r2,r2,4272
@@ -13993,7 +13993,7 @@ Disassembly of section .text:
    4cae4:	00800234 	movhi	r2,8
    4cae8:	10845804 	addi	r2,r2,4448
    4caec:	10c00035 	stwio	r3,0(r2)
-   4caf0:	01001904 	movi	r4,100
+   4caf0:	01000044 	movi	r4,1
    4caf4:	005f9d80 	call	5f9d8 <usleep>
    4caf8:	d0a72d03 	ldbu	r2,-25420(gp)
    4cafc:	10800054 	ori	r2,r2,1
@@ -17014,7 +17014,7 @@ Disassembly of section .text:
    4f8e0:	1105883a 	add	r2,r2,r4
    4f8e4:	10800017 	ldw	r2,0(r2)
    4f8e8:	1000683a 	jmp	r2
-   4f8ec:	0004fb40 	call	4fb4 <__reset-0x3b04c>
+   4f8ec:	0004fb40 	call	4fb4 <__alt_mem_onchip_memory-0x3b04c>
    4f8f0:	0004f94c 	andi	zero,zero,5093
    4f8f4:	0004f94c 	andi	zero,zero,5093
    4f8f8:	0004f948 	cmpgei	zero,zero,5093
@@ -21312,7 +21312,7 @@ Disassembly of section .text:
    53b38:	000546e0 	cmpeqi	zero,zero,5403
    53b3c:	000547e8 	cmpgeui	zero,zero,5407
    53b40:	000547e8 	cmpgeui	zero,zero,5407
-   53b44:	00054700 	call	5470 <__reset-0x3ab90>
+   53b44:	00054700 	call	5470 <__alt_mem_onchip_memory-0x3ab90>
    53b48:	000547e8 	cmpgeui	zero,zero,5407
    53b4c:	000547e8 	cmpgeui	zero,zero,5407
    53b50:	000547e8 	cmpgeui	zero,zero,5407
@@ -30435,7 +30435,7 @@ Disassembly of section .text:
    5c77c:	0005d090 	cmplti	zero,zero,5954
    5c780:	0005d090 	cmplti	zero,zero,5954
    5c784:	0005d090 	cmplti	zero,zero,5954
-   5c788:	0005ce40 	call	5ce4 <__reset-0x3a31c>
+   5c788:	0005ce40 	call	5ce4 <__alt_mem_onchip_memory-0x3a31c>
    5c78c:	0005d090 	cmplti	zero,zero,5954
    5c790:	0005d090 	cmplti	zero,zero,5954
    5c794:	0005d090 	cmplti	zero,zero,5954
@@ -36788,7 +36788,7 @@ Disassembly of section .text:
    627a0:	d9400015 	stw	r5,0(sp)
    627a4:	d9800115 	stw	r6,4(sp)
    627a8:	d9c00215 	stw	r7,8(sp)
-   627ac:	00000000 	call	0 <__reset-0x40000>
+   627ac:	00000000 	call	0 <__alt_mem_onchip_memory-0x40000>
    627b0:	d9400017 	ldw	r5,0(sp)
    627b4:	d9800117 	ldw	r6,4(sp)
    627b8:	d9c00217 	ldw	r7,8(sp)
@@ -36872,7 +36872,7 @@ Disassembly of section .text:
    628e8:	10003226 	beq	r2,zero,629b4 <__call_exitprocs+0x178>
    628ec:	a009883a 	mov	r4,r20
    628f0:	98800015 	stw	r2,0(r19)
-   628f4:	00000000 	call	0 <__reset-0x40000>
+   628f4:	00000000 	call	0 <__alt_mem_onchip_memory-0x40000>
    628f8:	9d000017 	ldw	r20,0(r19)
    628fc:	a03fe41e 	bne	r20,zero,62890 <__alt_data_end+0xfffe2890>
    62900:	dfc00a17 	ldw	ra,40(sp)

@@ -40,7 +40,7 @@
 //   V1.1 :| HdHuang             :| 05/12/10  :| Initial Revision
 //   V2.0 :| Eko       				:| 05/23/12  :| version 11.1
 // ============================================================================
-module DE2_115_GOLDEN_TOP(
+module ZX_FUSION(
 
 	//////// CLOCK //////////
 	CLOCK_50,

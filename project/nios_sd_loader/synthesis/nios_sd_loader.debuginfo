@@ -101,7 +101,7 @@
  </parameter>
  <parameter name="projectName">
   <type>java.lang.String</type>
-  <value>DE2_115_GOLDEN_TOP.qpf</value>
+  <value>ZX_FUSION.qpf</value>
   <derived>false</derived>
   <enabled>true</enabled>
   <visible>false</visible>
