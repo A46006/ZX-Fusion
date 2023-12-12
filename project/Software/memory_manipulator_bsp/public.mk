@@ -86,7 +86,7 @@ ACDS_VERSION := 18.1
 
 # Quartus Generated JDI File. Required for resolving node instance ID's with 
 # design component names. 
-JDI_FILE := $(ABS_BSP_ROOT_DIR)/../../DE2_115_GOLDEN_TOP.jdi
+JDI_FILE := $(ABS_BSP_ROOT_DIR)/../../ZX_FUSION.jdi
 
 # Qsys--generated SOPCINFO file. Required for resolving node instance ID's with 
 # design component names. 

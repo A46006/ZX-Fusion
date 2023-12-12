@@ -28,6 +28,10 @@ entity top is
 		AUD_DACLRCK : out std_logic;
 		AUD_ADCLRCK : out std_logic;
 		
+		----------- I2C for Audio ------------
+		I2C_SCLK		: out std_logic;
+		I2C_SDAT		: inout std_logic;
+		
 		--------- EXPANSION ---------
 		KEYB_ADDR   : out std_logic_vector(7 downto 0);
 		KEYB_DATA   : in std_logic_vector(4 downto 0);
@@ -73,10 +77,19 @@ architecture Behavior of top is
 		areset		: IN STD_LOGIC  := '0';
 		inclk0		: IN STD_LOGIC  := '0'; -- 50 MHz
 		c0		: OUT STD_LOGIC ; -- 7 MHz
-		c1		: OUT STD_LOGIC ; -- 18 MHz
-		c2		: OUT STD_LOGIC ; -- 65 MHz
+		c1		: OUT STD_LOGIC ; -- 65 MHz
 		locked		: OUT STD_LOGIC 
 	);
+	END component;
+	
+	component audio_pll IS
+		PORT
+		(
+			areset		: IN STD_LOGIC  := '0';
+			inclk0		: IN STD_LOGIC  := '0';
+			c0		: OUT STD_LOGIC ;
+			locked		: OUT STD_LOGIC 
+		);
 	END component;
 	
 	-------------------
@@ -89,6 +102,16 @@ architecture Behavior of top is
 			clk_en		: IN STD_LOGIC ;
 			clock		: IN STD_LOGIC ;
 			q		: OUT STD_LOGIC_VECTOR (9 DOWNTO 0)
+		);
+	END component;
+	
+	component reset_audio_ctr IS
+		PORT
+		(
+			aclr		: IN STD_LOGIC ;
+			clk_en		: IN STD_LOGIC ;
+			clock		: IN STD_LOGIC ;
+			q		: OUT STD_LOGIC_VECTOR (19 DOWNTO 0)
 		);
 	END component;
 	
@@ -270,6 +293,19 @@ architecture Behavior of top is
 			EAR		:	out std_logic
 		);
 	end component;
+	
+	-- I2C for audio config
+	component I2C_AV_Config is 
+		port (
+			-- Host Side
+			iCLK      : in    std_logic;
+			iRST_N    : in    std_logic;
+			
+			-- I2C Side
+			I2C_SCLK : out   std_logic;
+			I2C_SDAT : inout std_logic
+		);
+	end component;
 	--------------
 	-- Joystick --
 	--------------
@@ -318,10 +354,7 @@ architecture Behavior of top is
 			address_external_connection_export     : out   std_logic_vector(15 downto 0);                    --  address for DMA
 			bus_ack_n_external_connection_export   : in    std_logic                     := '0';             --  bus ack from T80
 			bus_req_n_external_connection_export   : out   std_logic;                                        --  bus req for T80
-			clk_50_clk                             : in    std_logic                     := '0';             --  clock
-			
-			pll_areset_conduit_export              : in    std_logic                     := '0';      
-			pll_locked_conduit_export              : out   std_logic;                                  
+			clk_clk                                : in    std_logic                     := '0';             --  clock
 			
 			cpu_address_direct_external_connection_export : in    std_logic_vector(15 downto 0) := (others => '0'); -- address of CPU, not passing through regs, to check when PC is accessed after loading a game
 			cpu_address_external_connection_export : in    std_logic_vector(15 downto 0) := (others => '0'); --  address of CPU, for interface and page num
@@ -380,7 +413,7 @@ architecture Behavior of top is
 	signal pll_reset : std_logic := '0';															-- IN
 	signal ula_clock, video_clock, pll_locked : std_logic;									-- OUT
 	signal audio_ctrl_clk : std_logic := '0';
-		
+	
 	-- CPU --
 	signal cpu_reset_n : std_logic := '1';
 	signal cpu_wait_n : std_logic := '1';
@@ -432,7 +465,6 @@ architecture Behavior of top is
 	signal nios_en_reg_out : std_logic := '0';
 	
 	signal nios_reg_reset : std_logic := '0';
-	signal nios_pll_locked : std_logic := '0';
 	
 	-- SPI SD --
 	signal sd_cs : std_logic := '1';
@@ -483,6 +515,7 @@ architecture Behavior of top is
 	--signal delayed_iorq_n : std_logic := '1'; -- IOREQTW3
 	
 	-- Audio --
+	signal aud_reset_n : std_logic := '1';
 	signal audio_stream_clk : std_logic := '0';
 	signal audio_lr_clk : std_logic := '0';
 	signal audio_codec_in : std_logic := '0';
@@ -520,6 +553,10 @@ architecture Behavior of top is
 	-- Reset Counter --
 	signal rst_ctr_num : std_logic_vector(9 downto 0);
 	signal ctr_en : std_logic;
+	
+	-- Reset Audio Counter --
+	signal rst_aud_ctr_num : std_logic_vector(19 downto 0);
+	signal aud_ctr_en : std_logic := '1';
 	
 	-- Global --
 	signal global_reset : std_logic;
@@ -594,10 +631,17 @@ begin
 			areset	=> pll_reset,
 			inclk0	=> CLOCK_50,
 			c0			=> ula_clock,	      -- 7 MHz
-			c1			=> audio_ctrl_clk,	-- 18 MHz
-			c2			=> video_clock,		-- 65 MHz
+			c1			=> video_clock,		-- 65 MHz
 			locked	=> pll_locked
 		);
+		
+	aud_pll : audio_pll port map (
+			areset	=> not aud_reset_n,
+			inclk0	=> CLOCK_50,
+			c0			=> audio_ctrl_clk,   -- 18 MHz
+			locked	=> pll_locked
+		);
+
 		
 	---------
 	-- CPU --
@@ -652,12 +696,9 @@ begin
 	end process;
 	
 	sd_loader : nios_sd_loader port map(
-			clk_50_clk										=> CLOCK_50,
+			clk_clk											=> CLOCK_50,
 			reset_reset_n									=> nios_reset_n,
 			ledg_pio_external_connection_export		=> LEDG,
-			
-			pll_areset_conduit_export					=> pll_reset,
-			pll_locked_conduit_export					=> nios_pll_locked,
 			
 			-- SD --
 			sd_clk_external_connection_export		=> SD_CLK,
@@ -864,7 +905,7 @@ begin
 
 	audio : audio_codec port map(
 		CLK			=> audio_ctrl_clk,
-		nRESET		=> ula_reset_n,
+		nRESET		=> aud_reset_n,
 		
 		AUD_BCLK		=> audio_stream_clk,
 		AUD_LRCLK 	=> audio_lr_clk
@@ -872,10 +913,19 @@ begin
 	
 	audioADC: audio_adc port map(
 		CLK		=> audio_ctrl_clk,
-		nRESET	=> ula_reset_n,
+		nRESET	=> aud_reset_n,
 		ADC_DAT	=> audio_codec_in,
 		
 		EAR		=> ula_ear_in
+	);
+	
+	i2c_aud_conf : I2C_AV_Config port map(
+		-- Host Side
+		iCLK      => CLOCK_50,
+		iRST_N    => not global_reset,
+		-- I2C Side
+		I2C_SCLK => I2C_SCLK,
+		I2C_SDAT => I2C_SDAT
 	);
 	
 	--------------
@@ -935,6 +985,13 @@ begin
   			q				=> rst_ctr_num
 		);
 		
+	aud_ctr_en <= '0' when rst_aud_ctr_num = x"FFFFF" else '1';
+	audio_reseter : reset_audio_ctr port map(
+			aclr			=> global_reset,
+			clk_en			=> aud_ctr_en,
+			clock			=> CLOCK_50,
+  			q				=> rst_aud_ctr_num
+		);
 		
 	-- Restart order matters:
 	-- PLL first, since it gives off the clocks
@@ -948,6 +1005,8 @@ begin
 	ula_reset_n <= '0' when rst_ctr_num(9 downto 5) = "00001" else '1';
 	
 	cpu_reset_n <= '0' when rst_ctr_num(9 downto 7) = "001" else '1';
+	
+	aud_reset_n <= '1' when rst_aud_ctr_num = x"FFFFF" else '0';
 
 	--------------------------------------------------------------------
 	

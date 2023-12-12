@@ -115,7 +115,7 @@ alt_u8 read_io(alt_u16 addr) {
 	ctrl_bus_state &= IO_REQ_SET;
 	CTRL_BUS_SET(ctrl_bus_state);
 
-	usleep(100);
+	usleep(1);
 	data = DATA_GET;
 	IOWR_ALTERA_AVALON_PIO_DATA(LEDG_PIO_BASE, data);
 
@@ -136,7 +136,7 @@ void write_io(alt_u16 addr, alt_u8 data) {
 	CTRL_BUS_SET(ctrl_bus_state);
 
 	IOWR_ALTERA_AVALON_PIO_DATA(LEDG_PIO_BASE, data);
-	usleep(100);
+	usleep(1);
 
 	ctrl_bus_state |= IO_REQ_CLR;
 	ctrl_bus_state |= WRITE_CLR;
