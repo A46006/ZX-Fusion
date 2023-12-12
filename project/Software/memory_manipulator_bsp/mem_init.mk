@@ -184,6 +184,7 @@ $(MEM_0)_HEX_DATA_WIDTH := 8
 $(MEM_0)_ENDIANNESS := --little-endian-mem
 $(MEM_0)_CREATE_LANES := 0
 $(MEM_0)_CFI_FLAGS := --base=$($(MEM_0)_START) --end=$($(MEM_0)_END) --reset=$(RESET_ADDRESS)
+$(MEM_0)_BOOT_LOADER_FLAG := --boot="$(BOOT_LOADER_CFI)"
 
 .PHONY: epcq_controller_0
 epcq_controller_0: check_elf_exists $(MEM_INIT_DIR)/$(MEM_0).hex

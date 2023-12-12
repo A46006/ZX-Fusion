@@ -4,7 +4,7 @@
  * Machine generated for CPU 'cpu' in SOPC Builder design 'nios_sd_loader'
  * SOPC Builder design path: ../../nios_sd_loader.sopcinfo
  *
- * Generated: Wed Nov 29 17:34:59 GMT 2023
+ * Generated: Wed Dec 06 19:24:10 GMT 2023
  */
 
 /*
@@ -86,15 +86,7 @@
 #define ALT_RESET_DEVICE EPCQ_CONTROLLER_0_AVL_MEM
 #define ALT_RODATA_DEVICE ONCHIP_MEMORY
 #define ALT_RWDATA_DEVICE ONCHIP_MEMORY
-#define ALT_TEXT_DEVICE EPCQ_CONTROLLER_0_AVL_MEM
-
-
-/*
- * Initialization code at the reset address is allowed (e.g. no external bootloader).
- *
- */
-
-#define ALT_ALLOW_CODE_AT_RESET
+#define ALT_TEXT_DEVICE ONCHIP_MEMORY
 
 
 /*
@@ -102,8 +94,6 @@
  *
  */
 
-#define ALT_LOAD_COPY_EXCEPTIONS
-#define ALT_LOAD_COPY_RODATA
 #define ALT_LOAD_COPY_RWDATA
 
 #endif /* __LINKER_H_ */

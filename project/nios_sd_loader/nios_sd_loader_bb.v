@@ -3,7 +3,7 @@ module nios_sd_loader (
 	address_external_connection_export,
 	bus_ack_n_external_connection_export,
 	bus_req_n_external_connection_export,
-	clk_clk,
+	clk_50_clk,
 	cpu_address_direct_external_connection_export,
 	cpu_address_external_connection_export,
 	cpu_cmd_ack_external_connection_export,
@@ -25,12 +25,14 @@ module nios_sd_loader (
 	sd_cs_external_connection_export,
 	sd_miso_external_connection_export,
 	sd_mosi_external_connection_export,
-	sd_wp_n_external_connection_export);	
+	sd_wp_n_external_connection_export,
+	pll_areset_conduit_export,
+	pll_locked_conduit_export);	
 
 	output	[15:0]	address_external_connection_export;
 	input		bus_ack_n_external_connection_export;
 	output		bus_req_n_external_connection_export;
-	input		clk_clk;
+	input		clk_50_clk;
 	input	[15:0]	cpu_address_direct_external_connection_export;
 	input	[15:0]	cpu_address_external_connection_export;
 	output		cpu_cmd_ack_external_connection_export;
@@ -53,4 +55,6 @@ module nios_sd_loader (
 	input		sd_miso_external_connection_export;
 	output		sd_mosi_external_connection_export;
 	input		sd_wp_n_external_connection_export;
+	input		pll_areset_conduit_export;
+	output		pll_locked_conduit_export;
 endmodule

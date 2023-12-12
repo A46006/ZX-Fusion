@@ -75,7 +75,6 @@ architecture Behavior of top is
 		c0		: OUT STD_LOGIC ; -- 7 MHz
 		c1		: OUT STD_LOGIC ; -- 18 MHz
 		c2		: OUT STD_LOGIC ; -- 65 MHz
-		c3		: OUT STD_LOGIC ; -- 22,5 MHz
 		locked		: OUT STD_LOGIC 
 	);
 	END component;
@@ -319,7 +318,10 @@ architecture Behavior of top is
 			address_external_connection_export     : out   std_logic_vector(15 downto 0);                    --  address for DMA
 			bus_ack_n_external_connection_export   : in    std_logic                     := '0';             --  bus ack from T80
 			bus_req_n_external_connection_export   : out   std_logic;                                        --  bus req for T80
-			clk_clk                                : in    std_logic                     := '0';             --  clock
+			clk_50_clk                             : in    std_logic                     := '0';             --  clock
+			
+			pll_areset_conduit_export              : in    std_logic                     := '0';      
+			pll_locked_conduit_export              : out   std_logic;                                  
 			
 			cpu_address_direct_external_connection_export : in    std_logic_vector(15 downto 0) := (others => '0'); -- address of CPU, not passing through regs, to check when PC is accessed after loading a game
 			cpu_address_external_connection_export : in    std_logic_vector(15 downto 0) := (others => '0'); --  address of CPU, for interface and page num
@@ -378,7 +380,7 @@ architecture Behavior of top is
 	signal pll_reset : std_logic := '0';															-- IN
 	signal ula_clock, video_clock, pll_locked : std_logic;									-- OUT
 	signal audio_ctrl_clk : std_logic := '0';
-	
+		
 	-- CPU --
 	signal cpu_reset_n : std_logic := '1';
 	signal cpu_wait_n : std_logic := '1';
@@ -414,7 +416,6 @@ architecture Behavior of top is
 	signal nios_rd_n, nios_wr_n, nios_mreq_n, nios_iorq_n : std_logic;
 	signal nios_data, nios_data_in, nios_data_out : std_logic_vector(7 downto 0);
 	signal nios_address : std_logic_vector(15 downto 0);
-	signal nios_clock : std_logic := '0';
 	
 	signal nios_reg_en : std_logic := '0';
 	
@@ -431,6 +432,7 @@ architecture Behavior of top is
 	signal nios_en_reg_out : std_logic := '0';
 	
 	signal nios_reg_reset : std_logic := '0';
+	signal nios_pll_locked : std_logic := '0';
 	
 	-- SPI SD --
 	signal sd_cs : std_logic := '1';
@@ -594,7 +596,6 @@ begin
 			c0			=> ula_clock,	      -- 7 MHz
 			c1			=> audio_ctrl_clk,	-- 18 MHz
 			c2			=> video_clock,		-- 65 MHz
-			c3			=> nios_clock,
 			locked	=> pll_locked
 		);
 		
@@ -651,9 +652,12 @@ begin
 	end process;
 	
 	sd_loader : nios_sd_loader port map(
-			clk_clk											=> nios_clock,
+			clk_50_clk										=> CLOCK_50,
 			reset_reset_n									=> nios_reset_n,
 			ledg_pio_external_connection_export		=> LEDG,
+			
+			pll_areset_conduit_export					=> pll_reset,
+			pll_locked_conduit_export					=> nios_pll_locked,
 			
 			-- SD --
 			sd_clk_external_connection_export		=> SD_CLK,
@@ -856,7 +860,7 @@ begin
 	audio_codec_in <= AUD_ADCDAT;
 	AUD_DACDAT <= audio_codec_out;
 	
-	audio_codec_out <= ula_speaker_out xor ula_mic_out; -- dunno what to do with ula_mic_out, but should be here somehow
+	audio_codec_out <= ula_speaker_out; -- dunno what to do with ula_mic_out, but should be here somehow
 
 	audio : audio_codec port map(
 		CLK			=> audio_ctrl_clk,

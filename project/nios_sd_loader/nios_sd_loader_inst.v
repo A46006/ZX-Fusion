@@ -2,7 +2,7 @@
 		.address_external_connection_export            (<connected-to-address_external_connection_export>),            //            address_external_connection.export
 		.bus_ack_n_external_connection_export          (<connected-to-bus_ack_n_external_connection_export>),          //          bus_ack_n_external_connection.export
 		.bus_req_n_external_connection_export          (<connected-to-bus_req_n_external_connection_export>),          //          bus_req_n_external_connection.export
-		.clk_clk                                       (<connected-to-clk_clk>),                                       //                                    clk.clk
+		.clk_50_clk                                    (<connected-to-clk_50_clk>),                                    //                                 clk_50.clk
 		.cpu_address_direct_external_connection_export (<connected-to-cpu_address_direct_external_connection_export>), // cpu_address_direct_external_connection.export
 		.cpu_address_external_connection_export        (<connected-to-cpu_address_external_connection_export>),        //        cpu_address_external_connection.export
 		.cpu_cmd_ack_external_connection_export        (<connected-to-cpu_cmd_ack_external_connection_export>),        //        cpu_cmd_ack_external_connection.export
@@ -24,6 +24,8 @@
 		.sd_cs_external_connection_export              (<connected-to-sd_cs_external_connection_export>),              //              sd_cs_external_connection.export
 		.sd_miso_external_connection_export            (<connected-to-sd_miso_external_connection_export>),            //            sd_miso_external_connection.export
 		.sd_mosi_external_connection_export            (<connected-to-sd_mosi_external_connection_export>),            //            sd_mosi_external_connection.export
-		.sd_wp_n_external_connection_export            (<connected-to-sd_wp_n_external_connection_export>)             //            sd_wp_n_external_connection.export
+		.sd_wp_n_external_connection_export            (<connected-to-sd_wp_n_external_connection_export>),            //            sd_wp_n_external_connection.export
+		.pll_areset_conduit_export                     (<connected-to-pll_areset_conduit_export>),                     //                     pll_areset_conduit.export
+		.pll_locked_conduit_export                     (<connected-to-pll_locked_conduit_export>)                      //                     pll_locked_conduit.export
 	);
 

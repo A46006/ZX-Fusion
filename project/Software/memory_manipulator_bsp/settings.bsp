@@ -2,8 +2,8 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>Nov 30, 2023 12:11:23 PM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1701346283381</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>07-Dec-2023 14:45:26</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1701960326629</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>C:\Users\pepsu\Documents\MI13D\TFM\FINAL_REPO\ZX-Fusion\project\Software\memory_manipulator_bsp</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>..\..\nios_sd_loader.sopcinfo</SopcDesignFile>
@@ -62,7 +62,7 @@
                 <SettingName>hal.linker.allow_code_at_reset</SettingName>
                 <Identifier>ALT_ALLOW_CODE_AT_RESET</Identifier>
                 <Type>Boolean</Type>
-                <Value>1</Value>
+                <Value>0</Value>
                 <DefaultValue>0</DefaultValue>
                 <DestinationFile>none</DestinationFile>
                 <Description>Indicates if initialization code is allowed at the reset address. If true, defines the macro ALT_ALLOW_CODE_AT_RESET in linker.h.</Description>
@@ -74,7 +74,7 @@
                 <SettingName>hal.linker.enable_alt_load</SettingName>
                 <Identifier>none</Identifier>
                 <Type>Boolean</Type>
-                <Value>1</Value>
+                <Value>0</Value>
                 <DefaultValue>0</DefaultValue>
                 <DestinationFile>none</DestinationFile>
                 <Description>Enables the alt_load() facility. The alt_load() facility copies data sections (.rodata, .rwdata, or .exceptions) from boot memory to RAM. If true, this setting sets up the VMA/LMA of sections in linker.x to allow them to be loaded into the .text memory.</Description>
@@ -86,7 +86,7 @@
                 <SettingName>hal.linker.enable_alt_load_copy_rodata</SettingName>
                 <Identifier>none</Identifier>
                 <Type>Boolean</Type>
-                <Value>1</Value>
+                <Value>0</Value>
                 <DefaultValue>0</DefaultValue>
                 <DestinationFile>none</DestinationFile>
                 <Description>Causes the alt_load() facility to copy the .rodata section. If true, this setting defines the macro ALT_LOAD_COPY_RODATA in linker.h.</Description>
@@ -110,7 +110,7 @@
                 <SettingName>hal.linker.enable_alt_load_copy_exceptions</SettingName>
                 <Identifier>none</Identifier>
                 <Type>Boolean</Type>
-                <Value>1</Value>
+                <Value>0</Value>
                 <DefaultValue>0</DefaultValue>
                 <DestinationFile>none</DestinationFile>
                 <Description>Causes the alt_load() facility to copy the .exceptions section. If true, this setting defines the macro ALT_LOAD_COPY_EXCEPTIONS in linker.h.</Description>
@@ -899,6 +899,12 @@
                 <Group xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
         </Setting>
         <MemoryMap>
+                <slaveDescriptor>altpll</slaveDescriptor>
+                <addressRange>0x00000000 - 0x0000000F</addressRange>
+                <addressSpan>16</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
                 <slaveDescriptor>epcq_controller_0_avl_mem</slaveDescriptor>
                 <addressRange>0x00800000 - 0x00FFFFFF</addressRange>
                 <addressSpan>8388608</addressSpan>
@@ -1056,7 +1062,7 @@
         </MemoryMap>
         <LinkerSection>
                 <sectionName>.text</sectionName>
-                <regionName>epcq_controller_0_avl_mem</regionName>
+                <regionName>onchip_memory</regionName>
         </LinkerSection>
         <LinkerSection>
                 <sectionName>.rodata</sectionName>

@@ -1,10 +1,11 @@
-12:12:01 **** Build of configuration Nios II for project memory_manipulator ****
+14:45:52 **** Build of configuration Nios II for project memory_manipulator ****
 make mem_init_generate 
 Info: Building ../memory_manipulator_bsp/
 C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
 [BSP build complete]
 Post-processing to create mem_init/epcq_controller_0.hex...
-elf2hex memory_manip_attempt.elf 0x00800000 0x00ffffff --width=8 --little-endian-mem --create-lanes=0 mem_init/epcq_controller_0.hex
+alt-file-convert -I elf32-littlenios2 -O hex --input=memory_manip_attempt.elf --output=mem_init/epcq_controller_0.hex --base=0x00800000 --end=0x00ffffff --reset=0x00c00000 --out-data-width=8 --boot="C:/intelfpga_lite/18.1/nios2eds/components/altera_nios2/boot_loader_cfi.srec"
+Converting Nios II ELF file to HEX file. Appending boot file.
 Post-processing to create mem_init/nios_sd_loader_onchip_memory.hex...
 elf2hex memory_manip_attempt.elf 0x01040000 0x0107ffff --width=32 --little-endian-mem --create-lanes=0 mem_init/nios_sd_loader_onchip_memory.hex
 Post-processing to create mem_init/hdl_sim/nios_sd_loader_onchip_memory.dat...
@@ -14,5 +15,5 @@ elf2dat --infile=memory_manip_attempt.elf --outfile=mem_init/hdl_sim/nios_sd_loa
 Post-processing to create mem_init/hdl_sim/nios_sd_loader_onchip_memory.sym...
 nios2-elf-nm -n memory_manip_attempt.elf > mem_init/hdl_sim/nios_sd_loader_onchip_memory.sym
 
-12:12:03 Build Finished (took 2s.223ms)
+14:45:55 Build Finished (took 2s.970ms)
 
