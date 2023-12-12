@@ -1,6 +1,6 @@
-23:06:59 **** Clean-only build of configuration Nios II for project ff15_test ****
+14:57:05 **** Clean-only build of configuration Nios II for project ff15_test ****
 make clean 
 [ff15_test clean complete]
 
-23:06:59 Build Finished (took 145ms)
+14:57:06 Build Finished (took 149ms)
 

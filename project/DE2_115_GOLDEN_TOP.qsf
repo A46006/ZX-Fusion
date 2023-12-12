@@ -1201,6 +1201,8 @@ set_global_assignment -name VHDL_FILE joystick/nes_gamepad.vhd
 set_global_assignment -name VHDL_FILE joystick/kempston_if.vhd
 set_global_assignment -name VHDL_FILE audio/audio_adc.vhd
 set_global_assignment -name VHDL_FILE audio/audio_codec.vhd
+set_global_assignment -name VERILOG_FILE audio/I2C_Controller.v
+set_global_assignment -name VERILOG_FILE audio/I2C_AV_Config.v
 set_global_assignment -name QIP_FILE nios_sd_loader/synthesis/nios_sd_loader.qip
 set_global_assignment -name VHDL_FILE nios_per_reg.vhd
 set_global_assignment -name VHDL_FILE keyboard/keyboard_tb.vhd
@@ -1237,4 +1239,6 @@ set_global_assignment -name VHDL_FILE 7seg/double_spin_anim_7seg.vhd
 set_global_assignment -name VHDL_FILE primitive_blocks/FallingEdge_TFF_RCE.vhd
 set_global_assignment -name VHDL_FILE primitive_blocks/FallingEdge_DFF.vhd
 set_global_assignment -name QIP_FILE pll/pll.qip
+set_global_assignment -name QIP_FILE reset_audio_ctr.qip
+set_global_assignment -name QIP_FILE pll/audio_pll.qip
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
