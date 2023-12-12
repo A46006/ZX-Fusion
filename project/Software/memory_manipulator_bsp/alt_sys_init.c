@@ -4,7 +4,7 @@
  * Machine generated for CPU 'cpu' in SOPC Builder design 'nios_sd_loader'
  * SOPC Builder design path: ../../nios_sd_loader.sopcinfo
  *
- * Generated: Tue Dec 12 14:50:27 GMT 2023
+ * Generated: Tue Dec 12 21:31:03 GMT 2023
  */
 
 /*
@@ -62,6 +62,7 @@
 #include "altera_avalon_jtag_uart.h"
 #include "altera_avalon_lcd_16207.h"
 #include "altera_avalon_timer.h"
+#include "altera_epcq_controller.h"
 
 /*
  * Allocate the device storage
@@ -71,6 +72,7 @@ ALTERA_NIOS2_GEN2_IRQ_INSTANCE ( CPU, cpu);
 ALTERA_AVALON_JTAG_UART_INSTANCE ( JTAG_UART, jtag_uart);
 ALTERA_AVALON_LCD_16207_INSTANCE ( LCD, lcd);
 ALTERA_AVALON_TIMER_INSTANCE ( TIMER, timer);
+ALTERA_EPCQ_CONTROLLER_AVL_MEM_AVL_CSR_INSTANCE ( EPCQ_CONTROLLER_0, EPCQ_CONTROLLER_0_AVL_MEM, EPCQ_CONTROLLER_0_AVL_CSR, epcq_controller_0);
 
 /*
  * Initialize the interrupt controller devices
@@ -96,4 +98,5 @@ void alt_sys_init( void )
     ALTERA_AVALON_TIMER_INIT ( TIMER, timer);
     ALTERA_AVALON_JTAG_UART_INIT ( JTAG_UART, jtag_uart);
     ALTERA_AVALON_LCD_16207_INIT ( LCD, lcd);
+    ALTERA_EPCQ_CONTROLLER_INIT ( EPCQ_CONTROLLER_0, epcq_controller_0);
 }

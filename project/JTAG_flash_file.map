@@ -1,0 +1,16 @@
+BLOCK		START ADDRESS		END ADDRESS
+
+epcq_controller_0.hex		0x00400000		0x00434FA3
+Page_0		0x00000000		0x00112776
+
+
+Configuration device: EP4CE115
+Configuration mode: Active Serial
+Quad-Serial configuration device dummy clock cycle: 8
+
+
+Notes:
+
+- Data checksum for this conversion is 0x6E361117
+
+- All the addresses in this file are byte addresses

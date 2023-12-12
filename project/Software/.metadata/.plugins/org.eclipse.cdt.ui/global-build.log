@@ -1,39 +1,16 @@
-19:57:09 **** Incremental Build of configuration Nios II for project memory_manipulator ****
-make all 
+21:53:48 **** Build of configuration Nios II for project memory_manipulator ****
+make mem_init_generate 
 Info: Building ../memory_manipulator_bsp/
 C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
 [BSP build complete]
-[memory_manip_attempt build complete]
-19:57:14 **** Build of configuration Nios II for project memory_manipulator ****
-make all 
-Info: Building ../memory_manipulator_bsp/
-C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
-[BSP build complete]
-[memory_manip_attempt build complete]
-19:57:16 **** Incremental Build of configuration Nios II for project memory_manipulator ****
-make all 
-Info: Building ../memory_manipulator_bsp/
-C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
-[BSP build complete]
-[memory_manip_attempt build complete]
-20:00:23 **** Build of configuration Nios II for project memory_manipulator ****
-make all 
-Info: Building ../memory_manipulator_bsp/
-C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
-[BSP build complete]
-Info: Compiling spectrum_control_IFs/DMA/dma_hal.c to obj/default/spectrum_control_IFs/DMA/dma_hal.o
-nios2-elf-gcc -xc -MP -MMD -c -I../memory_manipulator_bsp//HAL/inc -I../memory_manipulator_bsp/ -I../memory_manipulator_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_INSTRUCTION_EMULATION -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/spectrum_control_IFs/DMA/dma_hal.o spectrum_control_IFs/DMA/dma_hal.c
-Info: Linking memory_manip_attempt.elf
-nios2-elf-g++  -T'../memory_manipulator_bsp//linker.x' -msys-crt0='../memory_manipulator_bsp//obj/HAL/src/crt0.o' -msys-lib=hal_bsp -L../memory_manipulator_bsp/   -Wl,-Map=memory_manip_attempt.map   -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o memory_manip_attempt.elf obj/default/SD/ff15/diskio.o obj/default/SD/ff15/ff.o obj/default/SD/ff15/ffsystem.o obj/default/SD/ff15/ffunicode.o obj/default/SD/ff15/sdmmc.o obj/default/SD/sd_if.o obj/default/SD/test_sd.o obj/default/file_reader/file_format_aux.o obj/default/file_reader/formats.o obj/default/main.o obj/default/spectrum_control_IFs/DMA/dma_hal.o obj/default/spectrum_control_IFs/Peripheral_Interfaces/per_hal.o obj/default/terasic_lib/LCD.o obj/default/terasic_lib/debug.o -lm -msys-lib=m
-nios2-elf-insert memory_manip_attempt.elf --thread_model hal --cpu_name cpu --qsys true --simulation_enabled false --stderr_dev jtag_uart --stdin_dev jtag_uart --stdout_dev jtag_uart --sopc_system_name nios_sd_loader --jdi H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../ZX_FUSION.jdi --sopcinfo H:/MI13D/TFM/FINAL-REPO-actual-46006/ZX-Fusion/project/Software/memory_manipulator_bsp/../../nios_sd_loader.sopcinfo
-Info: (memory_manip_attempt.elf) 211 KBytes program size (code + initialized data).
-Info:                            37 KBytes free for stack + heap.
-Info: Creating memory_manip_attempt.objdump
-nios2-elf-objdump --disassemble --syms --all-header memory_manip_attempt.elf >memory_manip_attempt.objdump
-[memory_manip_attempt build complete]
-20:00:26 **** Incremental Build of configuration Nios II for project memory_manipulator ****
-make all 
-Info: Building ../memory_manipulator_bsp/
-C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../memory_manipulator_bsp/
-[BSP build complete]
-[memory_manip_attempt build complete]
+Post-processing to create mem_init/epcq_controller_0.hex...
+alt-file-convert -I elf32-littlenios2 -O hex --input=memory_manip_attempt.elf --output=mem_init/epcq_controller_0.hex --base=0x00800000 --end=0x00ffffff --reset=0x00c00000 --out-data-width=8 --boot="C:/intelfpga_lite/18.1/nios2eds/components/altera_nios2/boot_loader_cfi.srec"
+Converting Nios II ELF file to HEX file. Appending boot file.
+Post-processing to create mem_init/nios_sd_loader_onchip_memory.hex...
+elf2hex memory_manip_attempt.elf 0x01040000 0x0107ffff --width=32 --little-endian-mem --create-lanes=0 mem_init/nios_sd_loader_onchip_memory.hex
+Post-processing to create mem_init/hdl_sim/nios_sd_loader_onchip_memory.dat...
+elf2dat --infile=memory_manip_attempt.elf --outfile=mem_init/hdl_sim/nios_sd_loader_onchip_memory.dat \
+		--base=0x01040000 --end=0x0107ffff --width=32 \
+		--little-endian-mem --create-lanes=0 
+Post-processing to create mem_init/hdl_sim/nios_sd_loader_onchip_memory.sym...
+nios2-elf-nm -n memory_manip_attempt.elf > mem_init/hdl_sim/nios_sd_loader_onchip_memory.sym

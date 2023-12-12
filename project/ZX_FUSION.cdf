@@ -4,7 +4,7 @@ JedecChain;
 	DefaultMfr(6E);
 
 	P ActionCode(Cfg)
-		Device PartName(EP4CE115F29) Path("./") File("ZX_FUSION.sof") MfrSpec(OpMask(1));
+		Device PartName(EP4CE115) Path("./") File("JTAG_flash_file.jic") MfrSpec(OpMask(1) SEC_Device(EPCS64) Child_OpMask(1 3));
 
 ChainEnd;
 

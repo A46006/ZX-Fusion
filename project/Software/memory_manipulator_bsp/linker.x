@@ -4,7 +4,7 @@
  * Machine generated for CPU 'cpu' in SOPC Builder design 'nios_sd_loader'
  * SOPC Builder design path: ../../nios_sd_loader.sopcinfo
  *
- * Generated: Tue Dec 12 14:50:27 GMT 2023
+ * Generated: Tue Dec 12 21:42:05 GMT 2023
  */
 
 /*
@@ -50,12 +50,16 @@
 
 MEMORY
 {
-    reset : ORIGIN = 0x40000, LENGTH = 32
-    onchip_memory : ORIGIN = 0x40020, LENGTH = 262112
+    epcq_controller_0_avl_mem_BEFORE_RESET : ORIGIN = 0x800000, LENGTH = 4194304
+    reset : ORIGIN = 0xc00000, LENGTH = 32
+    epcq_controller_0_avl_mem : ORIGIN = 0xc00020, LENGTH = 4194272
+    onchip_memory_BEFORE_EXCEPTION : ORIGIN = 0x1040000, LENGTH = 32
+    onchip_memory : ORIGIN = 0x1040020, LENGTH = 262112
 }
 
 /* Define symbols for each memory base-address */
-__alt_mem_onchip_memory = 0x40000;
+__alt_mem_epcq_controller_0_avl_mem = 0x800000;
+__alt_mem_onchip_memory = 0x1040000;
 
 OUTPUT_FORMAT( "elf32-littlenios2",
                "elf32-littlenios2",
@@ -64,12 +68,9 @@ OUTPUT_ARCH( nios2 )
 ENTRY( _start )
 
 /*
- * The alt_load() facility is enabled. This typically happens when there isn't
- * an external bootloader (e.g. flash bootloader).
- * The LMA (aka physical address) of each loaded section is
- * set to the .text memory device.
- * The HAL alt_load() routine called from crt0 copies sections from
- * the .text memory to RAM as needed.
+ * The alt_load() facility is disabled. This typically happens when an
+ * external bootloader is provided or the application runs in place.
+ * The LMA (aka physical address) of each section defaults to its VMA.
  */
 
 SECTIONS
@@ -221,18 +222,7 @@ SECTIONS
 
     PROVIDE (__flash_rodata_start = LOADADDR(.rodata));
 
-    /*
-     *
-     * This section's LMA is set to the .text region.
-     * crt0 will copy to this section's specified mapped region virtual memory address (VMA)
-     *
-     * .rwdata region equals the .text region, and is set to be loaded into .text region.
-     * This requires two copies of .rwdata in the .text region. One read writable at VMA.
-     * and one read-only at LMA. crt0 will copy from LMA to VMA on reset
-     *
-     */
-
-    .rwdata LOADADDR (.rodata) + SIZEOF (.rodata) : AT ( LOADADDR (.rodata) + SIZEOF (.rodata)+ SIZEOF (.rwdata) )
+    .rwdata :
     {
         PROVIDE (__ram_rwdata_start = ABSOLUTE(.));
         . = ALIGN(4);
@@ -255,14 +245,7 @@ SECTIONS
 
     PROVIDE (__flash_rwdata_start = LOADADDR(.rwdata));
 
-    /*
-     *
-     * This section's LMA is set to the .text region.
-     * crt0 will copy to this section's specified mapped region virtual memory address (VMA)
-     *
-     */
-
-    .bss LOADADDR (.rwdata) + SIZEOF (.rwdata) : AT ( LOADADDR (.rwdata) + SIZEOF (.rwdata) )
+    .bss :
     {
         __bss_start = ABSOLUTE(.);
         PROVIDE (__sbss_start = ABSOLUTE(.));
@@ -293,21 +276,19 @@ SECTIONS
      * The output section used for the heap is treated in a special way,
      * i.e. the symbols "end" and "_end" are added to point to the heap start.
      *
-     * Because alt_load() is enabled, these sections have
-     * their LMA set to be loaded into the .text memory region.
-     * However, the alt_load() code will NOT automatically copy
-     * these sections into their mapped memory region.
-     *
      */
 
-    /*
-     *
-     * This section's LMA is set to the .text region.
-     * crt0 will copy to this section's specified mapped region virtual memory address (VMA)
-     *
-     */
+    .epcq_controller_0_avl_mem :
+    {
+        PROVIDE (_alt_partition_epcq_controller_0_avl_mem_start = ABSOLUTE(.));
+        *(.epcq_controller_0_avl_mem .epcq_controller_0_avl_mem. epcq_controller_0_avl_mem.*)
+        . = ALIGN(4);
+        PROVIDE (_alt_partition_epcq_controller_0_avl_mem_end = ABSOLUTE(.));
+    } > epcq_controller_0_avl_mem
 
-    .onchip_memory LOADADDR (.bss) + SIZEOF (.bss) : AT ( LOADADDR (.bss) + SIZEOF (.bss) )
+    PROVIDE (_alt_partition_epcq_controller_0_avl_mem_load_addr = LOADADDR(.epcq_controller_0_avl_mem));
+
+    .onchip_memory :
     {
         PROVIDE (_alt_partition_onchip_memory_start = ABSOLUTE(.));
         *(.onchip_memory .onchip_memory. onchip_memory.*)
@@ -367,7 +348,7 @@ SECTIONS
 /*
  * Don't override this, override the __alt_stack_* symbols instead.
  */
-__alt_data_end = 0x80000;
+__alt_data_end = 0x1080000;
 
 /*
  * The next two symbols define the location of the default stack.  You can
@@ -383,4 +364,4 @@ PROVIDE( __alt_stack_limit   = __alt_stack_base );
  * Override this symbol to put the heap in a different memory.
  */
 PROVIDE( __alt_heap_start    = end );
-PROVIDE( __alt_heap_limit    = 0x80000 );
+PROVIDE( __alt_heap_limit    = 0x1080000 );
